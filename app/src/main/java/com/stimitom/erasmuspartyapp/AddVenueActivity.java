@@ -53,9 +53,10 @@ public class AddVenueActivity extends AppCompatActivity {
                 bundle.putParcelableArrayList("updated_venues", helper);
                 intent.putExtras(bundle);
                 intent.putExtra("added_flag", false);
+                intent.putExtra("venue_name", venueNameInput);
                 startActivity(intent);
             } else {
-                Log.e(TAG, "elseonclick");
+                Log.i(TAG, "elseonclick");
                 finish();
             }
 

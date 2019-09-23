@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -63,10 +64,14 @@ public class VenuesActivity extends AppCompatActivity {
         } else {
             Log.e(TAG, "onCreate: else");
             List<Venue> updatedList = this.getIntent().getParcelableArrayListExtra("updated_venues");
+            String addedVenue= this.getIntent().getStringExtra("venue_name");
+
+            Toast toast = Toast.makeText(getApplicationContext(),addedVenue + " was added to List",Toast.LENGTH_LONG);
+            toast.show();
+
             venues = new ArrayList<>();
             venues.addAll(updatedList);
         }
-
         // to improve performance
         //recyclerView.setHasFixedSize(true);
 
