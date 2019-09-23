@@ -36,7 +36,8 @@ public class LauncherActivity extends AppCompatActivity {
     View.OnClickListener startVenuesActivity = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            runVenuesActivity();
+           // runVenuesActivity();
+            runRegistrationActivity();
         }
     };
 
@@ -49,6 +50,11 @@ public class LauncherActivity extends AppCompatActivity {
 
     public void runVenuesActivity(){
         Intent intent = new Intent(context,VenuesActivity.class);
+        context.startActivity(intent);
+    }
+
+    public void runRegistrationActivity(){
+        Intent intent =  new Intent(context,RegistrationActivity.class);
         context.startActivity(intent);
     }
 
