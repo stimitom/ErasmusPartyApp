@@ -36,3 +36,8 @@ public class Lab1ExtrasActivity extends AppCompatActivity {
         }
     };
 }
+
+/*
+import com.facebook.FacebookSdk;
+import com.facebook.appevents.AppEventsLogger;
+ */
