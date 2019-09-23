@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">Erasmus Party</string>
+    <string name="welcome">Welcome to the Erasmus Party App</string>
+    <string name="button_lab1">LAB 1</string>
+    <string name="button_core_app">Core App</string>
+    <string name="venue_picture">venuePicture</string>
+    <string name="action_add_venue">Add Venue</string>
+    <string name="venue_name">Venue</string>
+    <string name="venue_rating">Rating: X/5</string>
+</resources>
