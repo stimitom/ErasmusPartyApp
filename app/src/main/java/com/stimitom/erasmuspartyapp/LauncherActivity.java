@@ -9,9 +9,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+
 public class LauncherActivity extends AppCompatActivity {
 
-    private TextView welcomeTextView;
     private Button  lab1Button;
     private Button coreAppButton;
 
@@ -24,20 +24,20 @@ public class LauncherActivity extends AppCompatActivity {
         Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
         setSupportActionBar(myToolbar);
 
-
-        welcomeTextView = (TextView) findViewById(R.id.welcome_text_view);
         lab1Button = (Button) findViewById(R.id.button_lab_1);
         coreAppButton = (Button) findViewById(R.id.button_core_app);
 
         lab1Button.setOnClickListener(startLab1ExtrasActivity);
-        coreAppButton.setOnClickListener(startVenuesActivity);
+        coreAppButton.setOnClickListener(startNextActivity);
     }
 
-    View.OnClickListener startVenuesActivity = new View.OnClickListener() {
+    //If logged in : Starts VenuesActivity
+    //else starts RegistrationActivity
+    View.OnClickListener startNextActivity = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-           // runVenuesActivity();
-            runRegistrationActivity();
+             if (RegistrationActivity.isLoggedIn()) runVenuesActivity();
+             else runRegistrationActivity();
         }
     };
 
@@ -64,3 +64,23 @@ public class LauncherActivity extends AppCompatActivity {
     }
 
 }
+
+
+/*
+CODE TO FIND A KEYHASH FOR FACEBOOK LOGIN: (RUN IN ON CREATE)
+
+ try{
+            PackageInfo info = getPackageManager().getPackageInfo(
+                    "com.stimitom.erasmuspartyapp", PackageManager.GET_SIGNATURES);
+            for (Signature signature : info.signatures) {
+                MessageDigest md = MessageDigest.getInstance("SHA");
+                md.update(signature.toByteArray());
+                Log.d("KeyHash:", Base64.encodeToString(md.digest(), Base64.DEFAULT));
+
+            }
+        } catch (PackageManager.NameNotFoundException e) {
+
+        } catch (NoSuchAlgorithmException e) {
+
+        }
+ */
