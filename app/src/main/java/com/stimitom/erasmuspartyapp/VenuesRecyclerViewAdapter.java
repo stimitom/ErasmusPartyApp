@@ -15,9 +15,7 @@ public class VenuesRecyclerViewAdapter extends RecyclerView.Adapter<VenuesRecycl
 
     private List<Venue> venuesList;
 
-    public VenuesRecyclerViewAdapter(List<Venue> venuesList) {
-        this.venuesList = venuesList;
-    }
+    public VenuesRecyclerViewAdapter(List<Venue> venuesList) { this.venuesList = venuesList; }
 
     @Override
     public VenuesViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {

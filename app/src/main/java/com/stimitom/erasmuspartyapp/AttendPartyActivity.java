@@ -21,5 +21,6 @@ public class AttendPartyActivity extends AppCompatActivity {
         venueRating = (TextView) findViewById(R.id.venue_rating_tv);
         attendButton = (Button) findViewById(R.id.attend_button);
 
+
     }
 }

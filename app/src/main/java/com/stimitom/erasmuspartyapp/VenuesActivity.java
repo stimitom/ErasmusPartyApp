@@ -1,6 +1,7 @@
 package com.stimitom.erasmuspartyapp;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
@@ -11,6 +12,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -24,6 +26,7 @@ public class VenuesActivity extends AppCompatActivity {
     private VenuesRecyclerViewAdapter adapter;
     private String TAG = "VenuesActivity";
     public static Activity reloader;
+    private Context context = this;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,8 +37,11 @@ public class VenuesActivity extends AppCompatActivity {
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view_venues);
         reloader = this;
 
-        Intent intent = getIntent();
 
+        //******************//
+        //Loading a list of venues//
+
+        Intent intent = getIntent();
         //If activity is started normally adds List of Venus
         //If activity is started from AddVenueActivity and a correct Venue was added will create updated list
         if (intent.getBooleanExtra("added_flag", true)) {
@@ -79,6 +85,20 @@ public class VenuesActivity extends AppCompatActivity {
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
+
+        //Handling clicks on Venues
+        recyclerView.addOnItemTouchListener(new RecyclerTouchListener(context, recyclerView, new RecyclerTouchListener.ClickListener() {
+            @Override
+            public void onClick(View view, int position) {
+                Intent intent1 = new Intent(context, AttendPartyActivity.class);
+//TODO ADD CODE FOR TRANSPORTATION OF VENUE DATA
+            }
+
+            @Override
+            public void onLongClick(View view, int position) {
+
+            }
+        }));
     }
 
     public static List<Venue> getVenues() {
