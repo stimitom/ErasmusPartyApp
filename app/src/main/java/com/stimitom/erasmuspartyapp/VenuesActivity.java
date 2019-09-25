@@ -16,6 +16,8 @@ import android.view.View;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class VenuesActivity extends AppCompatActivity {
@@ -108,6 +110,7 @@ public class VenuesActivity extends AppCompatActivity {
     }
 
 
+    //******************//
     //ACTION BAR METHODS
 
     //Inflates the menu's XML file to the Action Bar
@@ -127,13 +130,25 @@ public class VenuesActivity extends AppCompatActivity {
                 Intent intent = new Intent(this, AddVenueActivity.class);
                 startActivity(intent);
                 return true;
-
+            case R.id.action_sort_alphabetically:
+                sortVenuesAlphabetically();
+                adapter.notifyDataSetChanged();
             default:
                 // If we got here, the user's action was not recognized.
                 // Invoke the superclass to handle it.
                 return super.onOptionsItemSelected(item);
 
         }
+    }
+
+    //Sorts venues alphabetically by venue's name
+    public void sortVenuesAlphabetically(){
+        Collections.sort(venues, new Comparator<Venue>() {
+            @Override
+            public int compare(Venue lhs, Venue rhs) {
+                return lhs.getVenueName().compareTo(rhs.getVenueName());
+            }
+        });
     }
 
 }

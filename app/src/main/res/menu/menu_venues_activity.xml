@@ -8,5 +8,9 @@
         android:title="@string/action_add_venue"
         app:showAsAction="never"
         />
-
+    <item
+        android:id="@+id/action_sort_alphabetically"
+        android:title="@string/sort"
+        app:showAsAction="ifRoom"
+        />
 </menu>

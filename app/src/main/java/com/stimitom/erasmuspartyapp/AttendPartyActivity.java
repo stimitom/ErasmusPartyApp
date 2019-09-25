@@ -27,7 +27,8 @@ public class AttendPartyActivity extends AppCompatActivity {
 
         Venue venue = getIntent().getParcelableExtra("clickedVenue");
         venueName.setText(venue.getVenueName());
-       venuePicture.setImageResource(venue.getImageId());
+        venuePicture.setImageResource(venue.getImageId());
         venueRating.setText(venue.getRating());
+
     }
 }
