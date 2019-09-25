@@ -90,8 +90,10 @@ public class VenuesActivity extends AppCompatActivity {
         recyclerView.addOnItemTouchListener(new RecyclerTouchListener(context, recyclerView, new RecyclerTouchListener.ClickListener() {
             @Override
             public void onClick(View view, int position) {
+                Venue clickedVenue=  venues.get(position);
                 Intent intent1 = new Intent(context, AttendPartyActivity.class);
-//TODO ADD CODE FOR TRANSPORTATION OF VENUE DATA
+                intent1.putExtra("clickedVenue", clickedVenue);
+                startActivity(intent1);
             }
 
             @Override
