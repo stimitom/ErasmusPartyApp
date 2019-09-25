@@ -10,6 +10,7 @@
     <string name="facebook_app_id">2401198669957036</string>
     <string name="fb_login_protocol_scheme">fb2401198669957036</string>
     <string name="attend">Attend Tonight</string>
-    <string name="sort">SORT</string>
+    <string name="sort">Sort</string>
+    <string name="search">Search</string>
 
 </resources>
