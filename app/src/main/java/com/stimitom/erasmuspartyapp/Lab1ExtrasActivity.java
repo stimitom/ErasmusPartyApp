@@ -13,6 +13,7 @@ public class Lab1ExtrasActivity extends AppCompatActivity {
     private Button removeButton;
     private TextView toBeRemovedTextView;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,8 +37,3 @@ public class Lab1ExtrasActivity extends AppCompatActivity {
         }
     };
 }
-
-/*
-import com.facebook.FacebookSdk;
-import com.facebook.appevents.AppEventsLogger;
- */
