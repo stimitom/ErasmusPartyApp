@@ -10,7 +10,6 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
         <activity android:name=".AttendPartyActivity"></activity>
-        <activity android:name=".RegistrationActivity" />
         <activity android:name=".LauncherActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -41,7 +40,7 @@
         </activity>
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
-            android:value="@string/facebook_app_id" />
+            android:value="@string/facebook_application_id" />
     </application>
 
     <uses-permission android:name="android.permission.INTERNET" />
