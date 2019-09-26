@@ -21,7 +21,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-public class VenuesActivity extends AppCompatActivity {
+public class VenuesActivity extends AppCompatActivity implements UsernameNationalityDialog.UsernameNationalityListener {
 
     private RecyclerView recyclerView;
     private RecyclerView.LayoutManager layoutManager;
@@ -83,11 +83,11 @@ public class VenuesActivity extends AppCompatActivity {
         }
 
         //TODO Ask if user already defined a username in if-condition
-        if (intent.getBooleanExtra("sign_up_flag",false)){
+     //   if (intent.getBooleanExtra("sign_up_flag",false)){
             //Open Dialog for username and nationality input
+            openDialog();
 
-
-        }
+     //   }
 
         // to improve performance
         //recyclerView.setHasFixedSize(true);
@@ -181,4 +181,8 @@ public class VenuesActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    public void transportInputs(String username, String nationality) {
+    //TODO do something with the transported Inputs
+    }
 }
