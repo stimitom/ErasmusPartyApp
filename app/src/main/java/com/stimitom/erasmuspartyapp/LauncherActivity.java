@@ -99,7 +99,10 @@ public class LauncherActivity extends AppCompatActivity {
             if (resultCode == RSC_SIGN_IN_OK){
                 //Successfully signed in
                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                runVenuesActivity();
+                //Starts VenueActivitywithFlag
+                Intent intent = new Intent(context,VenuesActivity.class);
+                intent.putExtra("sign_up_flag",true);
+                context.startActivity(intent);
             }else{
                 // Sign in failed. If response is null the user canceled the
                 // sign-in flow using the back button. Otherwise check

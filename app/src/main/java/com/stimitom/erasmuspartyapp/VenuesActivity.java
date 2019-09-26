@@ -81,6 +81,14 @@ public class VenuesActivity extends AppCompatActivity {
             venues = new ArrayList<>();
             venues.addAll(updatedList);
         }
+
+        //TODO Ask if user already defined a username in if-condition
+        if (intent.getBooleanExtra("sign_up_flag",false)){
+            //Open Dialog for username and nationality input
+
+
+        }
+
         // to improve performance
         //recyclerView.setHasFixedSize(true);
 
@@ -110,6 +118,10 @@ public class VenuesActivity extends AppCompatActivity {
         return venues;
     }
 
+    public void openDialog(){
+        UsernameNationalityDialog dialog = new UsernameNationalityDialog();
+        dialog.show(getSupportFragmentManager(),"UsernameNationalityDialog");
+    }
 
     //******************//
     //ACTION BAR METHODS

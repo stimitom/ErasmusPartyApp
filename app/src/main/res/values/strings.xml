@@ -12,5 +12,7 @@
     <string name="attend">Attend Tonight</string>
     <string name="sort">Sort</string>
     <string name="search">Search</string>
+    <string name="username">Username</string>
+    <string name="nationality">Nationality</string>
 
 </resources>
