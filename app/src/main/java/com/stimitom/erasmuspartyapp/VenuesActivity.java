@@ -31,7 +31,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class VenuesActivity extends AppCompatActivity implements UsernameNationalityDialog.UsernameNationalityListener {
+//implements UsernameNationalityDialog.UsernameNationalityListener
+
+public class VenuesActivity extends AppCompatActivity  {
     private RecyclerView recyclerView;
     private RecyclerView.LayoutManager layoutManager;
     private static List<Venue> venues;
@@ -197,9 +199,9 @@ public class VenuesActivity extends AppCompatActivity implements UsernameNationa
         dialog.show(getSupportFragmentManager(),"UsernameNationalityDialog");
     }
 
-    @Override
-    public void transportInputs(String username, String nationality) {
-    }
+//    @Override
+//    public void transportInputs(String username, String nationality) {
+//    }
 
 
 }

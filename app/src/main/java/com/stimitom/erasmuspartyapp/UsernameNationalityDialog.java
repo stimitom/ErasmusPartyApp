@@ -8,7 +8,10 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
@@ -23,11 +26,11 @@ import java.util.Map;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatDialogFragment;
 
-public class UsernameNationalityDialog extends AppCompatDialogFragment {
+public class UsernameNationalityDialog extends AppCompatDialogFragment implements AdapterView.OnItemSelectedListener {
     private final String TAG = "UserNationalityDialog";
     private EditText editTextUsername;
-    private EditText editTextNationality;
-    private UsernameNationalityListener listener;
+    private Spinner spinnerNationality;
+//    private UsernameNationalityListener listener;
     private Context context = VenuesActivity.reloader;
 
     @Override
@@ -35,6 +38,13 @@ public class UsernameNationalityDialog extends AppCompatDialogFragment {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         LayoutInflater inflater = getActivity().getLayoutInflater();
         View view = inflater.inflate(R.layout.layout_dialog_name_nationality,null);
+
+        editTextUsername = view.findViewById(R.id.edit_username);
+        spinnerNationality = view.findViewById(R.id.spinner_nationality);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(VenuesActivity.reloader,R.array.countries,android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerNationality.setAdapter(adapter);
+        spinnerNationality.setOnItemSelectedListener(this);
 
         builder.setView(view)
                 .setTitle("Introduce Yourself: ")
@@ -48,13 +58,12 @@ public class UsernameNationalityDialog extends AppCompatDialogFragment {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         String username = editTextUsername.getText().toString();
-                        String nationality = editTextNationality.getText().toString();
+                        String nationality = spinnerNationality.getSelectedItem().toString();
                         saveUserToDatabase(username,nationality);
-                        listener.transportInputs(username,nationality);
+//                        listener.transportInputs(username,nationality);
                     }
                 });
-        editTextUsername = view.findViewById(R.id.edit_username);
-        editTextNationality = view.findViewById(R.id.edit_nationality);
+
 
         return builder.create();
     }
@@ -63,17 +72,29 @@ public class UsernameNationalityDialog extends AppCompatDialogFragment {
     public void onAttach(Context context) {
         super.onAttach(context);
 
-        try {
-            listener = (UsernameNationalityListener) context;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(context.toString() + "must implement UsernameNationalityListener");
-        }
+//        try {
+//            listener = (UsernameNationalityListener) context;
+//        } catch (ClassCastException e) {
+//            throw new ClassCastException(context.toString() + "must implement UsernameNationalityListener");
+//        }
     }
 
-    public interface UsernameNationalityListener{
-        void transportInputs(String username, String nationality);
+    //Handle Spinner
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+    }
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
     }
 
+
+
+//    public interface UsernameNationalityListener{
+//        void transportInputs(String username, String nationality);
+//    }
+
+    /******************/
+    /** Handles upload of User to Database */
 
     private static final String KEY_USERNAME = "username";
     private static final String KEY_NATIONALITY = "nationality";
