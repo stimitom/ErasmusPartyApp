@@ -21,7 +21,7 @@ public class VenuesRecyclerViewAdapter extends RecyclerView.Adapter<VenuesRecycl
 
     public VenuesRecyclerViewAdapter(List<Venue> venuesList) {
         this.venuesList = venuesList;
-        this.venuesListFull = new ArrayList<>(venuesList);
+        this.venuesListFull = new ArrayList<Venue>(venuesList);
     }
 
     @Override
