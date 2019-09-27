@@ -3,6 +3,8 @@ package com.stimitom.erasmuspartyapp;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -16,13 +18,20 @@ import android.view.View;
 import android.widget.SearchView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class VenuesActivity extends AppCompatActivity implements UsernameNationalityDialog.UsernameNationalityListener {
-
     private RecyclerView recyclerView;
     private RecyclerView.LayoutManager layoutManager;
     private static List<Venue> venues;
@@ -85,7 +94,9 @@ public class VenuesActivity extends AppCompatActivity implements UsernameNationa
         //TODO Ask if user already defined a username in if-condition
      //   if (intent.getBooleanExtra("sign_up_flag",false)){
             //Open Dialog for username and nationality input
-            openDialog();
+        openDialog();
+
+
 
      //   }
 
@@ -118,12 +129,8 @@ public class VenuesActivity extends AppCompatActivity implements UsernameNationa
         return venues;
     }
 
-    public void openDialog(){
-        UsernameNationalityDialog dialog = new UsernameNationalityDialog();
-        dialog.show(getSupportFragmentManager(),"UsernameNationalityDialog");
-    }
 
-    //******************//
+    /********************************/
     //ACTION BAR METHODS
 
     //Inflates the menu's XML file to the Action Bar
@@ -181,8 +188,18 @@ public class VenuesActivity extends AppCompatActivity implements UsernameNationa
         });
     }
 
+    /**********************************/
+    // Handles the dialog and databaseUpload
+
+
+    public void openDialog(){
+        UsernameNationalityDialog dialog = new UsernameNationalityDialog();
+        dialog.show(getSupportFragmentManager(),"UsernameNationalityDialog");
+    }
+
     @Override
     public void transportInputs(String username, String nationality) {
-    //TODO do something with the transported Inputs
     }
+
+
 }
