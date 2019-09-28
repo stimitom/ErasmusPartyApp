@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -18,18 +17,10 @@ import android.view.View;
 import android.widget.SearchView;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.FirebaseFirestore;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 //implements UsernameNationalityDialog.UsernameNationalityListener
 
@@ -97,9 +88,6 @@ public class VenuesActivity extends AppCompatActivity  {
      //   if (intent.getBooleanExtra("sign_up_flag",false)){
             //Open Dialog for username and nationality input
         openDialog();
-
-
-
      //   }
 
         // to improve performance

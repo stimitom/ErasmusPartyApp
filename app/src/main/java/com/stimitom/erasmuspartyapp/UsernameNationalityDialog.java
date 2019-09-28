@@ -17,7 +17,7 @@ import android.widget.Toast;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
@@ -94,7 +94,7 @@ public class UsernameNationalityDialog extends AppCompatDialogFragment implement
 //    }
 
     /******************/
-    /** Handles upload of User to Database */
+    /** Database methods concerning User*/
 
     private static final String KEY_USERNAME = "username";
     private static final String KEY_NATIONALITY = "nationality";
@@ -113,10 +113,11 @@ public class UsernameNationalityDialog extends AppCompatDialogFragment implement
 
 
         db.collection("users")
-                .add(user)
-                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                .document(userId)
+                .set(user)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
-                    public void onSuccess(DocumentReference documentReference) {
+                    public void onSuccess(Void aVoid) {
                         Log.i(TAG, "user upload to database succesful");
                         Toast.makeText(context,"Have Fun tonight!", Toast.LENGTH_SHORT).show();
                     }
@@ -126,6 +127,33 @@ public class UsernameNationalityDialog extends AppCompatDialogFragment implement
                     public void onFailure(@NonNull Exception e) {
                         Log.e(TAG, "user upload to database FAILES");
                         Log.e(TAG, e.toString());
+                    }
+                });
+    }
+
+    //Retrieve a user's data from the database with the userId of the current user
+    // TODO maybe not void later
+    public void loadUserFromDatabase(String userId){
+        db.collection("users")
+                .document(userId)
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        if (documentSnapshot.exists()){
+                            Map<String, Object> user = documentSnapshot.getData();
+                            //TODO DO SOmething
+                        }else{
+                            //is executed when user is not registered or logged in
+                            Log.e(TAG, "No loadable document exists");
+                        }
+
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.e(TAG,"failure on loading userdata", e);
                     }
                 });
     }
