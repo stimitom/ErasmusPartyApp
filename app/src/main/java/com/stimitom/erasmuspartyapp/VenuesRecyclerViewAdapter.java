@@ -52,8 +52,8 @@ public class VenuesRecyclerViewAdapter extends RecyclerView.Adapter<VenuesRecycl
     public Filter getFilter() {
         return venueFilter;
     }
-    private Filter venueFilter = new Filter() {
 
+    private Filter venueFilter = new Filter() {
         //Is run on separate thread by default
         @Override
         protected FilterResults performFiltering(CharSequence constraint) {

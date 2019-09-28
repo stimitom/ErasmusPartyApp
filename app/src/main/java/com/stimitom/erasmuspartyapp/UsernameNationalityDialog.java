@@ -132,7 +132,6 @@ public class UsernameNationalityDialog extends AppCompatDialogFragment implement
     }
 
     //Retrieve a user's data from the database with the userId of the current user
-    // TODO maybe not void later
     public void loadUserFromDatabase(String userId){
         db.collection("users")
                 .document(userId)

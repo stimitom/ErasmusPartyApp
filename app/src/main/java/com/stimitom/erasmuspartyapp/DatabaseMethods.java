@@ -9,6 +9,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import androidx.annotation.NonNull;
@@ -44,10 +45,12 @@ public class DatabaseMethods {
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override
                     public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        venuesList.clear();
                         for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots ){
                             Venue venue = documentSnapshot.toObject(Venue.class);
                             venuesList.add(venue);
                         }
+
                     }
 
                 });

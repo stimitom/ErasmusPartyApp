@@ -27,7 +27,7 @@ import java.util.List;
 public class VenuesActivity extends AppCompatActivity  {
     private RecyclerView recyclerView;
     private RecyclerView.LayoutManager layoutManager;
-    private static List<Venue> venues;
+    private static List<Venue> venues = new ArrayList<Venue>();
     private VenuesRecyclerViewAdapter adapter;
     private String TAG = "VenuesActivity";
     public static Activity reloader;
@@ -42,73 +42,27 @@ public class VenuesActivity extends AppCompatActivity  {
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view_venues);
         reloader = this;
 
-
         /*******************/
         /**Loading a list of venues**/
-
         Intent intent = getIntent();
         //If activity is started normally adds List of Venus
         //If activity is started from AddVenueActivity and a correct Venue was added will create updated list
         if (intent.getBooleanExtra("added_flag", true)) {
-            Log.e(TAG, "onCreate: IF");
-            venues = new ArrayList<Venue>();
-
-//            DatabaseMethods.saveVenueToDatabase(new Venue("Dzempub", R.drawable.bk_logo, "3/5"));
-//            DatabaseMethods.saveVenueToDatabase(new Venue("Taboo", R.drawable.bk_logo, "2/5"));
-//            DatabaseMethods.saveVenueToDatabase(new Venue("Listas", R.drawable.bk_logo, "1/5"));
-//            DatabaseMethods.saveVenueToDatabase(new Venue("DejaVu", R.drawable.bk_logo, "3/5"));
-//            DatabaseMethods.saveVenueToDatabase(new Venue("Pjazz", R.drawable.bk_logo, "4/5"));
-//            DatabaseMethods.saveVenueToDatabase(new Venue("B20", R.drawable.bk_logo, "3/5"));
-//            DatabaseMethods.saveVenueToDatabase(new Venue("Blue", R.drawable.bk_logo, "3/5"));
-//            DatabaseMethods.saveVenueToDatabase(new Venue("Green", R.drawable.bk_logo, "3/5"));
-//            DatabaseMethods.saveVenueToDatabase(new Venue("Yellow", R.drawable.bk_logo, "3/5"));
-//            DatabaseMethods.saveVenueToDatabase(new Venue("Brown", R.drawable.bk_logo, "2/5"));
-//            DatabaseMethods.saveVenueToDatabase(new Venue("Black", R.drawable.bk_logo, "3/5"));
-//            DatabaseMethods.saveVenueToDatabase(new Venue("Grey", R.drawable.bk_logo, "3/5"));
-//            DatabaseMethods.saveVenueToDatabase(new Venue("White", R.drawable.bk_logo, "4/5"));
-//            DatabaseMethods.saveVenueToDatabase(new Venue("Purple", R.drawable.bk_logo, "3/5"));
-//            DatabaseMethods.saveVenueToDatabase(new Venue("Red", R.drawable.bk_logo, "1/5"));
-//            DatabaseMethods.saveVenueToDatabase(new Venue("Magenta", R.drawable.bk_logo, "5/5"));
-//            DatabaseMethods.saveVenueToDatabase(new Venue("Some Shithole", R.drawable.bk_logo, "5/5"));
-
-            //stores all Venues from database to ArrayList "venues"
             DatabaseMethods.loadVenues(venues);
-
-//            venues.add(new Venue("Dzempub", R.drawable.bk_logo, "3/5"));
-//            venues.add(new Venue("Taboo", R.drawable.bk_logo, "2/5"));
-//            venues.add(new Venue("Listas", R.drawable.bk_logo, "1/5"));
-//            venues.add(new Venue("DejaVu", R.drawable.bk_logo, "3/5"));
-//            venues.add(new Venue("Pjazz", R.drawable.bk_logo, "4/5"));
-//            venues.add(new Venue("B20", R.drawable.bk_logo, "3/5"));
-//            venues.add(new Venue("Blue", R.drawable.bk_logo, "3/5"));
-//            venues.add(new Venue("Green", R.drawable.bk_logo, "3/5"));
-//            venues.add(new Venue("Yellow", R.drawable.bk_logo, "3/5"));
-//            venues.add(new Venue("Brown", R.drawable.bk_logo, "2/5"));
-//            venues.add(new Venue("Black", R.drawable.bk_logo, "3/5"));
-//            venues.add(new Venue("Grey", R.drawable.bk_logo, "3/5"));
-//            venues.add(new Venue("White", R.drawable.bk_logo, "4/5"));
-//            venues.add(new Venue("Purple", R.drawable.bk_logo, "3/5"));
-//            venues.add(new Venue("Red", R.drawable.bk_logo, "1/5"));
-//            venues.add(new Venue("Magenta", R.drawable.bk_logo, "5/5"));
-//            venues.add(new Venue("Some Shithole", R.drawable.bk_logo, "5/5"));
-
-
-        } else {
+        }else{
             Log.e(TAG, "onCreate: else");
-            List<Venue> updatedList = this.getIntent().getParcelableArrayListExtra("updated_venues");
             String addedVenue= this.getIntent().getStringExtra("venue_name");
 
             Toast toast = Toast.makeText(getApplicationContext(),addedVenue + " was added to List",Toast.LENGTH_LONG);
             toast.show();
 
-            venues = new ArrayList<>();
-            venues.addAll(updatedList);
+            DatabaseMethods.loadVenues(venues);
         }
 
         //TODO Ask if user already defined a username in if-condition
      //   if (intent.getBooleanExtra("sign_up_flag",false)){
             //Open Dialog for username and nationality input
-        openDialog();
+         openDialog();
      //   }
 
         // to improve performance
@@ -136,13 +90,20 @@ public class VenuesActivity extends AppCompatActivity  {
         }));
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        DatabaseMethods.loadVenues(venues);
+        adapter.notifyDataSetChanged();
+    }
+
     public static List<Venue> getVenues() {
         return venues;
     }
 
 
     /********************************/
-    //ACTION BAR METHODS
+    /** ACTION BAR METHODS **/
 
     //Inflates the menu's XML file to the Action Bar
     //and inflates the searchView in the Action bar
@@ -214,3 +175,52 @@ public class VenuesActivity extends AppCompatActivity  {
 
 
 }
+
+/*
+       Intent intent = getIntent();
+        //If activity is started normally adds List of Venus
+        //If activity is started from AddVenueActivity and a correct Venue was added will create updated list
+        if (intent.getBooleanExtra("added_flag", true)) {
+            Log.e(TAG, "onCreate: IF");
+            venues = new ArrayList<Venue>();
+
+//            DatabaseMethods.saveVenueToDatabase(new Venue("Dzempub", R.drawable.bk_logo, "3/5"));
+//            DatabaseMethods.saveVenueToDatabase(new Venue("Taboo", R.drawable.bk_logo, "2/5"));
+//            DatabaseMethods.saveVenueToDatabase(new Venue("Listas", R.drawable.bk_logo, "1/5"));
+//            DatabaseMethods.saveVenueToDatabase(new Venue("DejaVu", R.drawable.bk_logo, "3/5"));
+//            DatabaseMethods.saveVenueToDatabase(new Venue("Pjazz", R.drawable.bk_logo, "4/5"));
+//            DatabaseMethods.saveVenueToDatabase(new Venue("B20", R.drawable.bk_logo, "3/5"));
+//            DatabaseMethods.saveVenueToDatabase(new Venue("Blue", R.drawable.bk_logo, "3/5"));
+//            DatabaseMethods.saveVenueToDatabase(new Venue("Green", R.drawable.bk_logo, "3/5"));
+//            DatabaseMethods.saveVenueToDatabase(new Venue("Yellow", R.drawable.bk_logo, "3/5"));
+//            DatabaseMethods.saveVenueToDatabase(new Venue("Brown", R.drawable.bk_logo, "2/5"));
+//            DatabaseMethods.saveVenueToDatabase(new Venue("Black", R.drawable.bk_logo, "3/5"));
+//            DatabaseMethods.saveVenueToDatabase(new Venue("Grey", R.drawable.bk_logo, "3/5"));
+//            DatabaseMethods.saveVenueToDatabase(new Venue("White", R.drawable.bk_logo, "4/5"));
+//            DatabaseMethods.saveVenueToDatabase(new Venue("Purple", R.drawable.bk_logo, "3/5"));
+//            DatabaseMethods.saveVenueToDatabase(new Venue("Red", R.drawable.bk_logo, "1/5"));
+//            DatabaseMethods.saveVenueToDatabase(new Venue("Magenta", R.drawable.bk_logo, "5/5"));
+//            DatabaseMethods.saveVenueToDatabase(new Venue("Some Shithole", R.drawable.bk_logo, "5/5"));
+
+            //stores all Venues from database to ArrayList "venues"
+            DatabaseMethods.loadVenues(venues);
+
+//            venues.add(new Venue("Dzempub", R.drawable.bk_logo, "3/5"));
+//            venues.add(new Venue("Taboo", R.drawable.bk_logo, "2/5"));
+//            venues.add(new Venue("Listas", R.drawable.bk_logo, "1/5"));
+//            venues.add(new Venue("DejaVu", R.drawable.bk_logo, "3/5"));
+//            venues.add(new Venue("Pjazz", R.drawable.bk_logo, "4/5"));
+//            venues.add(new Venue("B20", R.drawable.bk_logo, "3/5"));
+//            venues.add(new Venue("Blue", R.drawable.bk_logo, "3/5"));
+//            venues.add(new Venue("Green", R.drawable.bk_logo, "3/5"));
+//            venues.add(new Venue("Yellow", R.drawable.bk_logo, "3/5"));
+//            venues.add(new Venue("Brown", R.drawable.bk_logo, "2/5"));
+//            venues.add(new Venue("Black", R.drawable.bk_logo, "3/5"));
+//            venues.add(new Venue("Grey", R.drawable.bk_logo, "3/5"));
+//            venues.add(new Venue("White", R.drawable.bk_logo, "4/5"));
+//            venues.add(new Venue("Purple", R.drawable.bk_logo, "3/5"));
+//            venues.add(new Venue("Red", R.drawable.bk_logo, "1/5"));
+//            venues.add(new Venue("Magenta", R.drawable.bk_logo, "5/5"));
+//            venues.add(new Venue("Some Shithole", R.drawable.bk_logo, "5/5"));
+
+ */

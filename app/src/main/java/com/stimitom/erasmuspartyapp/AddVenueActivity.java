@@ -46,13 +46,9 @@ public class AddVenueActivity extends AppCompatActivity {
             if (venueNameInput != null && venueRatingInput != null
                     && venueNameInput.length() != 0 && venueRatingInput.length() != 0) {
                 VenuesActivity.reloader.finish();
-                ArrayList<Venue> helper = new ArrayList<>();
-                helper.addAll(VenuesActivity.getVenues());
-                helper.add(new Venue(venueNameInput, R.drawable.bk_logo, venueRatingInput));
+
+                DatabaseMethods.saveVenueToDatabase(new Venue(venueNameInput, R.drawable.bk_logo, venueRatingInput));
                 Intent intent = new Intent(context, VenuesActivity.class);
-                Bundle bundle = new Bundle();
-                bundle.putParcelableArrayList("updated_venues", helper);
-                intent.putExtras(bundle);
                 intent.putExtra("added_flag", false);
                 intent.putExtra("venue_name", venueNameInput);
                 startActivity(intent);
