@@ -33,6 +33,7 @@ public class AddVenueActivity extends AppCompatActivity {
         addVenueButton.setOnClickListener(addVenue);
     }
 
+    //TODO update to proper databse method
     //Adds venue to venuesList in Adapter
     //Post: Either finishes this activity (if no correct input)
     // or finishes VenuesActivity and starts it again with updated Data
