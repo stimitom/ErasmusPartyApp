@@ -37,6 +37,7 @@ public class VenuesRecyclerViewAdapter extends RecyclerView.Adapter<VenuesRecycl
         venuesViewHolder.venueName.setText(venuesList.get(position).getVenueName());
         venuesViewHolder.venuePicture.setImageResource(venuesList.get(position).getImageId());
         venuesViewHolder.venueRating.setText(venuesList.get(position).getRating());
+        venuesViewHolder.numberOfAttendees.setText(venuesList.get(position).getNumberOfAttendees() + "\npeople attend tonight");
     }
 
     @Override
@@ -45,15 +46,15 @@ public class VenuesRecyclerViewAdapter extends RecyclerView.Adapter<VenuesRecycl
     }
 
 
-    //*************************//
-    //HANDLES THE FILTERING
+    /*************************/
+    /** HANDLES THE FILTERING **/
     @Override
     public Filter getFilter() {
         return venueFilter;
     }
     private Filter venueFilter = new Filter() {
 
-        //Is run on seperate thread by default
+        //Is run on separate thread by default
         @Override
         protected FilterResults performFiltering(CharSequence constraint) {
             List<Venue> filteredList = new ArrayList<>();
@@ -84,13 +85,14 @@ public class VenuesRecyclerViewAdapter extends RecyclerView.Adapter<VenuesRecycl
         }
     };
 
-    //*************************//
-    //VIEWHOLDER
+    /*************************/
+    /** VIEWHOLDER **/
     public static class VenuesViewHolder extends RecyclerView.ViewHolder {
 
         public TextView venueName;
         public ImageView venuePicture;
         public TextView venueRating;
+        public TextView numberOfAttendees;
         public ConstraintLayout constraintLayout;
 
         public VenuesViewHolder(View itemView) {
@@ -98,6 +100,7 @@ public class VenuesRecyclerViewAdapter extends RecyclerView.Adapter<VenuesRecycl
             this.venueName = (TextView) itemView.findViewById(R.id.venue_name);
             this.venuePicture = (ImageView) itemView.findViewById(R.id.venue_picture);
             this.venueRating = (TextView) itemView.findViewById(R.id.venue_rating);
+            this.numberOfAttendees = (TextView) itemView.findViewById(R.id.number_of_attendees);
             constraintLayout = (ConstraintLayout) itemView.findViewById(R.id.constraint_layout_venue);
         }
     }
