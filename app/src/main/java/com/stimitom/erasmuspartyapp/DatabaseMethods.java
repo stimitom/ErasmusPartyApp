@@ -35,21 +35,3 @@ public class DatabaseMethods {
     }
 }
 
-//
-//    //Retrieves all venues from Database and stores them to given List
-//    // NOT NEEDED --> TRANSFERRED TO VENUESACTIVITY
-//    public static void loadVenues(final List<Venue> venuesList) {
-//        venuesRef.get()
-//                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-//                    @Override
-//                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-//                        venuesList.clear();
-//                        for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots ){
-//                            Venue venue = documentSnapshot.toObject(Venue.class);
-//                            venuesList.add(venue);
-//                        }
-//
-//                    }
-//
-//                });
-//    }

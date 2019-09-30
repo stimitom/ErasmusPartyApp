@@ -3,7 +3,7 @@ package com.stimitom.erasmuspartyapp;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Filter;
+
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -32,12 +32,13 @@ public class VenuesAdapter extends FirestoreRecyclerAdapter<Venue, VenuesAdapter
     }
 
     @Override
-    public void onBindViewHolder(VenuesViewHolder venuesViewHolder, int position, @NonNull Venue venue) {
+    public void onBindViewHolder(VenuesViewHolder venuesViewHolder, int position,Venue venue) {
         venuesViewHolder.venueName.setText(venue.getVenueName());
         venuesViewHolder.venuePicture.setImageResource(venue.getImageId());
         venuesViewHolder.venueRating.setText(venue.getRating());
         venuesViewHolder.numberOfAttendees.setText(venue.getNumberOfAttendees() +"\npeople attend tonight");
     }
+
     /*************************/
     /**VIEWHOLDER**/
 

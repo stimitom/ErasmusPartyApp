@@ -44,7 +44,7 @@
         android:inputType="text" />
 
     <ImageView
-        android:id="@+id/burger_king_default_imageView"
+        android:id="@+id/input_venue_picture"
         android:layout_width="80dp"
         android:layout_height="80dp"
         android:layout_marginStart="16dp"
@@ -69,6 +69,6 @@
         android:text="@string/action_add_venue"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/burger_king_default_imageView" />
+        app:layout_constraintTop_toBottomOf="@+id/input_venue_picture" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
