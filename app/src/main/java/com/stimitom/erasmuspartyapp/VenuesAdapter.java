@@ -9,6 +9,8 @@ import android.widget.TextView;
 
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.firebase.firestore.DocumentSnapshot;
+
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
@@ -16,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public class VenuesAdapter extends FirestoreRecyclerAdapter<Venue, VenuesAdapter.VenuesViewHolder> {
     private final String TAG = "Adapter";
+    private OnItemClickListener listener;
 
     public VenuesAdapter(@NonNull FirestoreRecyclerOptions<Venue> options){
         super(options);
@@ -33,7 +36,7 @@ public class VenuesAdapter extends FirestoreRecyclerAdapter<Venue, VenuesAdapter
         venuesViewHolder.venueName.setText(venue.getVenueName());
         venuesViewHolder.venuePicture.setImageResource(venue.getImageId());
         venuesViewHolder.venueRating.setText(venue.getRating());
-        venuesViewHolder.numberOfAttendees.setText(String.valueOf(venue.getNumberOfAttendees()) +"/n"+ R.string.attendtonight);
+        venuesViewHolder.numberOfAttendees.setText(venue.getNumberOfAttendees() +"\npeople attend tonight");
     }
     /*************************/
     /**VIEWHOLDER**/
@@ -53,7 +56,26 @@ public class VenuesAdapter extends FirestoreRecyclerAdapter<Venue, VenuesAdapter
             this.venueRating = (TextView) itemView.findViewById(R.id.venue_rating);
             this.numberOfAttendees = (TextView) itemView.findViewById(R.id.number_of_attendees);
             cardView = (CardView) itemView.findViewById(R.id.card_view_venue);
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int position = getAdapterPosition();
+                    // if item gets remove but gets clicked during remove animation the following will not be called
+                    if (position != RecyclerView.NO_POSITION && listener!= null) {
+                        listener.onItemClick(getSnapshots().getSnapshot(position), position);
+                    }
+                }
+            });
         }
+    }
+    //To send itemdata to underlying activity
+    public interface OnItemClickListener{
+        void onItemClick(DocumentSnapshot documentSnapshot, int position);
+    }
+
+    public void setOnItemClickListener(OnItemClickListener listener){
+        this.listener = listener;
     }
 
 }
