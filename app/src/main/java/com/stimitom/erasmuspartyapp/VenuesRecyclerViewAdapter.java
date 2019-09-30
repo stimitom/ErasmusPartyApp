@@ -1,5 +1,7 @@
 package com.stimitom.erasmuspartyapp;
 
+import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -12,6 +14,9 @@ import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
+import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,7 +28,7 @@ public class VenuesRecyclerViewAdapter extends RecyclerView.Adapter<VenuesRecycl
 
     public VenuesRecyclerViewAdapter(List<Venue> venuesList) {
         this.venuesList = venuesList;
-        Log.e(TAG,"" + venuesList.size());
+        Log.e(TAG, "" + venuesList.size());
         this.venuesListFull = new ArrayList<Venue>(venuesList);
     }
 
@@ -50,7 +55,9 @@ public class VenuesRecyclerViewAdapter extends RecyclerView.Adapter<VenuesRecycl
 
 
     /*************************/
-    /** HANDLES THE FILTERING **/
+    /**
+     * HANDLES THE FILTERING
+     **/
     @Override
     public Filter getFilter() {
         return venueFilter;
@@ -64,12 +71,12 @@ public class VenuesRecyclerViewAdapter extends RecyclerView.Adapter<VenuesRecycl
 
             if (constraint == null || constraint.length() == 0) {
                 filteredList.addAll(venuesListFull);
-            }else{
+            } else {
                 String filterPattern = constraint.toString().toLowerCase().trim();
                 //iterate through whole list to find items that match constraint
 
-                for (Venue venue: venuesListFull) {
-                    if (venue.getVenueName().toLowerCase().startsWith(filterPattern)){
+                for (Venue venue : venuesListFull) {
+                    if (venue.getVenueName().toLowerCase().startsWith(filterPattern)) {
                         filteredList.add(venue);
                     }
                 }
@@ -88,15 +95,17 @@ public class VenuesRecyclerViewAdapter extends RecyclerView.Adapter<VenuesRecycl
         }
     };
 
-    /*************************/
-    /** VIEWHOLDER **/
+/*************************/
+    /**
+     * VIEWHOLDER
+     **/
     public static class VenuesViewHolder extends RecyclerView.ViewHolder {
 
         public TextView venueName;
         public ImageView venuePicture;
         public TextView venueRating;
         public TextView numberOfAttendees;
-        public ConstraintLayout constraintLayout;
+        public CardView cardView;
 
         public VenuesViewHolder(View itemView) {
             super(itemView);
@@ -104,8 +113,9 @@ public class VenuesRecyclerViewAdapter extends RecyclerView.Adapter<VenuesRecycl
             this.venuePicture = (ImageView) itemView.findViewById(R.id.venue_picture);
             this.venueRating = (TextView) itemView.findViewById(R.id.venue_rating);
             this.numberOfAttendees = (TextView) itemView.findViewById(R.id.number_of_attendees);
-            constraintLayout = (ConstraintLayout) itemView.findViewById(R.id.constraint_layout_venue);
+            cardView = (CardView) itemView.findViewById(R.id.card_view_venue);
         }
     }
 
 }
+

@@ -3,7 +3,7 @@ package com.stimitom.erasmuspartyapp;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-//List Item of VenuesList
+//List Item of VenuesListActivity
 // implements Parcelable so it can be sent to other activities via an Intent
 
 public class Venue implements Parcelable{

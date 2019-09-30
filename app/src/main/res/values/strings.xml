@@ -10,10 +10,12 @@
     <string name="facebook_application_id">2401198669957036</string>
     <string name="fb_login_protocol_scheme">fb2401198669957036</string>
     <string name="attend">Attend Tonight</string>
+    <string name="dontgo">I don\' go Tonight</string>
     <string name="sort">Sort</string>
     <string name="search">Search</string>
     <string name="username">Username</string>
     <string name="nationality">Nationality</string>
+    <string name="attendtonight">attend tonight</string>
     <string-array name="countries">
         <item>Afghanistan</item>
         <item>Aland Islands</item>
