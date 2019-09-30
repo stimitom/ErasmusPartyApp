@@ -30,18 +30,17 @@ public class UsernameNationalityDialog extends AppCompatDialogFragment implement
     private final String TAG = "UserNationalityDialog";
     private EditText editTextUsername;
     private Spinner spinnerNationality;
-//    private UsernameNationalityListener listener;
     private Context context = VenuesActivity.reloader;
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         LayoutInflater inflater = getActivity().getLayoutInflater();
-        View view = inflater.inflate(R.layout.layout_dialog_name_nationality,null);
+        View view = inflater.inflate(R.layout.layout_dialog_name_nationality, null);
 
         editTextUsername = view.findViewById(R.id.edit_username);
         spinnerNationality = view.findViewById(R.id.spinner_nationality);
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(VenuesActivity.reloader,R.array.countries,android.R.layout.simple_spinner_item);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(VenuesActivity.reloader, R.array.countries, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerNationality.setAdapter(adapter);
         spinnerNationality.setOnItemSelectedListener(this);
@@ -59,8 +58,7 @@ public class UsernameNationalityDialog extends AppCompatDialogFragment implement
                     public void onClick(DialogInterface dialog, int which) {
                         String username = editTextUsername.getText().toString();
                         String nationality = spinnerNationality.getSelectedItem().toString();
-                        saveUserToDatabase(username,nationality);
-//                        listener.transportInputs(username,nationality);
+                        saveUserToDatabase(username, nationality);
                     }
                 });
 
@@ -71,30 +69,22 @@ public class UsernameNationalityDialog extends AppCompatDialogFragment implement
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-
-//        try {
-//            listener = (UsernameNationalityListener) context;
-//        } catch (ClassCastException e) {
-//            throw new ClassCastException(context.toString() + "must implement UsernameNationalityListener");
-//        }
     }
 
     //Handle Spinner
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
     }
+
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
     }
 
 
-
-//    public interface UsernameNationalityListener{
-//        void transportInputs(String username, String nationality);
-//    }
-
     /******************/
-    /** Database methods concerning User*/
+    /**
+     * Database methods concerning User
+     */
 
     private static final String KEY_USERNAME = "username";
     private static final String KEY_NATIONALITY = "nationality";
@@ -102,14 +92,14 @@ public class UsernameNationalityDialog extends AppCompatDialogFragment implement
     private static final String KEY_USERID = "userid";
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-    public void saveUserToDatabase(String inputUsername, String inputNationality){
-        Map<String,Object> user = new HashMap<>();
+    public void saveUserToDatabase(String inputUsername, String inputNationality) {
+        Map<String, Object> user = new HashMap<>();
         String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         String userEmail = FirebaseAuth.getInstance().getCurrentUser().getEmail();
         user.put(KEY_USERID, userId);
-        user.put(KEY_USERNAME,inputUsername);
+        user.put(KEY_USERNAME, inputUsername);
         user.put(KEY_NATIONALITY, inputNationality);
-        user.put(KEY_EMAIL,userEmail);
+        user.put(KEY_EMAIL, userEmail);
 
 
         db.collection("users")
@@ -119,7 +109,7 @@ public class UsernameNationalityDialog extends AppCompatDialogFragment implement
                     @Override
                     public void onSuccess(Void aVoid) {
                         Log.i(TAG, "user upload to database succesful");
-                        Toast.makeText(context,"Have Fun tonight!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, "Have Fun tonight!", Toast.LENGTH_SHORT).show();
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -132,17 +122,17 @@ public class UsernameNationalityDialog extends AppCompatDialogFragment implement
     }
 
     //Retrieve a user's data from the database with the userId of the current user
-    public void loadUserFromDatabase(String userId){
+    public void loadUserFromDatabase(String userId) {
         db.collection("users")
                 .document(userId)
                 .get()
                 .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                     @Override
                     public void onSuccess(DocumentSnapshot documentSnapshot) {
-                        if (documentSnapshot.exists()){
+                        if (documentSnapshot.exists()) {
                             Map<String, Object> user = documentSnapshot.getData();
                             //TODO DO SOmething
-                        }else{
+                        } else {
                             //is executed when user is not registered or logged in
                             Log.e(TAG, "No loadable document exists");
                         }
@@ -152,7 +142,7 @@ public class UsernameNationalityDialog extends AppCompatDialogFragment implement
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Log.e(TAG,"failure on loading userdata", e);
+                        Log.e(TAG, "failure on loading userdata", e);
                     }
                 });
     }

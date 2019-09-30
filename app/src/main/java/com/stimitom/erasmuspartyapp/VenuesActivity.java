@@ -5,10 +5,13 @@ import android.content.Context;
 import android.content.Intent;
 
 import androidx.appcompat.app.AppCompatActivity;
+
 import android.os.Bundle;
+
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.appcompat.widget.Toolbar;
+
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -17,17 +20,22 @@ import android.view.View;
 import android.widget.SearchView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-//implements UsernameNationalityDialog.UsernameNationalityListener
 
-public class VenuesActivity extends AppCompatActivity  {
+public class VenuesActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private RecyclerView.LayoutManager layoutManager;
-    private static List<Venue> venues = new ArrayList<Venue>();
+    private static List<Venue> venues;
     private VenuesRecyclerViewAdapter adapter;
     private String TAG = "VenuesActivity";
     public static Activity reloader;
@@ -39,45 +47,82 @@ public class VenuesActivity extends AppCompatActivity  {
         setContentView(R.layout.activity_venues);
         Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
         setSupportActionBar(myToolbar);
+
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view_venues);
         reloader = this;
 
         /*******************/
         /**Loading a list of venues**/
+        /**IF loads Venues from database normally
+         * else is executed after adding venue
+         */
         Intent intent = getIntent();
-        //If activity is started normally adds List of Venus
-        //If activity is started from AddVenueActivity and a correct Venue was added will create updated list
         if (intent.getBooleanExtra("added_flag", true)) {
-            DatabaseMethods.loadVenues(venues);
-        }else{
+            Log.e(TAG, "on create : IF");
+            venues = new ArrayList<Venue>();
+            loadVenues();
+        } else {
             Log.e(TAG, "onCreate: else");
-            String addedVenue= this.getIntent().getStringExtra("venue_name");
+            String addedVenue = this.getIntent().getStringExtra("venue_name");
 
-            Toast toast = Toast.makeText(getApplicationContext(),addedVenue + " was added to List",Toast.LENGTH_LONG);
+            Toast toast = Toast.makeText(getApplicationContext(), addedVenue + " was added to List", Toast.LENGTH_LONG);
             toast.show();
-
-            DatabaseMethods.loadVenues(venues);
+            loadVenues();
         }
 
         //TODO Ask if user already defined a username in if-condition
-     //   if (intent.getBooleanExtra("sign_up_flag",false)){
-            //Open Dialog for username and nationality input
-         openDialog();
-     //   }
+        //   if (intent.getBooleanExtra("sign_up_flag",false))
+        //Open Dialog for username and nationality input
+        // openDialog();
+    }
 
-        // to improve performance
-        //recyclerView.setHasFixedSize(true);
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.e(TAG, "on Resume is run");
+    }
 
+    /*****************************/
+    /**
+     * Handles the fetching of venues from database
+     * and initializes recyclerview and adapter
+     */
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private CollectionReference venuesRef = db.collection("venues");
+
+    public void loadVenues() {
+        venuesRef.get()
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        venues.clear();
+                        for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                            Venue venue = documentSnapshot.toObject(Venue.class);
+                            venues.add(venue);
+                        }
+                        // Is called here because fetching of data from DB must be finished
+                        buildRecyclerView();
+                        Log.e(TAG, "onSuccessLoadVenues: finished adding to venues");
+                    }
+
+                });
+
+    }
+
+    public void buildRecyclerView() {
         adapter = new VenuesRecyclerViewAdapter(venues);
-        layoutManager = new LinearLayoutManager(this);
+        layoutManager = new LinearLayoutManager(getApplicationContext());
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
+        recyclerView.setHasFixedSize(true);
+        handleItemClicks();
+    }
 
-        //Handling clicks on Venues
+    public void handleItemClicks() {
         recyclerView.addOnItemTouchListener(new RecyclerTouchListener(context, recyclerView, new RecyclerTouchListener.ClickListener() {
             @Override
             public void onClick(View view, int position) {
-                Venue clickedVenue=  venues.get(position);
+                Venue clickedVenue = venues.get(position);
                 Intent intent1 = new Intent(context, AttendPartyActivity.class);
                 intent1.putExtra("clickedVenue", clickedVenue);
                 startActivity(intent1);
@@ -85,25 +130,12 @@ public class VenuesActivity extends AppCompatActivity  {
 
             @Override
             public void onLongClick(View view, int position) {
-
             }
         }));
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        DatabaseMethods.loadVenues(venues);
-        adapter.notifyDataSetChanged();
-    }
-
-    public static List<Venue> getVenues() {
-        return venues;
-    }
-
-
     /********************************/
-    /** ACTION BAR METHODS **/
+    /*** ACTION BAR METHODS **/
 
     //Inflates the menu's XML file to the Action Bar
     //and inflates the searchView in the Action bar
@@ -113,7 +145,7 @@ public class VenuesActivity extends AppCompatActivity  {
         inflater.inflate(R.menu.menu_venues_activity, menu);
 
         MenuItem searchItem = menu.findItem(R.id.action_search);
-        SearchView searchView = (SearchView)searchItem.getActionView();
+        SearchView searchView = (SearchView) searchItem.getActionView();
 
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -151,7 +183,7 @@ public class VenuesActivity extends AppCompatActivity  {
     }
 
     //Sorts venues alphabetically by venue's name
-    public void sortVenuesAlphabetically(){
+    public void sortVenuesAlphabetically() {
         Collections.sort(venues, new Comparator<Venue>() {
             @Override
             public int compare(Venue lhs, Venue rhs) {
@@ -161,29 +193,18 @@ public class VenuesActivity extends AppCompatActivity  {
     }
 
     /**********************************/
-    // Handles the dialog and databaseUpload
-
-
-    public void openDialog(){
+    /**
+     * Handles the dialog and databaseUpload of Inputs
+     */
+    public void openDialog() {
         UsernameNationalityDialog dialog = new UsernameNationalityDialog();
-        dialog.show(getSupportFragmentManager(),"UsernameNationalityDialog");
+        dialog.show(getSupportFragmentManager(), "UsernameNationalityDialog");
     }
-
-//    @Override
-//    public void transportInputs(String username, String nationality) {
-//    }
 
 
 }
 
 /*
-       Intent intent = getIntent();
-        //If activity is started normally adds List of Venus
-        //If activity is started from AddVenueActivity and a correct Venue was added will create updated list
-        if (intent.getBooleanExtra("added_flag", true)) {
-            Log.e(TAG, "onCreate: IF");
-            venues = new ArrayList<Venue>();
-
 //            DatabaseMethods.saveVenueToDatabase(new Venue("Dzempub", R.drawable.bk_logo, "3/5"));
 //            DatabaseMethods.saveVenueToDatabase(new Venue("Taboo", R.drawable.bk_logo, "2/5"));
 //            DatabaseMethods.saveVenueToDatabase(new Venue("Listas", R.drawable.bk_logo, "1/5"));
@@ -201,26 +222,4 @@ public class VenuesActivity extends AppCompatActivity  {
 //            DatabaseMethods.saveVenueToDatabase(new Venue("Red", R.drawable.bk_logo, "1/5"));
 //            DatabaseMethods.saveVenueToDatabase(new Venue("Magenta", R.drawable.bk_logo, "5/5"));
 //            DatabaseMethods.saveVenueToDatabase(new Venue("Some Shithole", R.drawable.bk_logo, "5/5"));
-
-            //stores all Venues from database to ArrayList "venues"
-            DatabaseMethods.loadVenues(venues);
-
-//            venues.add(new Venue("Dzempub", R.drawable.bk_logo, "3/5"));
-//            venues.add(new Venue("Taboo", R.drawable.bk_logo, "2/5"));
-//            venues.add(new Venue("Listas", R.drawable.bk_logo, "1/5"));
-//            venues.add(new Venue("DejaVu", R.drawable.bk_logo, "3/5"));
-//            venues.add(new Venue("Pjazz", R.drawable.bk_logo, "4/5"));
-//            venues.add(new Venue("B20", R.drawable.bk_logo, "3/5"));
-//            venues.add(new Venue("Blue", R.drawable.bk_logo, "3/5"));
-//            venues.add(new Venue("Green", R.drawable.bk_logo, "3/5"));
-//            venues.add(new Venue("Yellow", R.drawable.bk_logo, "3/5"));
-//            venues.add(new Venue("Brown", R.drawable.bk_logo, "2/5"));
-//            venues.add(new Venue("Black", R.drawable.bk_logo, "3/5"));
-//            venues.add(new Venue("Grey", R.drawable.bk_logo, "3/5"));
-//            venues.add(new Venue("White", R.drawable.bk_logo, "4/5"));
-//            venues.add(new Venue("Purple", R.drawable.bk_logo, "3/5"));
-//            venues.add(new Venue("Red", R.drawable.bk_logo, "1/5"));
-//            venues.add(new Venue("Magenta", R.drawable.bk_logo, "5/5"));
-//            venues.add(new Venue("Some Shithole", R.drawable.bk_logo, "5/5"));
-
  */
