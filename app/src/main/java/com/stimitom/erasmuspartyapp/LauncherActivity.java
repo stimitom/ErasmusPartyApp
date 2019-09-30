@@ -48,7 +48,7 @@ public class LauncherActivity extends AppCompatActivity {
     View.OnClickListener startNextActivity = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-             if (isLoggedIn()) runVenuesActivity();
+             if (isLoggedIn()) runVenuesListActivity();
              else runSignInActivity();
         }
     };
@@ -60,7 +60,7 @@ public class LauncherActivity extends AppCompatActivity {
         }
     };
 
-    public void runVenuesActivity(){
+    public void runVenuesListActivity(){
         Intent intent = new Intent(context,VenuesListActivity.class);
         context.startActivity(intent);
     }
@@ -99,7 +99,7 @@ public class LauncherActivity extends AppCompatActivity {
             if (resultCode == RSC_SIGN_IN_OK){
                 //Successfully signed in
                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                //Starts VenueActivitywithFlag
+                //Starts VenueListActivitywithFlag
                 Intent intent = new Intent(context, VenuesListActivity.class);
                 intent.putExtra("sign_up_flag",true);
                 context.startActivity(intent);
