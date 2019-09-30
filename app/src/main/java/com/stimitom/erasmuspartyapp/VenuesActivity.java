@@ -171,9 +171,9 @@ public class VenuesActivity extends AppCompatActivity {
                 Intent intent = new Intent(this, AddVenueActivity.class);
                 startActivity(intent);
                 return true;
-            case R.id.action_sort_alphabetically:
-                sortVenuesAlphabetically();
-                adapter.notifyDataSetChanged();
+//            case R.id.action_sort_alphabetically:
+//                sortVenuesAlphabetically();
+//                adapter.notifyDataSetChanged();
             default:
                 // If we got here, the user's action was not recognized.
                 // Invoke the superclass to handle it.
