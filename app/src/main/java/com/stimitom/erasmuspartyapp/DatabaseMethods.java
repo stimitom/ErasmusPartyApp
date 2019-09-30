@@ -6,11 +6,6 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
-
-import java.util.ArrayList;
-import java.util.List;
 
 import androidx.annotation.NonNull;
 
@@ -38,21 +33,23 @@ public class DatabaseMethods {
                     }
                 });
     }
-
-    //Retrieves all venues from Database and stores them to given List
-    public static void loadVenues(final List<Venue> venuesList) {
-        venuesRef.get()
-                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-                    @Override
-                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                        venuesList.clear();
-                        for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots ){
-                            Venue venue = documentSnapshot.toObject(Venue.class);
-                            venuesList.add(venue);
-                        }
-
-                    }
-
-                });
-    }
 }
+
+//
+//    //Retrieves all venues from Database and stores them to given List
+//    // NOT NEEDED --> TRANSFERRED TO VENUESACTIVITY
+//    public static void loadVenues(final List<Venue> venuesList) {
+//        venuesRef.get()
+//                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+//                    @Override
+//                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+//                        venuesList.clear();
+//                        for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots ){
+//                            Venue venue = documentSnapshot.toObject(Venue.class);
+//                            venuesList.add(venue);
+//                        }
+//
+//                    }
+//
+//                });
+//    }

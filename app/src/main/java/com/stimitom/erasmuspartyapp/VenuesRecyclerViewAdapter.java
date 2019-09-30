@@ -2,6 +2,8 @@ package com.stimitom.erasmuspartyapp;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,12 +17,13 @@ import java.util.List;
 
 
 public class VenuesRecyclerViewAdapter extends RecyclerView.Adapter<VenuesRecyclerViewAdapter.VenuesViewHolder> implements Filterable {
-
+    private final String TAG = "RVAdapter";
     private List<Venue> venuesList;
     private List<Venue> venuesListFull;
 
     public VenuesRecyclerViewAdapter(List<Venue> venuesList) {
         this.venuesList = venuesList;
+        Log.e(TAG,"" + venuesList.size());
         this.venuesListFull = new ArrayList<Venue>(venuesList);
     }
 
