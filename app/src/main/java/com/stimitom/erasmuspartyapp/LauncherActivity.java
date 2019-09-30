@@ -61,7 +61,7 @@ public class LauncherActivity extends AppCompatActivity {
     };
 
     public void runVenuesActivity(){
-        Intent intent = new Intent(context,VenuesActivity.class);
+        Intent intent = new Intent(context,VenuesListActivity.class);
         context.startActivity(intent);
     }
     public void runLab1ExtrasActivity(){
@@ -100,7 +100,7 @@ public class LauncherActivity extends AppCompatActivity {
                 //Successfully signed in
                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                 //Starts VenueActivitywithFlag
-                Intent intent = new Intent(context,VenuesActivity.class);
+                Intent intent = new Intent(context, VenuesListActivity.class);
                 intent.putExtra("sign_up_flag",true);
                 context.startActivity(intent);
             }else{
