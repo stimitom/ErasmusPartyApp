@@ -67,4 +67,11 @@ public class Venue implements Parcelable{
     }
 
     public int getNumberOfAttendees() { return numberOfAttendees; }
+
+    public void increaseNumberOfAttendees(){
+        numberOfAttendees++;
+    }
+    public void decreaseNumberOfAttendees(){
+        numberOfAttendees--;
+    }
 }

@@ -31,4 +31,10 @@ public class AttendPartyActivity extends AppCompatActivity {
         venueRating.setText(venue.getRating());
 
     }
+
+    //If true increases number of attendees by 1 , else decreases by 1
+    public void changeNumberOfAttendees(Venue venue ,Boolean add){
+        if (add){ venue.increaseNumberOfAttendees();}
+        else venue.decreaseNumberOfAttendees();
+    }
 }
