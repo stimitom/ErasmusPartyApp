@@ -17,11 +17,8 @@ import android.widget.Toast;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
-
-import java.util.HashMap;
-import java.util.Map;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatDialogFragment;
@@ -30,7 +27,7 @@ public class UsernameNationalityDialog extends AppCompatDialogFragment implement
     private final String TAG = "UserNationalityDialog";
     private EditText editTextUsername;
     private Spinner spinnerNationality;
-    private Context context = VenuesActivity.reloader;
+    private Context context = VenuesListActivity.reloader;
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -40,7 +37,7 @@ public class UsernameNationalityDialog extends AppCompatDialogFragment implement
 
         editTextUsername = view.findViewById(R.id.edit_username);
         spinnerNationality = view.findViewById(R.id.spinner_nationality);
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(VenuesActivity.reloader, R.array.countries, android.R.layout.simple_spinner_item);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(VenuesListActivity.reloader, R.array.countries, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerNationality.setAdapter(adapter);
         spinnerNationality.setOnItemSelectedListener(this);
@@ -85,25 +82,15 @@ public class UsernameNationalityDialog extends AppCompatDialogFragment implement
     /**
      * Database methods concerning User
      */
-
-    private static final String KEY_USERNAME = "username";
-    private static final String KEY_NATIONALITY = "nationality";
-    private static final String KEY_EMAIL = "email";
-    private static final String KEY_USERID = "userid";
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private CollectionReference usersRef =  db.collection("users");
 
     public void saveUserToDatabase(String inputUsername, String inputNationality) {
-        Map<String, Object> user = new HashMap<>();
         String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         String userEmail = FirebaseAuth.getInstance().getCurrentUser().getEmail();
-        user.put(KEY_USERID, userId);
-        user.put(KEY_USERNAME, inputUsername);
-        user.put(KEY_NATIONALITY, inputNationality);
-        user.put(KEY_EMAIL, userEmail);
 
-
-        db.collection("users")
-                .document(userId)
+        User user = new User(userId,inputUsername,inputNationality,userEmail);
+        usersRef.document(userId)
                 .set(user)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
@@ -115,35 +102,38 @@ public class UsernameNationalityDialog extends AppCompatDialogFragment implement
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Log.e(TAG, "user upload to database FAILES");
+                        Log.e(TAG, "user upload to database FAILED");
                         Log.e(TAG, e.toString());
                     }
                 });
     }
 
-    //Retrieve a user's data from the database with the userId of the current user
-    public void loadUserFromDatabase(String userId) {
-        db.collection("users")
-                .document(userId)
-                .get()
-                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                    @Override
-                    public void onSuccess(DocumentSnapshot documentSnapshot) {
-                        if (documentSnapshot.exists()) {
-                            Map<String, Object> user = documentSnapshot.getData();
-                            //TODO DO SOmething
-                        } else {
-                            //is executed when user is not registered or logged in
-                            Log.e(TAG, "No loadable document exists");
-                        }
-
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.e(TAG, "failure on loading userdata", e);
-                    }
-                });
-    }
 }
+
+/*
+ //Retrieve a user's data from the database with the userId of the current user
+        public void loadUserFromDatabase(String userId) {
+            db.collection("users")
+                    .document(userId)
+                    .get()
+                    .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                        @Override
+                        public void onSuccess(DocumentSnapshot documentSnapshot) {
+                            if (documentSnapshot.exists()) {
+                                Map<String, Object> user = documentSnapshot.getData();
+
+                            } else {
+                                //is executed when user is not registered or logged in
+                                Log.e(TAG, "No loadable document exists");
+                            }
+
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Log.e(TAG, "failure on loading userdata", e);
+                        }
+                    });
+    }
+ */

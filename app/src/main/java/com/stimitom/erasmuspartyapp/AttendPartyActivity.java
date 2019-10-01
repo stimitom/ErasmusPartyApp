@@ -70,10 +70,13 @@ public class AttendPartyActivity extends AppCompatActivity {
 
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private CollectionReference venuesRef = db.collection("venues");
-
+    //private DocumentReference currentUserRef = db.collection("users");
 
     public void updateNumberOfAttendees(String venueName, int count) {
         DocumentReference venueInDB = venuesRef.document(venueName);
         venueInDB.update("numberOfAttendees", count);
+    }
+    public void updateListOfVenuesAttended(Venue venue){
+
     }
 }

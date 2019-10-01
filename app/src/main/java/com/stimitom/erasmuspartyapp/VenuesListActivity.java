@@ -20,6 +20,8 @@ import android.widget.SearchView;
 
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -44,6 +46,7 @@ public class VenuesListActivity extends AppCompatActivity{
         Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
         setSupportActionBar(myToolbar);
         reloader = this;
+        openDialog();
 
         setUpRecyclerView();
     }
@@ -62,6 +65,10 @@ public class VenuesListActivity extends AppCompatActivity{
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);
 
+        attachItemClickListenerToAdapter(adapter);
+
+    }
+    public void attachItemClickListenerToAdapter(VenuesAdapter adapter){
         /**Handles the Clicks**/
         adapter.setOnItemClickListener(new VenuesAdapter.OnItemClickListener() {
             @Override
@@ -116,16 +123,19 @@ public class VenuesListActivity extends AppCompatActivity{
                         .build();
                 VenuesAdapter searchAdapter = new VenuesAdapter(options);
                 if (newText.trim().isEmpty()){
-                    recyclerView.swapAdapter(adapter,true);
-                    adapter.startListening();
                     searchAdapter.stopListening();
+                    recyclerView.setAdapter(adapter);
+                    attachItemClickListenerToAdapter(adapter);
+                    adapter.startListening();
                     return false;
                 }else {
-                    recyclerView.swapAdapter(searchAdapter, true);
-                    searchAdapter.startListening();
                     adapter.stopListening();
+                    recyclerView.setAdapter(searchAdapter);
+                    attachItemClickListenerToAdapter(searchAdapter);
+                    searchAdapter.startListening();
                     return false;
                 }
+
             }
         });
         return true;
@@ -153,5 +163,27 @@ public class VenuesListActivity extends AppCompatActivity{
 
         }
     }
+
+    /**DIALOG**/
+    public void openDialog() {
+        UsernameNationalityDialog dialog = new UsernameNationalityDialog();
+        dialog.show(getSupportFragmentManager(), "UsernameNationalityDialog");
+    }
+
+    /**UserInfo**/
+    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+    //Returns String of ID if user is logged in
+    //null otherwise
+    public String getUserId(){
+        if (user!= null){
+            //User is logged in
+            return user.getUid();
+        }else {
+            //User not logged in
+            return null;
+        }
+    }
+
 
 }
