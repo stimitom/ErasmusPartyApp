@@ -49,7 +49,8 @@ public class VenuesListActivity extends AppCompatActivity{
     }
 
     private void setUpRecyclerView(){
-        Query query = venuesRef.orderBy("numberOfAttendees", Query.Direction.DESCENDING);
+        Query query = venuesRef.orderBy("numberOfAttendees", Query.Direction.DESCENDING)
+                .orderBy("venueName", Query.Direction.ASCENDING);
 
         FirestoreRecyclerOptions<Venue> options = new FirestoreRecyclerOptions.Builder<Venue>()
                 .setQuery(query, Venue.class)
@@ -108,7 +109,7 @@ public class VenuesListActivity extends AppCompatActivity{
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                Query query = venuesRef.orderBy("venueName", Query.Direction.ASCENDING).startAt(newText);
+                Query query = venuesRef.orderBy("venueName", Query.Direction.ASCENDING).startAt(newText.toUpperCase());
 
                 FirestoreRecyclerOptions<Venue> options = new FirestoreRecyclerOptions.Builder<Venue>()
                         .setQuery(query, Venue.class)
