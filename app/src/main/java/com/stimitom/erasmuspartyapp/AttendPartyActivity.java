@@ -19,7 +19,7 @@ public class AttendPartyActivity extends AppCompatActivity {
     private TextView venueName;
     private TextView venueRating;
     private ImageView venuePicture;
-    private TextView numberOfAttendees;
+    private TextView numberOfAttendeesView;
     private Button attendButton;
     private Boolean clicked = false;
 
@@ -32,30 +32,35 @@ public class AttendPartyActivity extends AppCompatActivity {
         venueRating = (TextView) findViewById(R.id.venue_rating_tv);
         venuePicture = (ImageView) findViewById(R.id.venue_picture_iv);
         attendButton = (Button) findViewById(R.id.attend_button);
-        numberOfAttendees = (TextView) findViewById(R.id.number_of_attendees1);
+        numberOfAttendeesView = (TextView) findViewById(R.id.number_of_attendees1);
 
 
         final Venue venue = getIntent().getParcelableExtra("clickedVenue");
         final String venue_name = venue.getVenueName();
-        final int number_of_attendees = venue.getNumberOfAttendees();
         venueName.setText(venue_name);
         venuePicture.setImageResource(venue.getImageId());
         venueRating.setText(venue.getRating());
-        numberOfAttendees.setText(Integer.toString(number_of_attendees));
+        numberOfAttendeesView.setText(Integer.toString(venue.getNumberOfAttendees()));
 
 
         attendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (clicked == false) {
+                    venue.increaseNumberOfAttendees();
+                    int updatedCount = venue.getNumberOfAttendees();
+                    numberOfAttendeesView.setText(Integer.toString(updatedCount));
                     attendButton.setText(R.string.dontgo);
                     attendButton.setBackgroundColor(Color.RED);
-                    updateNumberOfAttendees(venue_name, number_of_attendees, true);
+                    updateNumberOfAttendees(venue_name, updatedCount);
                     clicked = true;
                 } else {
+                    venue.decreaseNumberOfAttendees();
+                    int updatedCount = venue.getNumberOfAttendees();
+                    numberOfAttendeesView.setText(Integer.toString(updatedCount));
                     attendButton.setText(R.string.attend);
                     attendButton.setBackgroundColor(Color.GREEN);
-                    updateNumberOfAttendees(venue_name, number_of_attendees, false);
+                    updateNumberOfAttendees(venue_name, updatedCount);
                     clicked = false;
                 }
             }
@@ -66,10 +71,9 @@ public class AttendPartyActivity extends AppCompatActivity {
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private CollectionReference venuesRef = db.collection("venues");
 
-    //If true increases number of attendees by 1 , else decreases by 1
-    public void updateNumberOfAttendees(String venueName, int count, Boolean add) {
+
+    public void updateNumberOfAttendees(String venueName, int count) {
         DocumentReference venueInDB = venuesRef.document(venueName);
-        if (add) venueInDB.update("numberOfAttendees", ++count);
-        else venueInDB.update("numberOfAttendees", --count);
+        venueInDB.update("numberOfAttendees", count);
     }
 }
