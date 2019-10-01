@@ -73,11 +73,9 @@ public class VenuesListActivity extends AppCompatActivity{
         adapter.setOnItemClickListener(new VenuesAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(DocumentSnapshot documentSnapshot, int position) {
-                String path = documentSnapshot.getReference().getPath();
                 Venue clickedVenue = documentSnapshot.toObject(Venue.class);
                 Intent intent = new Intent(context, AttendPartyActivity.class);
                 intent.putExtra("clickedVenue", clickedVenue);
-                intent.putExtra("documentPath", path);
                 startActivity(intent);
             }
         });
@@ -170,20 +168,7 @@ public class VenuesListActivity extends AppCompatActivity{
         dialog.show(getSupportFragmentManager(), "UsernameNationalityDialog");
     }
 
-    /**UserInfo**/
-    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
-    //Returns String of ID if user is logged in
-    //null otherwise
-    public String getUserId(){
-        if (user!= null){
-            //User is logged in
-            return user.getUid();
-        }else {
-            //User not logged in
-            return null;
-        }
-    }
 
 
 }
