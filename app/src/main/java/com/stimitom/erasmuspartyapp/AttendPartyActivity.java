@@ -17,7 +17,6 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -45,6 +44,8 @@ public class AttendPartyActivity extends AppCompatActivity {
     private String venueRating;
     private int venueImageId;
     private int venueNumberOfAttendees;
+    private List<String> venueGuestList;
+    private String currentUserId;
 
     private long usersCurrentVenueCount = 0;
     private List<Venue> usersCurrentAttendedVenuesList = new ArrayList<>();
@@ -71,9 +72,10 @@ public class AttendPartyActivity extends AppCompatActivity {
 
 
         if (user != null){
+            currentUserId = getUserId();
             Log.d(TAG, "onCreate: user is logged in, userRef defined");
              userRef = db.collection("users")
-                    .document(getUserId());
+                    .document(currentUserId);
         }else{
             Log.d(TAG, "onCreate: user is not logged in, should be sent to LOGIN");
             //TODO send to login
@@ -89,6 +91,7 @@ public class AttendPartyActivity extends AppCompatActivity {
                         Log.d(TAG, "onClick: update of Venue and User will be performed");
                         // Update db venueSide
                         venueRef.update("numberOfAttendees",++venueNumberOfAttendees);
+                        addUserToVenueGuestList(currentUserId);
                         //update db userSide
                         addToUserListOfAttendedVenues(venue);
                         attendButton.setText(R.string.dontgo);
@@ -98,6 +101,7 @@ public class AttendPartyActivity extends AppCompatActivity {
                     } else {
                         //update db venueSide
                         venueRef.update("numberOfAttendees", --venueNumberOfAttendees);
+                        deleteUserFromVenueGuestList(currentUserId);
                         //update db userSide
                         deleteFromUserListOfAttendedVenues(venue);
                         attendButton.setText(R.string.attend);
@@ -160,6 +164,7 @@ public class AttendPartyActivity extends AppCompatActivity {
                         venueRating = venue.getRating();
                         venueImageId = venue.getImageId();
                         venueNumberOfAttendees = venue.getNumberOfAttendees();
+                        venueGuestList = venue.getGuestList();
 
                         venueName_TextView.setText(venueName);
                         venuePicture_ImageView.setImageResource(venueImageId);
@@ -177,6 +182,8 @@ public class AttendPartyActivity extends AppCompatActivity {
 
     /***************************/
     /** UPDATE DATABASE **/
+
+    /**User Side **/
 
     public void addToUserListOfAttendedVenues(Venue venue){
         usersCurrentAttendedVenuesList.add(venue);
@@ -205,4 +212,18 @@ public class AttendPartyActivity extends AppCompatActivity {
         userRef.update("venuesattending", usersCurrentAttendedVenuesList);
         userRef.update("venuecount", usersCurrentVenueCount);
     }
+
+    /** Venue Side **/
+
+    public void addUserToVenueGuestList(String userId){
+        venueGuestList.add(userId);
+        venueRef.update("GuestList", venueGuestList);
+    }
+
+    public void deleteUserFromVenueGuestList(String userId){
+        venueGuestList.remove(userId);
+        venueRef.update("GuestList", venueGuestList);
+    }
+
+
 }

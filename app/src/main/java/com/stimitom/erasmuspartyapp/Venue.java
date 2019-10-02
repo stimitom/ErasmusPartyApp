@@ -3,6 +3,9 @@ package com.stimitom.erasmuspartyapp;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.ArrayList;
+import java.util.List;
+
 //List Item of VenuesListActivity
 // implements Parcelable so it can be sent to other activities via an Intent
 
@@ -11,6 +14,7 @@ public class Venue implements Parcelable{
     private int imageId;
     private String rating;
     private int numberOfAttendees;
+    private List<String> guestList;
 
     //Default constructor needed for database upload
     public Venue(){}
@@ -20,6 +24,7 @@ public class Venue implements Parcelable{
         this.imageId = imageId;
         this.rating = rating;
         numberOfAttendees = 0;
+        guestList = new ArrayList<String>();
     }
 
     protected Venue(Parcel in) {
@@ -27,6 +32,7 @@ public class Venue implements Parcelable{
         imageId = in.readInt();
         rating = in.readString();
         numberOfAttendees = in.readInt();
+        guestList = in.readArrayList(ClassLoader.getSystemClassLoader());
     }
 
     public static final Creator<Venue> CREATOR = new Creator<Venue>() {
@@ -52,6 +58,7 @@ public class Venue implements Parcelable{
         dest.writeInt(imageId);
         dest.writeString(rating);
         dest.writeInt(numberOfAttendees);
+        dest.writeList(guestList);
     }
 
     public String getVenueName() {
@@ -68,11 +75,11 @@ public class Venue implements Parcelable{
 
     public int getNumberOfAttendees() { return numberOfAttendees; }
 
-    public void increaseNumberOfAttendees(){
-        numberOfAttendees++;
+    public List<String> getGuestList() {
+        return guestList;
     }
-    public void decreaseNumberOfAttendees(){
-        numberOfAttendees--;
+    public void setGuestList(List<String> guestList) {
+        this.guestList = guestList;
     }
 
 }
