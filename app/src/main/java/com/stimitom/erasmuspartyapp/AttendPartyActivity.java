@@ -70,7 +70,6 @@ public class AttendPartyActivity extends AppCompatActivity {
         venueRef = db.collection("venues").document(venue_name);
         getVenueData();
 
-
         if (user != null){
             currentUserId = getUserId();
             Log.d(TAG, "onCreate: user is logged in, userRef defined");
@@ -125,6 +124,7 @@ public class AttendPartyActivity extends AppCompatActivity {
     public String getUserId(){
         if (user!= null){
             //User is logged in
+            Log.e(TAG, "getUserId: "+ user.getUid() );
             return user.getUid();
         }else {
             //User not logged in
@@ -216,6 +216,7 @@ public class AttendPartyActivity extends AppCompatActivity {
     /** Venue Side **/
 
     public void addUserToVenueGuestList(String userId){
+        venueGuestList = new ArrayList<String>();
         venueGuestList.add(userId);
         venueRef.update("GuestList", venueGuestList);
     }
