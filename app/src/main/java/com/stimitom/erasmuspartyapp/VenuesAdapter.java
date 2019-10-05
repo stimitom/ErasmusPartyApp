@@ -1,5 +1,6 @@
 package com.stimitom.erasmuspartyapp;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,8 +10,16 @@ import android.widget.TextView;
 
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
+
+import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
@@ -19,8 +28,11 @@ import androidx.recyclerview.widget.RecyclerView;
 public class VenuesAdapter extends FirestoreRecyclerAdapter<Venue, VenuesAdapter.VenuesViewHolder> {
     private final String TAG = "Adapter";
     private OnItemClickListener listener;
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+    private DocumentReference venueRef;
 
-    public VenuesAdapter(@NonNull FirestoreRecyclerOptions<Venue> options){
+    public VenuesAdapter(@NonNull FirestoreRecyclerOptions<Venue> options) {
         super(options);
     }
 
@@ -32,15 +44,58 @@ public class VenuesAdapter extends FirestoreRecyclerAdapter<Venue, VenuesAdapter
     }
 
     @Override
-    public void onBindViewHolder(VenuesViewHolder venuesViewHolder, int position,Venue venue) {
+    public void onBindViewHolder(final VenuesViewHolder venuesViewHolder, int position, final Venue venue) {
         venuesViewHolder.venueName.setText(venue.getVenueName());
         venuesViewHolder.venuePicture.setImageResource(venue.getImageId());
         venuesViewHolder.venueRating.setText(venue.getRating());
-        venuesViewHolder.numberOfAttendees.setText(venue.getNumberOfAttendees() +"\npeople attend tonight");
+        venuesViewHolder.numberOfAttendees.setText(venue.getNumberOfAttendees() + "\npeople coming tonight");
+
+        //Make going button visible on attended Venues
+        if (user != null) {
+            final String currentUserId = getUserId();
+            venueRef = db.collection("venues").document(venue.getVenueName());
+            venueRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                @Override
+                public void onSuccess(DocumentSnapshot documentSnapshot) {
+                    if (documentSnapshot.contains("GuestList")) {
+                        Log.d(TAG, "onSuccess: docSnapshot contains guestlist");
+                        List<String> usersAttending = (List<String>) documentSnapshot.get("GuestList");
+                        if (usersAttending!= null) {
+                            if (usersAttending.contains(currentUserId)) {
+                                venuesViewHolder.goingBanner.setVisibility(View.VISIBLE);
+                                Log.d(TAG, "onSuccess: venuesbanner set to visble");
+                            } else Log.d(TAG, "onSuccess: venuesbanner does not contain UserID");
+                        }
+                    }
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    Log.e(TAG, "onFailure: retrieveing venue data failed" + e.toString());
+                }
+            });
+        }
+
     }
 
+    //Returns String of ID if user is logged in
+    //null otherwise
+    public String getUserId() {
+        if (user != null) {
+            //User is logged in
+            Log.e(TAG, "getUserId: " + user.getUid());
+            return user.getUid();
+        } else {
+            //User not logged in
+            return null;
+        }
+    }
+
+
     /*************************/
-    /**VIEWHOLDER**/
+    /**
+     * VIEWHOLDER
+     **/
 
     class VenuesViewHolder extends RecyclerView.ViewHolder {
 
@@ -49,6 +104,7 @@ public class VenuesAdapter extends FirestoreRecyclerAdapter<Venue, VenuesAdapter
         public TextView venueRating;
         public TextView numberOfAttendees;
         public CardView cardView;
+        public ImageView goingBanner;
 
         public VenuesViewHolder(View itemView) {
             super(itemView);
@@ -56,6 +112,7 @@ public class VenuesAdapter extends FirestoreRecyclerAdapter<Venue, VenuesAdapter
             this.venuePicture = (ImageView) itemView.findViewById(R.id.venue_picture);
             this.venueRating = (TextView) itemView.findViewById(R.id.venue_rating);
             this.numberOfAttendees = (TextView) itemView.findViewById(R.id.number_of_attendees);
+            this.goingBanner = (ImageView) itemView.findViewById(R.id.going_banner);
             cardView = (CardView) itemView.findViewById(R.id.card_view_venue);
 
             itemView.setOnClickListener(new View.OnClickListener() {
@@ -63,19 +120,20 @@ public class VenuesAdapter extends FirestoreRecyclerAdapter<Venue, VenuesAdapter
                 public void onClick(View v) {
                     int position = getAdapterPosition();
                     // if item gets remove but gets clicked during remove animation the following will not be called
-                    if (position != RecyclerView.NO_POSITION && listener!= null) {
+                    if (position != RecyclerView.NO_POSITION && listener != null) {
                         listener.onItemClick(getSnapshots().getSnapshot(position), position);
                     }
                 }
             });
         }
     }
+
     //To send itemdata to underlying activity
-    public interface OnItemClickListener{
+    public interface OnItemClickListener {
         void onItemClick(DocumentSnapshot documentSnapshot, int position);
     }
 
-    public void setOnItemClickListener(OnItemClickListener listener){
+    public void setOnItemClickListener(OnItemClickListener listener) {
         this.listener = listener;
     }
 

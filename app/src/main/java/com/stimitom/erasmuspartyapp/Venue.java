@@ -16,6 +16,7 @@ public class Venue implements Parcelable{
     private int numberOfAttendees;
     private List<String> guestList;
 
+
     //Default constructor needed for database upload
     public Venue(){}
 
@@ -78,8 +79,6 @@ public class Venue implements Parcelable{
     public List<String> getGuestList() {
         return guestList;
     }
-    public void setGuestList(List<String> guestList) {
-        this.guestList = guestList;
-    }
+
 
 }
