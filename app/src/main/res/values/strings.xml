@@ -14,6 +14,8 @@
     <string name="sort">Sort</string>
     <string name="search">Search</string>
     <string name="username">Username</string>
+    <string name="password">Password</string>
+    <string name="login">Login</string>
     <string name="nationality">Nationality</string>
     <string-array name="countries">
         <item>Afghanistan</item>
