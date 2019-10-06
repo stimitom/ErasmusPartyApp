@@ -57,9 +57,9 @@ public class VenuesAdapter extends FirestoreRecyclerAdapter<Venue, VenuesAdapter
             venueRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                 @Override
                 public void onSuccess(DocumentSnapshot documentSnapshot) {
-                    if (documentSnapshot.contains("GuestList")) {
+                    if (documentSnapshot.contains("guestList")) {
                         Log.d(TAG, "onSuccess: docSnapshot contains guestlist");
-                        List<String> usersAttending = (List<String>) documentSnapshot.get("GuestList");
+                        List<String> usersAttending = (List<String>) documentSnapshot.get("guestList");
                         if (usersAttending!= null) {
                             if (usersAttending.contains(currentUserId)) {
                                 venuesViewHolder.goingBanner.setVisibility(View.VISIBLE);
