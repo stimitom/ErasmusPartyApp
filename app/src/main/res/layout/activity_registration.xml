@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/activity_registration"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/beer_photo"
+    android:paddingHorizontal="16dp">
+
+    <LinearLayout
+        android:paddingTop="230dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <EditText
+            android:textColor="#fff"
+            android:textColorHint="#fff"
+            android:background="@drawable/edittextstyle"
+            android:layout_width="300dp"
+            android:layout_height="60dp"
+            android:layout_gravity="center"
+            android:hint="@string/username" />
+        <EditText
+            android:textColor="#fff"
+            android:textColorHint="#fff"
+            android:background="@drawable/edittextstyle"
+            android:layout_marginTop="10dp"
+            android:layout_width="300dp"
+            android:layout_height="60dp"
+            android:layout_gravity="center"
+            android:hint="@string/password" />
+
+        <Button
+            android:layout_height="60dp"
+            android:layout_width="match_parent"
+            android:layout_marginTop="30dp"
+            android:background="@drawable/buttonstyleselector"
+            android:gravity="center"
+            android:text="@string/login" />
+    </LinearLayout>
+
+
+</RelativeLayout>
+
