@@ -1,5 +1,6 @@
 package com.stimitom.erasmuspartyapp;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -16,20 +17,28 @@ import android.view.MenuItem;
 import android.widget.SearchView;
 
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 
-public class VenuesListActivity extends AppCompatActivity{
+public class VenuesListActivity extends AppCompatActivity {
     private final String TAG = "VenuesListActivity";
     private Context context = this;
-    public  static Activity reloader;
+    public static Activity reloader;
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private CollectionReference venuesRef = db.collection("venues");
-    private  RecyclerView recyclerView;
+    private RecyclerView recyclerView;
+    private FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+    DocumentReference userRef;
 
     private VenuesAdapter adapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,9 +46,10 @@ public class VenuesListActivity extends AppCompatActivity{
         Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
         setSupportActionBar(myToolbar);
         reloader = this;
-        openDialog();
 
+        checkIfDialogNeeded();
 
+//
 //
 //            DatabaseMethods.saveVenueToDatabase(new Venue("Dzempub", R.drawable.bk_logo, "3/5"));
 //            DatabaseMethods.saveVenueToDatabase(new Venue("Taboo", R.drawable.bk_logo, "2/5"));
@@ -62,7 +72,7 @@ public class VenuesListActivity extends AppCompatActivity{
         setUpRecyclerView();
     }
 
-    private void setUpRecyclerView(){
+    private void setUpRecyclerView() {
         Query query = venuesRef.orderBy("numberOfAttendees", Query.Direction.DESCENDING)
                 .orderBy("venueName", Query.Direction.ASCENDING);
 
@@ -79,7 +89,8 @@ public class VenuesListActivity extends AppCompatActivity{
         attachItemClickListenerToAdapter(adapter);
 
     }
-    public void attachItemClickListenerToAdapter(VenuesAdapter adapter){
+
+    public void attachItemClickListenerToAdapter(VenuesAdapter adapter) {
         /**Handles the Clicks**/
         adapter.setOnItemClickListener(new VenuesAdapter.OnItemClickListener() {
             @Override
@@ -131,13 +142,13 @@ public class VenuesListActivity extends AppCompatActivity{
                         .setQuery(query, Venue.class)
                         .build();
                 VenuesAdapter searchAdapter = new VenuesAdapter(options);
-                if (newText.trim().isEmpty()){
+                if (newText.trim().isEmpty()) {
                     searchAdapter.stopListening();
                     recyclerView.setAdapter(adapter);
                     attachItemClickListenerToAdapter(adapter);
                     adapter.startListening();
                     return false;
-                }else {
+                } else {
                     adapter.stopListening();
                     recyclerView.setAdapter(searchAdapter);
                     attachItemClickListenerToAdapter(searchAdapter);
@@ -173,13 +184,50 @@ public class VenuesListActivity extends AppCompatActivity{
         }
     }
 
-    /**DIALOG**/
+    /**
+     * DIALOG
+     **/
     public void openDialog() {
         UsernameNationalityDialog dialog = new UsernameNationalityDialog();
         dialog.show(getSupportFragmentManager(), "UsernameNationalityDialog");
     }
 
 
+    /**
+     * UserInfo
+     **/
+    //Returns String of ID if user is logged in
+    //null otherwise
+    public String getUserId() {
+        if (user != null) {
+            //User is logged in
+            Log.d(TAG, "getUserId: " + user.getUid());
+            return user.getUid();
+        } else {
+            //User not logged in
+            return null;
+        }
+    }
+
+    public void checkIfDialogNeeded() {
+        userRef = db.collection("users").document(getUserId());
+        userRef.get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        User user = documentSnapshot.toObject(User.class);
+                        if (user.getUsername() == null){
+                            openDialog();
+                        }
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.e(TAG, "onFailure: Could not fetch UserData" + e.toString());
+                    }
+                });
+    }
 
 
 }

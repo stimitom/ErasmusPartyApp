@@ -34,7 +34,7 @@ public class AttendPartyActivity extends AppCompatActivity {
     private TextView venueNumberOfAttendees_TextView;
 
     private Button attendButton;
-    private Boolean clicked;
+    private Boolean ButtonIsRed;
 
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
@@ -105,8 +105,8 @@ public class AttendPartyActivity extends AppCompatActivity {
         attendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (usersCurrentVenueCount < 3) {
-                    if (!clicked) {
+                if (usersCurrentVenueCount < 3 || ButtonIsRed) {
+                    if (!ButtonIsRed) {
                         Log.d(TAG, "onClick: update of Venue and User will be performed");
                         // Update db venueSide
                         venueRef.update("numberOfAttendees", ++venueNumberOfAttendees);
@@ -116,7 +116,7 @@ public class AttendPartyActivity extends AppCompatActivity {
                         attendButton.setText(R.string.dontgo);
                         attendButton.setBackgroundColor(Color.RED);
                         venueNumberOfAttendees_TextView.setText(Integer.toString(venueNumberOfAttendees));
-                        clicked = true;
+                        ButtonIsRed = true;
                     } else {
                         //update db venueSide
                         venueRef.update("numberOfAttendees", --venueNumberOfAttendees);
@@ -126,7 +126,7 @@ public class AttendPartyActivity extends AppCompatActivity {
                         attendButton.setText(R.string.attend);
                         attendButton.setBackgroundColor(Color.GREEN);
                         venueNumberOfAttendees_TextView.setText(Integer.toString(venueNumberOfAttendees));
-                        clicked = false;
+                        ButtonIsRed = false;
                     }
                 } else {
                     Toast.makeText(context, "Sorry, you can only attend 3 venues per night!", Toast.LENGTH_SHORT).show();
@@ -180,18 +180,18 @@ public class AttendPartyActivity extends AppCompatActivity {
             Log.e(TAG, "onCreate: venueGuestList not null");
             if (venueGuestList.contains(currentUserId)) {
                 Log.e(TAG, "setButtonColorAndText: venue Guest list contains currentuserID");
-                clicked = true;
+                ButtonIsRed = true;
                 attendButton.setBackgroundColor(Color.RED);
                 attendButton.setText(R.string.dontgo);
             } else {
                 Log.e(TAG, "setButtonColorAndText: doesnt contain that shit");
-                clicked = false;
+                ButtonIsRed = false;
                 attendButton.setText(R.string.attend);
                 attendButton.setBackgroundColor(Color.GREEN);
             }
         } else {
             Log.e(TAG, "onCreate: venueGuestList == null");
-            clicked = false;
+            ButtonIsRed = false;
             attendButton.setText(R.string.attend);
             attendButton.setBackgroundColor(Color.GREEN);
         }
