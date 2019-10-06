@@ -77,6 +77,29 @@ public class AttendPartyActivity extends AppCompatActivity {
             //TODO send to login
         }
 
+        readVenueData(new GetDataListener() {
+            @Override
+            public void onSuccess(DocumentSnapshot snapshot) {
+                Venue venue = snapshot.toObject(Venue.class);
+                venueGuestList = new ArrayList<String>();
+                if (venue.getGuestList() != null) venueGuestList.addAll(venue.getGuestList());
+                venueName = venue.getVenueName();
+                venueRating = venue.getRating();
+                venueImageId = venue.getImageId();
+                venueNumberOfAttendees = venue.getNumberOfAttendees();
+
+                venueName_TextView.setText(venueName);
+                venuePicture_ImageView.setImageResource(venueImageId);
+                venueRating_TextView.setText(venueRating);
+                venueNumberOfAttendees_TextView.setText(Integer.toString(venueNumberOfAttendees));
+
+                //Called here to ensure sequential execution
+                getUserData();
+                setButtonColorAndText();
+            }
+        });
+
+
 
 
         attendButton.setOnClickListener(new View.OnClickListener() {
@@ -184,9 +207,11 @@ public class AttendPartyActivity extends AppCompatActivity {
                 .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                     @Override
                     public void onSuccess(DocumentSnapshot documentSnapshot) {
+
                         Venue venue = documentSnapshot.toObject(Venue.class);
                         venueGuestList = new ArrayList<String>();
-                        if (venue.getGuestList() != null) venueGuestList.addAll(venue.getGuestList());
+                        if (venue.getGuestList() != null)
+                            venueGuestList.addAll(venue.getGuestList());
                         venueName = venue.getVenueName();
                         venueRating = venue.getRating();
                         venueImageId = venue.getImageId();
@@ -197,8 +222,6 @@ public class AttendPartyActivity extends AppCompatActivity {
                         venueRating_TextView.setText(venueRating);
                         venueNumberOfAttendees_TextView.setText(Integer.toString(venueNumberOfAttendees));
 
-                        getUserData();
-                        setButtonColorAndText();
                     }
                 }).addOnFailureListener(new OnFailureListener() {
             @Override
@@ -207,6 +230,26 @@ public class AttendPartyActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    public interface GetDataListener {
+        void onSuccess(DocumentSnapshot snapshot);
+    }
+
+    public void readVenueData(final GetDataListener listener) {
+        venueRef.get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        listener.onSuccess(documentSnapshot);
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.e(TAG, "onFailure: Could not fetch VenueData" + e.toString());
+                    }
+                });
     }
 
     /***************************/
@@ -251,12 +294,12 @@ public class AttendPartyActivity extends AppCompatActivity {
     public void addUserToVenueGuestList(String userId) {
         venueGuestList = new ArrayList<String>();
         venueGuestList.add(userId);
-        venueRef.update("GuestList", venueGuestList);
+        venueRef.update("guestList", venueGuestList);
     }
 
     public void deleteUserFromVenueGuestList(String userId) {
         venueGuestList.remove(userId);
-        venueRef.update("GuestList", venueGuestList);
+        venueRef.update("guestList", venueGuestList);
     }
 
 

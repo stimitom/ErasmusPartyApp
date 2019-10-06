@@ -14,7 +14,7 @@ public class Venue implements Parcelable{
     private int imageId;
     private String rating;
     private int numberOfAttendees;
-    private List<String> guestList;
+    private ArrayList<String> guestList;
 
 
     //Default constructor needed for database upload
@@ -33,7 +33,8 @@ public class Venue implements Parcelable{
         imageId = in.readInt();
         rating = in.readString();
         numberOfAttendees = in.readInt();
-        guestList = in.readArrayList(ClassLoader.getSystemClassLoader());
+        guestList = new ArrayList<String>();
+        in.readList(guestList,null);
     }
 
     public static final Creator<Venue> CREATOR = new Creator<Venue>() {
@@ -59,7 +60,7 @@ public class Venue implements Parcelable{
         dest.writeInt(imageId);
         dest.writeString(rating);
         dest.writeInt(numberOfAttendees);
-        dest.writeList(guestList);
+        dest.writeStringList(guestList);
     }
 
     public String getVenueName() {
@@ -79,6 +80,4 @@ public class Venue implements Parcelable{
     public List<String> getGuestList() {
         return guestList;
     }
-
-
 }
