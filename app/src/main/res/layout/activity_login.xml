@@ -22,17 +22,6 @@
             android:hint="@string/email" />
 
         <EditText
-            android:layout_marginTop="10dp"
-            android:id="@+id/username_edit_text"
-            android:textColor="#fff"
-            android:textColorHint="#fff"
-            android:background="@drawable/edittextstylelogin"
-            android:layout_width="300dp"
-            android:layout_height="60dp"
-            android:layout_gravity="center"
-            android:hint="@string/username"/>
-
-        <EditText
             android:id="@+id/password_edit_text"
             android:textColor="#fff"
             android:textColorHint="#fff"
@@ -43,37 +32,31 @@
             android:layout_gravity="center"
             android:hint="@string/password" />
 
-        <EditText
-            android:id="@+id/repeat_password_edit_text"
-            android:textColor="#fff"
-            android:textColorHint="#fff"
-            android:background="@drawable/edittextstylelogin"
-            android:layout_marginTop="10dp"
-            android:layout_width="300dp"
-            android:layout_height="60dp"
-            android:layout_gravity="center"
-            android:hint="@string/repeat_password" />
-
         <Button
-            android:id="@+id/sign_up_button"
+            android:id="@+id/generic_login_button"
             android:layout_height="60dp"
             android:layout_width="match_parent"
             android:layout_marginTop="30dp"
             android:background="@drawable/buttonstyleselector"
             android:gravity="center"
-            android:text="@string/sign_up" />
+            android:text="@string/login" />
+
+        <com.facebook.login.widget.LoginButton
+            android:id="@+id/facebook_login_button"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_marginTop="20dp"/>
 
         <Button
-            android:id="@+id/already_registered_button"
+            android:id="@+id/not_registered_yet_button"
             android:background="?android:attr/selectableItemBackground"
             android:layout_marginTop="20dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/already_registered"
+            android:text="@string/not_registered_yet"
             android:textAllCaps="false"
             android:textColor="#fff"
             android:layout_gravity="center"/>
-
 
     </LinearLayout>
 
@@ -84,6 +67,7 @@
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
         />
+
 
 </RelativeLayout>
 
