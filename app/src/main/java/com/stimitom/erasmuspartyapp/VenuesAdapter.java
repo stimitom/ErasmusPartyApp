@@ -31,7 +31,7 @@ public class VenuesAdapter extends FirestoreRecyclerAdapter<Venue, VenuesAdapter
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     private DocumentReference venueRef;
-
+    private String currentUserId = getUserId();
     public VenuesAdapter(@NonNull FirestoreRecyclerOptions<Venue> options) {
         super(options);
     }
@@ -45,26 +45,24 @@ public class VenuesAdapter extends FirestoreRecyclerAdapter<Venue, VenuesAdapter
 
     @Override
     public void onBindViewHolder(final VenuesViewHolder venuesViewHolder, int position, final Venue venue) {
+        venuesViewHolder.goingBanner.setVisibility(View.INVISIBLE);
         venuesViewHolder.venueName.setText(venue.getVenueName());
         venuesViewHolder.venuePicture.setImageResource(venue.getImageId());
         venuesViewHolder.venueRating.setText(venue.getRating());
-        venuesViewHolder.numberOfAttendees.setText(venue.getNumberOfAttendees() + "\npeople coming tonight");
+        venuesViewHolder.numberOfAttendees.setText(""+venue.getNumberOfAttendees());
 
         //Make going button visible on attended Venues
         if (user != null) {
-            final String currentUserId = getUserId();
             venueRef = db.collection("venues").document(venue.getVenueName());
             venueRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                 @Override
                 public void onSuccess(DocumentSnapshot documentSnapshot) {
                     if (documentSnapshot.contains("guestList")) {
-                        Log.d(TAG, "onSuccess: docSnapshot contains guestlist");
                         List<String> usersAttending = (List<String>) documentSnapshot.get("guestList");
                         if (usersAttending!= null) {
                             if (usersAttending.contains(currentUserId)) {
                                 venuesViewHolder.goingBanner.setVisibility(View.VISIBLE);
-                                Log.d(TAG, "onSuccess: venuesbanner set to visble");
-                            } else Log.d(TAG, "onSuccess: venuesbanner does not contain UserID");
+                            }
                         }
                     }
                 }

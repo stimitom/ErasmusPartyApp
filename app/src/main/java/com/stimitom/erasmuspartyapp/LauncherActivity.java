@@ -10,16 +10,7 @@ import androidx.appcompat.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-
-import com.facebook.AccessToken;
-import com.firebase.ui.auth.AuthUI;
-import com.firebase.ui.auth.IdpResponse;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-
-import java.util.Arrays;
-import java.util.List;
-
 
 public class LauncherActivity extends AppCompatActivity {
     String TAG = "LauncherActivity";
@@ -74,50 +65,9 @@ public class LauncherActivity extends AppCompatActivity {
         context.startActivity(intent);
     }
 
-
-
-    /*********************/
-    //Handling Registration
-    // Authentication Providers
-
-    private int RQC_SIGN_IN = 1;
-    private int RSC_SIGN_IN_OK = 2;
-
-    List<AuthUI.IdpConfig> providers = Arrays.asList(
-            new AuthUI.IdpConfig.EmailBuilder().build(),
-            new AuthUI.IdpConfig.FacebookBuilder().build()
-    );
-
-
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (requestCode == RQC_SIGN_IN){
-            IdpResponse response = IdpResponse.fromResultIntent(data);
-
-            if (resultCode == RSC_SIGN_IN_OK){
-                //Successfully signed in
-                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                //Starts VenueListActivitywithFlag
-                Intent intent = new Intent(context, VenuesListActivity.class);
-                intent.putExtra("sign_up_flag",true);
-                context.startActivity(intent);
-            }else{
-                // Sign in failed. If response is null the user canceled the
-                // sign-in flow using the back button. Otherwise check
-                // response.getError().getErrorCode()
-                Log.e(TAG,"Sign In error: Check response.getError().getErrorCode()");
-            }
-        }
-    }
-
     public boolean isLoggedIn() {
-        boolean loggedIn = false;
-        AccessToken accessToken = AccessToken.getCurrentAccessToken();
-        if (accessToken != null) loggedIn = true;
-        return loggedIn;
+        //Returns true if a user is Logged in , false otherwise
+        return FirebaseAuth.getInstance().getCurrentUser() != null;
     }
 }
 

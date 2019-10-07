@@ -34,7 +34,7 @@ public class VenuesListActivity extends AppCompatActivity {
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private CollectionReference venuesRef = db.collection("venues");
     private RecyclerView recyclerView;
-    private FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+    private FirebaseUser user;
     DocumentReference userRef;
 
     private VenuesAdapter adapter;
@@ -46,11 +46,13 @@ public class VenuesListActivity extends AppCompatActivity {
         Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
         setSupportActionBar(myToolbar);
         reloader = this;
-
-        checkIfDialogNeeded();
-
-
-//
+        user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user!=null) {
+            checkIfDialogNeeded();
+        }else{
+            Intent intent = new Intent(context, LoginActivity.class);
+            context.startActivity(intent);
+        }
 //            DatabaseMethods.saveVenueToDatabase(new Venue("Dzempub", R.drawable.bk_logo, "3/5"));
 //            DatabaseMethods.saveVenueToDatabase(new Venue("Taboo", R.drawable.bk_logo, "2/5"));
 //            DatabaseMethods.saveVenueToDatabase(new Venue("Listas", R.drawable.bk_logo, "1/5"));
@@ -216,7 +218,7 @@ public class VenuesListActivity extends AppCompatActivity {
                     @Override
                     public void onSuccess(DocumentSnapshot documentSnapshot) {
                         User user = documentSnapshot.toObject(User.class);
-                        if (user.getUsername() == null){
+                        if (user.getNationality() == null){
                             openDialog();
                         }
                     }

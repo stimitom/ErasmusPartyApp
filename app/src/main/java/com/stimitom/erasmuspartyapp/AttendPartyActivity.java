@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
@@ -48,12 +49,13 @@ public class AttendPartyActivity extends AppCompatActivity {
     private String currentUserId;
 
     private long usersCurrentVenueCount = 0;
-    private List<Venue> usersCurrentAttendedVenuesList = new ArrayList<>();
+    private List<Venue> usersCurrentAttendedVenuesList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_attend_party);
+        usersCurrentAttendedVenuesList = new ArrayList<Venue>();
 
         venueName_TextView = (TextView) findViewById(R.id.venue_name_tv);
         venueRating_TextView = (TextView) findViewById(R.id.venue_rating_tv);
@@ -68,13 +70,12 @@ public class AttendPartyActivity extends AppCompatActivity {
         // Check current user
         if (user != null) {
             currentUserId = getUserId();
-            Log.d(TAG, "onCreate: user is logged in, user ID and userRef defined");
             userRef = db.collection("users")
                     .document(currentUserId);
             getVenueData();
         } else {
-            Log.d(TAG, "onCreate: user is not logged in, should be sent to LOGIN");
-            //TODO send to login
+            Intent intent = new Intent(context,LoginActivity.class);
+            context.startActivity(intent);
         }
 
         readVenueData(new GetDataListener() {
@@ -100,8 +101,6 @@ public class AttendPartyActivity extends AppCompatActivity {
         });
 
 
-
-
         attendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -119,8 +118,8 @@ public class AttendPartyActivity extends AppCompatActivity {
                         ButtonIsRed = true;
                     } else {
                         //update db venueSide
-                        venueRef.update("numberOfAttendees", --venueNumberOfAttendees);
                         deleteUserFromVenueGuestList(currentUserId);
+                        venueRef.update("numberOfAttendees", --venueNumberOfAttendees);
                         //update db userSide
                         deleteFromUserListOfAttendedVenues(venue);
                         attendButton.setText(R.string.attend);
@@ -179,18 +178,15 @@ public class AttendPartyActivity extends AppCompatActivity {
         if (venueGuestList != null) {
             Log.e(TAG, "onCreate: venueGuestList not null");
             if (venueGuestList.contains(currentUserId)) {
-                Log.e(TAG, "setButtonColorAndText: venue Guest list contains currentuserID");
                 ButtonIsRed = true;
                 attendButton.setBackgroundColor(Color.RED);
                 attendButton.setText(R.string.dontgo);
             } else {
-                Log.e(TAG, "setButtonColorAndText: doesnt contain that shit");
                 ButtonIsRed = false;
                 attendButton.setText(R.string.attend);
                 attendButton.setBackgroundColor(Color.GREEN);
             }
         } else {
-            Log.e(TAG, "onCreate: venueGuestList == null");
             ButtonIsRed = false;
             attendButton.setText(R.string.attend);
             attendButton.setBackgroundColor(Color.GREEN);

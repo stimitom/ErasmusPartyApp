@@ -12,7 +12,7 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
         <EditText
-            android:id="@+id/email_edit_text"
+            android:id="@+id/email_edit_text_registration"
             android:textColor="#fff"
             android:textColorHint="#fff"
             android:background="@drawable/edittextstylelogin"
@@ -22,7 +22,7 @@
             android:hint="@string/email" />
 
         <EditText
-            android:id="@+id/password_edit_text"
+            android:id="@+id/password_edit_text_registration"
             android:textColor="#fff"
             android:textColorHint="#fff"
             android:background="@drawable/edittextstylelogin"
@@ -61,7 +61,7 @@
     </LinearLayout>
 
     <ProgressBar
-        android:id="@+id/progress_bar"
+        android:id="@+id/progress_bar_registration"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
