@@ -29,9 +29,7 @@ import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 public class LoginActivity extends AppCompatActivity {
     private static final String TAG = "LoginActivity";
@@ -52,9 +50,9 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
         mAuth = FirebaseAuth.getInstance();
 
-        editTextEmail = (EditText) findViewById(R.id.email_edit_text);
-        editTextPassword = (EditText) findViewById(R.id.password_edit_text);
-        progressBar = (ProgressBar) findViewById(R.id.progress_bar);
+        editTextEmail = (EditText) findViewById(R.id.email_edit_text_registration);
+        editTextPassword = (EditText) findViewById(R.id.password_edit_text_registration);
+        progressBar = (ProgressBar) findViewById(R.id.progress_bar_registration);
         progressBar.setVisibility(View.INVISIBLE);
 
         facebookLoginButton = (LoginButton) findViewById(R.id.facebook_login_button);
@@ -70,6 +68,7 @@ public class LoginActivity extends AppCompatActivity {
         facebookLoginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
+                progressBar.setVisibility(View.VISIBLE);
                 Log.d(TAG, "facebook:onSuccess:" + loginResult);
                 handleFacebookAccessToken(loginResult.getAccessToken());
             }
@@ -100,6 +99,7 @@ public class LoginActivity extends AppCompatActivity {
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
+                        progressBar.setVisibility(View.GONE);
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "signInWithCredential:success");
@@ -129,18 +129,21 @@ public class LoginActivity extends AppCompatActivity {
         if (email.isEmpty()) {
             editTextEmail.setError("email required");
             editTextEmail.requestFocus();
+            progressBar.setVisibility(View.GONE);
             return;
         }
 
         if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
             editTextEmail.setError("Enter a valid email");
             editTextEmail.requestFocus();
+            progressBar.setVisibility(View.GONE);
             return;
         }
 
         if (password.isEmpty()) {
             editTextPassword.setError("password required");
             editTextPassword.requestFocus();
+            progressBar.setVisibility(View.GONE);
             return;
         }
 

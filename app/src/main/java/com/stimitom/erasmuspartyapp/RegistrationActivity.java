@@ -15,6 +15,8 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
@@ -41,12 +43,12 @@ public class RegistrationActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registration);
 
-        editTextName = (EditText) findViewById(R.id.username_edit_text);
-        editTextEmail = (EditText) findViewById(R.id.email_edit_text);
-        editTextPassword = (EditText) findViewById(R.id.password_edit_text);
-        editTextRepeatPassword = (EditText) findViewById(R.id.repeat_password_edit_text);
+        editTextName = (EditText) findViewById(R.id.username_edit_text_registration);
+        editTextEmail = (EditText) findViewById(R.id.email_edit_text_registration);
+        editTextPassword = (EditText) findViewById(R.id.password_edit_text_registration);
+        editTextRepeatPassword = (EditText) findViewById(R.id.repeat_password_edit_text_registration);
         signUpButton = (Button) findViewById(R.id.sign_up_button);
-        progressBar = (ProgressBar) findViewById(R.id.progress_bar);
+        progressBar = (ProgressBar) findViewById(R.id.progress_bar_registration);
         goToLoginButton = (Button) findViewById(R.id.already_registered_button);
         mAuth = FirebaseAuth.getInstance();
 
@@ -60,7 +62,7 @@ public class RegistrationActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         if (mAuth.getCurrentUser() != null) {
-            //User already signed in
+            runVenuesListActivity();
         }
     }
 
@@ -81,35 +83,41 @@ public class RegistrationActivity extends AppCompatActivity {
         if (name.isEmpty()) {
             editTextName.setError("username required");
             editTextName.requestFocus();
+            progressBar.setVisibility(View.GONE);
             return;
         }
 
         if (email.isEmpty()) {
             editTextEmail.setError("email required");
             editTextEmail.requestFocus();
+            progressBar.setVisibility(View.GONE);
             return;
         }
 
         if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
             editTextEmail.setError("Enter a valid email");
             editTextEmail.requestFocus();
+            progressBar.setVisibility(View.GONE);
             return;
         }
 
         if (password.isEmpty()) {
             editTextPassword.setError("password required");
             editTextPassword.requestFocus();
+            progressBar.setVisibility(View.GONE);
             return;
         }
 
         if (password.length() < 6) {
             editTextPassword.setError("password should be at least 6 characters long");
             editTextPassword.requestFocus();
+            progressBar.setVisibility(View.GONE);
             return;
         }
         if (!repeatedPassword.equals(password)) {
             editTextRepeatPassword.setError("Passwords do not match. Type again, please!");
             editTextRepeatPassword.requestFocus();
+            progressBar.setVisibility(View.GONE);
             return;
         }
 
@@ -120,12 +128,23 @@ public class RegistrationActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         progressBar.setVisibility(View.GONE);
                         if (task.isSuccessful()) {
-
                             User user = new User(name, email);
                             FirebaseFirestore db = FirebaseFirestore.getInstance();
                             db.collection("users").
                                     document(FirebaseAuth.getInstance().getCurrentUser().getUid())
-                                    .set(user);
+                                    .set(user)
+                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        @Override
+                                        public void onSuccess(Void aVoid) {
+                                            Log.d(TAG, "onSuccess: User sucessfully upoladed to db");
+                                        }
+                                    })
+                                    .addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+                                            Log.d(TAG, "onFailure: User could not be uploaded to db" + e.toString());
+                                        }
+                                    });
                             runVenuesListActivity();
                         } else {
                             Log.e(TAG, "onComplete: user upload to db was not succesful" + task.getException().getMessage());
