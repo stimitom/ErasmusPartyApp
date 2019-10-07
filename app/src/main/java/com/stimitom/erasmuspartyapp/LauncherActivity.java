@@ -49,7 +49,7 @@ public class LauncherActivity extends AppCompatActivity {
         @Override
         public void onClick(View v) {
              if (isLoggedIn()) runVenuesListActivity();
-             else runSignInActivity();
+             else runLoginActivity();
         }
     };
 
@@ -69,6 +69,13 @@ public class LauncherActivity extends AppCompatActivity {
         context.startActivity(intent);
     }
 
+    public void runLoginActivity(){
+        Intent intent = new Intent(context, LoginActivity.class);
+        context.startActivity(intent);
+    }
+
+
+
     /*********************/
     //Handling Registration
     // Authentication Providers
@@ -81,13 +88,7 @@ public class LauncherActivity extends AppCompatActivity {
             new AuthUI.IdpConfig.FacebookBuilder().build()
     );
 
-    public void runSignInActivity(){
-        startActivityForResult(
-                AuthUI.getInstance()
-                    .createSignInIntentBuilder()
-                    .setAvailableProviders(providers)
-                    .build(),RQC_SIGN_IN);
-    }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {

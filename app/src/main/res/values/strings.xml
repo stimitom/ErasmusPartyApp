@@ -15,9 +15,13 @@
     <string name="search">Search</string>
     <string name="username">Username</string>
     <string name="password">Password</string>
+    <string name="repeat_password">Repeat Password</string>
     <string name="login">Login</string>
     <string name="nationality">Nationality</string>
     <string name="email">Email</string>
+    <string name="not_registered_yet"> <u>Not registered yet? Sign Up here.</u> </string>
+    <string name="already_registered"> <u>Already registered? Login here.</u> </string>
+    <string name="sign_up">Sign Up</string>
     <string-array name="countries">
         <item>Afghanistan</item>
         <item>Aland Islands</item>
