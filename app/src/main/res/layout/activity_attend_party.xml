@@ -83,4 +83,13 @@
         app:layout_constraintTop_toBottomOf="@+id/venue_rating_tv" />
 
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_view_attend_party"
+        app:layout_constraintBottom_toBottomOf="@+id/number_of_attendees1"
+        app:layout_constraintTop_toTopOf="@id/attend_button"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        />
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>
