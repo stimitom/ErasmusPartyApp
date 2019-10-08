@@ -75,8 +75,6 @@ public class AttendPartyActivity extends AppCompatActivity {
         final String venue_name = venue.getVenueName();
         venueRef = db.collection("venues").document(venue_name);
 
-        query = db.collection("users").whereArrayContains("venuesattending",venue_name);
-
         // Check current user
         if (user != null) {
             currentUserId = getUserId();
@@ -143,7 +141,7 @@ public class AttendPartyActivity extends AppCompatActivity {
             }
         });
 
-      setUpRecyclerView();
+      setUpRecyclerView(venue);
     }
 
     /***************************/
@@ -310,7 +308,8 @@ public class AttendPartyActivity extends AppCompatActivity {
     }
 
     /**Set Up RecyclerView **/
-    private void setUpRecyclerView() {
+    private void setUpRecyclerView(Venue venue) {
+        query = db.collection("users").whereArrayContains("venuesattending",venue);
         FirestoreRecyclerOptions<User> options = new FirestoreRecyclerOptions.Builder<User>()
                 .setQuery(query, User.class)
                 .build();
