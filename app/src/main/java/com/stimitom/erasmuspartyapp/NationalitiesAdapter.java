@@ -7,10 +7,6 @@ import android.widget.TextView;
 
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.FirebaseFirestore;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
@@ -42,10 +38,10 @@ public class NationalitiesAdapter extends FirestoreRecyclerAdapter<User, Nationa
         private CardView cardView;
 
 
-        public NationalitiesViewHolder(View itemview){
-            super(itemview);
-            this.nationality = (TextView) itemview.findViewById(R.id.text_view_nationality);
-            this.cardView = (CardView) itemview.findViewById(R.id.card_view_nationality);
+        public NationalitiesViewHolder(View itemView){
+            super(itemView);
+            this.nationality = (TextView) itemView.findViewById(R.id.text_view_nationality);
+            cardView = (CardView) itemView.findViewById(R.id.card_view_nationality);
         }
     }
 

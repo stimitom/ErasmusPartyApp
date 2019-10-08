@@ -10,7 +10,7 @@
     <string name="facebook_application_id">2401198669957036</string>
     <string name="fb_login_protocol_scheme">fb2401198669957036</string>
     <string name="attend">Attend Tonight</string>
-    <string name="dontgo">I don\' go Tonight</string>
+    <string name="dontgo">I don\'t go Tonight</string>
     <string name="sort">Sort</string>
     <string name="search">Search</string>
     <string name="username">Username</string>
@@ -23,6 +23,8 @@
     <string name="already_registered"> <u>Already registered? Login here.</u> </string>
     <string name="sign_up">Sign Up</string>
     <string name="guests_tonight">Guests Tonight</string>
+    <string name="nationalities_tonight">Tonight you can meet people from these countries:</string>
+
     <string-array name="countries">
         <item>Afghanistan</item>
         <item>Aland Islands</item>

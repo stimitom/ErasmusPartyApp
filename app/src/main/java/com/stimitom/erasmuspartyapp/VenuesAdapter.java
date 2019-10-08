@@ -32,6 +32,7 @@ public class VenuesAdapter extends FirestoreRecyclerAdapter<Venue, VenuesAdapter
     private FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     private DocumentReference venueRef;
     private String currentUserId = getUserId();
+
     public VenuesAdapter(@NonNull FirestoreRecyclerOptions<Venue> options) {
         super(options);
     }

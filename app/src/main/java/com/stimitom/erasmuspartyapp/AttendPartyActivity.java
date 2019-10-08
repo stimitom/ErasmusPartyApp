@@ -53,7 +53,7 @@ public class AttendPartyActivity extends AppCompatActivity {
     private String currentUserId;
 
     private long usersCurrentVenueCount = 0;
-    private List<Venue> usersCurrentAttendedVenuesList;
+    private List<String> usersCurrentAttendedVenuesList;
 
     private Query query;
     private RecyclerView recyclerView;
@@ -63,7 +63,7 @@ public class AttendPartyActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_attend_party);
-        usersCurrentAttendedVenuesList = new ArrayList<Venue>();
+        usersCurrentAttendedVenuesList = new ArrayList<String>();
 
         venueName_TextView = (TextView) findViewById(R.id.venue_name_tv);
         venueRating_TextView = (TextView) findViewById(R.id.venue_rating_tv);
@@ -119,7 +119,7 @@ public class AttendPartyActivity extends AppCompatActivity {
                         venueRef.update("numberOfAttendees", ++venueNumberOfAttendees);
                         addUserToVenueGuestList(currentUserId);
                         //update db userSide
-                        addToUserListOfAttendedVenues(venue);
+                        addToUserListOfAttendedVenues(venueName);
                         attendButton.setText(R.string.dontgo);
                         attendButton.setBackgroundColor(Color.RED);
                         venueNumberOfAttendees_TextView.setText(Integer.toString(venueNumberOfAttendees));
@@ -129,7 +129,7 @@ public class AttendPartyActivity extends AppCompatActivity {
                         deleteUserFromVenueGuestList(currentUserId);
                         venueRef.update("numberOfAttendees", --venueNumberOfAttendees);
                         //update db userSide
-                        deleteFromUserListOfAttendedVenues(venue);
+                        deleteFromUserListOfAttendedVenues(venueName);
                         attendButton.setText(R.string.attend);
                         attendButton.setBackgroundColor(Color.GREEN);
                         venueNumberOfAttendees_TextView.setText(Integer.toString(venueNumberOfAttendees));
@@ -141,7 +141,14 @@ public class AttendPartyActivity extends AppCompatActivity {
             }
         });
 
-      setUpRecyclerView(venue);
+        setUpRecyclerView(venue_name);
+    }
+
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        adapter.stopListening();
     }
 
     /***************************/
@@ -264,30 +271,21 @@ public class AttendPartyActivity extends AppCompatActivity {
      * User Side
      **/
 
-    public void addToUserListOfAttendedVenues(Venue venue) {
-        usersCurrentAttendedVenuesList.add(venue);
+    public void addToUserListOfAttendedVenues(String venueName) {
+        //Update Local Variables
+        usersCurrentAttendedVenuesList.add(venueName);
         usersCurrentVenueCount++;
+        //Update Db variables
         userRef.update("venuesattending", usersCurrentAttendedVenuesList);
         userRef.update("venuecount", usersCurrentVenueCount);
         Log.d(TAG, "addToUserListOfAttendedVenues: Updated");
     }
 
-    public void deleteFromUserListOfAttendedVenues(Venue venue) {
-        List<Venue> updatedList = new ArrayList<>();
-        updatedList.addAll(usersCurrentAttendedVenuesList);
-        int positionOfVenueToBeDeleted = 0;
-        for (int i = 0; i < updatedList.size(); i++) {
-            if (updatedList.get(i).getVenueName().equals(venue.getVenueName())) {
-                positionOfVenueToBeDeleted = i;
-                // ListSize can at maximum be 3 so break loop with i = 4;
-                i = 4;
-            }
-        }
-        updatedList.remove(positionOfVenueToBeDeleted);
+    public void deleteFromUserListOfAttendedVenues(String venueName) {
         // Update Local variables
-        usersCurrentAttendedVenuesList.clear();
-        usersCurrentAttendedVenuesList.addAll(updatedList);
+        usersCurrentAttendedVenuesList.remove(venueName);
         usersCurrentVenueCount--;
+        //Update db Variables
         userRef.update("venuesattending", usersCurrentAttendedVenuesList);
         userRef.update("venuecount", usersCurrentVenueCount);
     }
@@ -308,8 +306,8 @@ public class AttendPartyActivity extends AppCompatActivity {
     }
 
     /**Set Up RecyclerView **/
-    private void setUpRecyclerView(Venue venue) {
-        query = db.collection("users").whereArrayContains("venuesattending",venue);
+    private void setUpRecyclerView(String venueName) {
+        query = db.collection("users").whereArrayContains("venuesattending",venueName);
         FirestoreRecyclerOptions<User> options = new FirestoreRecyclerOptions.Builder<User>()
                 .setQuery(query, User.class)
                 .build();
@@ -319,5 +317,6 @@ public class AttendPartyActivity extends AppCompatActivity {
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);
+        adapter.startListening();
     }
 }
