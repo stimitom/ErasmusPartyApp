@@ -8,29 +8,35 @@
     android:layout_marginTop="8dp"
     android:layout_marginStart="8dp"
     android:layout_marginEnd="8dp"
-    app:cardBackgroundColor="#FFFFE8">
+    app:cardBackgroundColor="#FFFFFF"
+    app:cardElevation="2dp"
+    app:cardCornerRadius="5dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:padding="8dp">
 
-        <ImageView
-            android:id="@+id/venue_picture"
-            android:layout_width="66dp"
-            android:layout_height="55dp"
+        <com.pkmmte.view.CircularImageView
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:id= "@+id/venue_picture_round"
+            app:border="true"
+            app:border_color="#EEEEEE"
+            app:border_width="4dp"
+            app:shadow="true"
             android:layout_marginTop="4dp"
             android:layout_marginBottom="4dp"
             android:contentDescription="@string/venue_picture"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"/>
 
         <ImageView
             android:id="@+id/going_banner"
             android:layout_width="60dp"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="4dp"
+            android:layout_marginEnd="12dp"
             android:src="@drawable/going_button"
             android:visibility="invisible"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -40,15 +46,14 @@
             android:id="@+id/venue_rating"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="44dp"
             android:padding="8dp"
             android:text="rating"
             android:textAlignment="viewStart"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/going_banner"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toEndOf="@+id/venue_picture" />
+            app:layout_constraintStart_toEndOf="@+id/venue_picture_round"
+            app:layout_constraintStart_toStartOf="@+id/venue_name" />
 
         <TextView
             android:id="@+id/venue_name"
@@ -56,13 +61,13 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_toStartOf="@+id/number_of_attendees"
-            android:layout_toEndOf="@+id/venue_picture"
+            android:layout_toEndOf="@+id/venue_picture_round"
             android:padding="8dp"
             android:text="venueName"
             android:textAlignment="viewStart"
-            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:textAppearance="@style/TextAppearance.AppCompat.Title"
             android:textStyle="bold"
-            app:layout_constraintStart_toEndOf="@+id/venue_picture"
+            app:layout_constraintStart_toEndOf="@+id/venue_picture_round"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
@@ -98,60 +103,36 @@
 
 </androidx.cardview.widget.CardView>
 
+<!--<ImageView-->
+<!--android:id="@+id/venue_picture"-->
+<!--android:layout_width="66dp"-->
+<!--android:layout_height="55dp"-->
+<!--android:layout_marginTop="4dp"-->
+<!--android:layout_marginBottom="4dp"-->
+<!--android:contentDescription="@string/venue_picture"-->
+<!--app:layout_constraintBottom_toBottomOf="parent"-->
+<!--app:layout_constraintStart_toStartOf="parent"-->
+<!--app:layout_constraintTop_toTopOf="parent"-->
+<!--app:layout_constraintCircleRadius=""/>-->
 
-<!--<RelativeLayout-->
+<!--<com.pkmmte.view.CircularImageView-->
+<!--android:layout_width="250dp"-->
+<!--android:layout_height="250dp"-->
+<!--android:src="@drawable/image"-->
+<!--app:border="true"-->
+<!--app:border_color="#EEEEEE"-->
+<!--app:border_width="4dp"-->
+<!--app:shadow="true" />-->
+
+
+<!--<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"-->
+<!--xmlns:app="http://schemas.android.com/apk/res-auto"-->
+<!--xmlns:tools="http://schemas.android.com/tools"-->
+<!--android:id="@+id/card_view_venue"-->
 <!--android:layout_width="match_parent"-->
-<!--android:layout_height="match_parent"-->
-<!--android:padding="8dp">-->
-
-<!--<ImageView-->
-<!--    android:id="@+id/venue_picture"-->
-<!--    android:layout_width="66dp"-->
-<!--    android:layout_height="55dp"-->
-<!--    android:layout_alignParentLeft="true"-->
-<!--    android:layout_alignParentTop="true"-->
-<!--    android:contentDescription="@string/venue_picture" />-->
-
-<!--<TextView-->
-<!--    android:id="@+id/venue_name"-->
-<!--    android:layout_width="wrap_content"-->
-<!--    android:layout_height="wrap_content"-->
-<!--    android:layout_toEndOf="@+id/venue_picture"-->
-<!--    android:layout_toStartOf="@+id/number_of_attendees"-->
-<!--    android:text="kikkk"-->
-<!--    android:textAppearance="@style/TextAppearance.AppCompat.Large"-->
-<!--    android:padding="8dp"/>-->
-
-<!--<TextView-->
-<!--    android:id="@+id/venue_rating"-->
-<!--    android:layout_width="wrap_content"-->
-<!--    android:layout_height="wrap_content"-->
-<!--    android:layout_below="@+id/venue_name"-->
-<!--    android:layout_toEndOf="@+id/venue_picture"-->
-<!--    android:padding="8dp"-->
-<!--    android:text="ssss" />-->
-
-<!--<TextView-->
-<!--    android:id="@+id/number_of_attendees"-->
-<!--    android:layout_width="85dp"-->
-<!--    android:layout_height="wrap_content"-->
-<!--    android:layout_alignParentTop="true"-->
-<!--    android:layout_alignParentEnd="true"-->
-<!--    android:layout_toStartOf="@+id/going_banner"-->
-<!--    android:text="sldkf"-->
-<!--    android:textAppearance="@style/TextAppearance.AppCompat.Medium"-->
-<!--    android:textStyle="bold"/>-->
-
-<!--<ImageView-->
-<!--    android:id="@+id/going_banner"-->
-<!--    android:layout_width="70dp"-->
-<!--    android:layout_height="wrap_content"-->
-<!--    android:layout_below="@+id/venue_name"-->
-<!--    android:layout_marginStart="52dp"-->
-<!--    android:layout_marginTop="1dp"-->
-<!--    android:layout_toEndOf="@+id/venue_rating"-->
-<!--    android:src="@drawable/going_button"-->
-<!--    android:visibility="invisible"/>-->
-
-
-<!--</RelativeLayout>-->
+<!--android:layout_height="wrap_content"-->
+<!--android:layout_marginTop="8dp"-->
+<!--android:layout_marginStart="8dp"-->
+<!--android:layout_marginEnd="8dp"-->
+<!--app:cardBackgroundColor="#FFFFE8"-->
+<!--android:elevation="2dp">-->
