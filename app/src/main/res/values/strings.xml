@@ -24,7 +24,7 @@
     <string name="sign_up">Sign Up</string>
     <string name="guests_tonight">Guests Tonight</string>
     <string name="nationalities_tonight">Tonight you can meet people from these countries:</string>
-
+    <string name="venues_title">Bars &amp; Clubs</string>
     <string-array name="countries">
         <item>Afghanistan</item>
         <item>Aland Islands</item>
