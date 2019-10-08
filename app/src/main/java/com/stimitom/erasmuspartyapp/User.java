@@ -7,7 +7,7 @@ public class User {
     private String username;
     private String nationality;
     private String email;
-    private List<Venue> venuesattending;
+    private List<String> venuesattending;
     private int venuecount;
 
     public User(){}
@@ -56,11 +56,11 @@ public class User {
         this.email = email;
     }
 
-    public List<Venue> getVenuesattending() {
+    public List<String> getVenuesattending() {
         return venuesattending;
     }
 
-    public void setVenuesattending(List<Venue> venuesattending) {
+    public void setVenuesattending(List<String> venuesattending) {
         this.venuesattending = venuesattending;
     }
 

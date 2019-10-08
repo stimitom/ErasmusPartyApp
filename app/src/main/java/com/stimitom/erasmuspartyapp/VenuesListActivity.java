@@ -217,10 +217,7 @@ public class VenuesListActivity extends AppCompatActivity {
                 .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                     @Override
                     public void onSuccess(DocumentSnapshot documentSnapshot) {
-                        User user = documentSnapshot.toObject(User.class);
-                        if (user.getNationality() == null){
-                            openDialog();
-                        }
+                        if (!documentSnapshot.contains("nationality")) openDialog();
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
