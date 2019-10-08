@@ -2,6 +2,8 @@ package com.stimitom.erasmuspartyapp;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
 import android.content.Intent;
@@ -14,6 +16,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -21,6 +24,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,6 +55,10 @@ public class AttendPartyActivity extends AppCompatActivity {
     private long usersCurrentVenueCount = 0;
     private List<Venue> usersCurrentAttendedVenuesList;
 
+    private Query query;
+    private RecyclerView recyclerView;
+    private NationalitiesAdapter adapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -66,6 +74,8 @@ public class AttendPartyActivity extends AppCompatActivity {
         final Venue venue = getIntent().getParcelableExtra("clickedVenue");
         final String venue_name = venue.getVenueName();
         venueRef = db.collection("venues").document(venue_name);
+
+        query = db.collection("users").whereArrayContains("venuesattending",venue_name);
 
         // Check current user
         if (user != null) {
@@ -133,6 +143,7 @@ public class AttendPartyActivity extends AppCompatActivity {
             }
         });
 
+      setUpRecyclerView();
     }
 
     /***************************/
@@ -298,5 +309,16 @@ public class AttendPartyActivity extends AppCompatActivity {
         venueRef.update("guestList", venueGuestList);
     }
 
+    /**Set Up RecyclerView **/
+    private void setUpRecyclerView() {
+        FirestoreRecyclerOptions<User> options = new FirestoreRecyclerOptions.Builder<User>()
+                .setQuery(query, User.class)
+                .build();
+        adapter = new NationalitiesAdapter(options);
 
+        recyclerView = (RecyclerView) findViewById(R.id.recycler_view_attend_party);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setAdapter(adapter);
+    }
 }
