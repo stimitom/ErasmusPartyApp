@@ -6,17 +6,16 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".VenuesListActivity"
-    android:orientation="vertical"
-    android:background="@color/colorPrimaryLight">
+    android:orientation="vertical">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/my_toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:elevation="4dp"
-        android:theme="@style/ActionBarTheme"
         app:title="@string/venues_title"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+        android:theme="@style/ActionBarTheme"
+        />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_view_venues_list"

@@ -82,7 +82,7 @@ public class AttendPartyActivity extends AppCompatActivity {
                     .document(currentUserId);
             getVenueData();
         } else {
-            Intent intent = new Intent(context,LoginActivity.class);
+            Intent intent = new Intent(context, LoginActivity.class);
             context.startActivity(intent);
         }
 
@@ -120,8 +120,7 @@ public class AttendPartyActivity extends AppCompatActivity {
                         addUserToVenueGuestList(currentUserId);
                         //update db userSide
                         addToUserListOfAttendedVenues(venueName);
-                        attendButton.setText(R.string.dontgo);
-                        attendButton.setBackgroundColor(Color.RED);
+                        makeButtonRed();
                         venueNumberOfAttendees_TextView.setText(Integer.toString(venueNumberOfAttendees));
                         ButtonIsRed = true;
                     } else {
@@ -130,8 +129,7 @@ public class AttendPartyActivity extends AppCompatActivity {
                         venueRef.update("numberOfAttendees", --venueNumberOfAttendees);
                         //update db userSide
                         deleteFromUserListOfAttendedVenues(venueName);
-                        attendButton.setText(R.string.attend);
-                        attendButton.setBackgroundColor(Color.GREEN);
+                        makeButtonGreen();
                         venueNumberOfAttendees_TextView.setText(Integer.toString(venueNumberOfAttendees));
                         ButtonIsRed = false;
                     }
@@ -195,19 +193,26 @@ public class AttendPartyActivity extends AppCompatActivity {
             Log.e(TAG, "onCreate: venueGuestList not null");
             if (venueGuestList.contains(currentUserId)) {
                 ButtonIsRed = true;
-                attendButton.setBackgroundColor(Color.RED);
-                attendButton.setText(R.string.dontgo);
+                makeButtonRed();
             } else {
                 ButtonIsRed = false;
-                attendButton.setText(R.string.attend);
-                attendButton.setBackgroundColor(Color.GREEN);
+                makeButtonGreen();
             }
         } else {
             ButtonIsRed = false;
-            attendButton.setText(R.string.attend);
-            attendButton.setBackgroundColor(Color.GREEN);
+            makeButtonGreen();
         }
 
+    }
+
+    public void makeButtonGreen() {
+        attendButton.setText(R.string.attend);
+        attendButton.setBackgroundResource(R.drawable.button_green_round);
+    }
+
+    public void makeButtonRed() {
+        attendButton.setBackgroundResource(R.drawable.button_red_round);
+        attendButton.setText(R.string.dontgo);
     }
 
     /**
@@ -305,9 +310,11 @@ public class AttendPartyActivity extends AppCompatActivity {
         venueRef.update("guestList", venueGuestList);
     }
 
-    /**Set Up RecyclerView **/
+    /**
+     * Set Up RecyclerView
+     **/
     private void setUpRecyclerView(String venueName) {
-        query = db.collection("users").whereArrayContains("venuesattending",venueName);
+        query = db.collection("users").whereArrayContains("venuesattending", venueName);
         FirestoreRecyclerOptions<User> options = new FirestoreRecyclerOptions.Builder<User>()
                 .setQuery(query, User.class)
                 .build();

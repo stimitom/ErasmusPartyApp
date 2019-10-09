@@ -4,5 +4,7 @@
     <color name="colorPrimaryDark">#26418f</color>
     <color name="colorPrimaryLight">#8e99f3</color>
     <color name="colorAccent">#8e99f3</color>
-    <color name="textOnPrimary">#ffffff</color>
+    <color name="TextColorOnPrimary">#ffffff</color>
+    <color name="greenButtonColor">#2fbf71</color>
+    <color name="redButtonColor">#ff5851</color>
 </resources>
