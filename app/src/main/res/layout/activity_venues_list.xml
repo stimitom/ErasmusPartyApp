@@ -28,13 +28,15 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="@string/popular"
-            android:layout_weight="1"/>
+            android:layout_weight="1"
+            android:textColor="@color/TextColorOnPrimary"/>
         <Button
             android:id="@+id/button_alphabetic"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="@string/alphabetic"
-            android:layout_weight="1"/>
+            android:layout_weight="1"
+            android:textColor="@color/TextColorOnPrimary"/>
     </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView

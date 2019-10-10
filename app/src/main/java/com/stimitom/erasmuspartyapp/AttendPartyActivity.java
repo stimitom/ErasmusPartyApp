@@ -1,6 +1,7 @@
 package com.stimitom.erasmuspartyapp;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -23,8 +24,14 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,6 +44,7 @@ public class AttendPartyActivity extends AppCompatActivity {
     private TextView venueRating_TextView;
     private ImageView venuePicture_ImageView;
     private TextView venueNumberOfAttendees_TextView;
+    private TextView currentVenueState;
 
     private Button attendButton;
     private Boolean ButtonIsRed;
@@ -58,6 +66,7 @@ public class AttendPartyActivity extends AppCompatActivity {
     private Query query;
     private RecyclerView recyclerView;
     private NationalitiesAdapter adapter;
+    private FirestoreRecyclerOptions<User> options;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,6 +79,7 @@ public class AttendPartyActivity extends AppCompatActivity {
         venuePicture_ImageView = (ImageView) findViewById(R.id.venue_picture_iv);
         attendButton = (Button) findViewById(R.id.attend_button);
         venueNumberOfAttendees_TextView = (TextView) findViewById(R.id.number_of_attendees1);
+        currentVenueState = (TextView) findViewById(R.id.text_view_meet_people_from);
 
         final Venue venue = getIntent().getParcelableExtra("clickedVenue");
         final String venue_name = venue.getVenueName();
@@ -80,7 +90,6 @@ public class AttendPartyActivity extends AppCompatActivity {
             currentUserId = getUserId();
             userRef = db.collection("users")
                     .document(currentUserId);
-            getVenueData();
         } else {
             Intent intent = new Intent(context, LoginActivity.class);
             context.startActivity(intent);
@@ -105,6 +114,8 @@ public class AttendPartyActivity extends AppCompatActivity {
                 //Called here to ensure sequential execution
                 getUserData();
                 setButtonColorAndText();
+                setDescriptiveText();
+
             }
         });
 
@@ -142,6 +153,11 @@ public class AttendPartyActivity extends AppCompatActivity {
         setUpRecyclerView(venue_name);
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        adapter.startListening();
+    }
 
     @Override
     protected void onStop() {
@@ -215,40 +231,15 @@ public class AttendPartyActivity extends AppCompatActivity {
         attendButton.setText(R.string.dontgo);
     }
 
+    public void setDescriptiveText(){
+        if (venueNumberOfAttendees == 0){
+            currentVenueState.setText(R.string.nobody_attends_yet);
+        }else currentVenueState.setText(R.string.nationalities_tonight);
+    }
+
     /**
      * Venue Info
      **/
-
-    public void getVenueData() {
-        venueRef.get()
-                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                    @Override
-                    public void onSuccess(DocumentSnapshot documentSnapshot) {
-
-                        Venue venue = documentSnapshot.toObject(Venue.class);
-                        venueGuestList = new ArrayList<String>();
-                        if (venue.getGuestList() != null)
-                            venueGuestList.addAll(venue.getGuestList());
-                        venueName = venue.getVenueName();
-                        venueRating = venue.getRating();
-                        venueImageId = venue.getImageId();
-                        venueNumberOfAttendees = venue.getNumberOfAttendees();
-
-                        venueName_TextView.setText(venueName);
-                        venuePicture_ImageView.setImageResource(venueImageId);
-                        venueRating_TextView.setText(venueRating);
-                        venueNumberOfAttendees_TextView.setText(Integer.toString(venueNumberOfAttendees));
-
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Log.e(TAG, "onFailure: Could not fetch VenueData" + e.toString());
-            }
-        });
-
-    }
-
     public interface GetDataListener {
         void onSuccess(DocumentSnapshot snapshot);
     }
@@ -267,6 +258,14 @@ public class AttendPartyActivity extends AppCompatActivity {
                         Log.e(TAG, "onFailure: Could not fetch VenueData" + e.toString());
                     }
                 });
+    }
+
+    public void performNationaitiesQuery(final GetDataListener listener){
+        query = db.collection("users").whereArrayContains("venuesattending", venueName);
+
+        FirestoreRecyclerOptions<User> options = new FirestoreRecyclerOptions.Builder<User>()
+                .setQuery(query, User.class)
+                .build();
     }
 
     /***************************/
@@ -313,17 +312,51 @@ public class AttendPartyActivity extends AppCompatActivity {
     /**
      * Set Up RecyclerView
      **/
+
     private void setUpRecyclerView(String venueName) {
         query = db.collection("users").whereArrayContains("venuesattending", venueName);
-        FirestoreRecyclerOptions<User> options = new FirestoreRecyclerOptions.Builder<User>()
+        options  = new FirestoreRecyclerOptions.Builder<User>()
                 .setQuery(query, User.class)
                 .build();
-        adapter = new NationalitiesAdapter(options);
 
+        adapter = new NationalitiesAdapter(options);
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view_attend_party);
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
         recyclerView.setAdapter(adapter);
         adapter.startListening();
     }
 }
+
+
+
+//    private void setUpRecyclerView(String venueName) {
+//        nationalitiesAttending = new ArrayList<String>();
+//        db.collection("users")
+//                .whereArrayContains("venuesattending", venueName)
+//                .get()
+//                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+//                    @Override
+//                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+//
+//                        for (QueryDocumentSnapshot documentSnapshot: queryDocumentSnapshots){
+//                            User user = documentSnapshot.toObject(User.class);
+//                            String nationality = user.getNationality();
+//                            if (!nationalitiesAttending.contains(nationality)){
+//                                nationalitiesAttending.add(nationality);
+//                            }
+//                        }
+//                        if (nationalitiesAttending.size() != 0) {
+//                            currentVenueState.setText(R.string.nationalities_tonight);
+//                            recyclerView = (RecyclerView) findViewById(R.id.recycler_view_attend_party);
+//                            adapter = new CountriesAdapter(nationalitiesAttending);
+//                            recyclerView.setHasFixedSize(true);
+//                            recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+//                            recyclerView.setAdapter(adapter);
+//                        }else {
+//                            currentVenueState.setText(R.string.nobody_attends_yet);
+//
+//                        }
+//                    }
+//                });
+//
+//    }
