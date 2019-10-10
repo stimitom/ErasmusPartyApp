@@ -25,6 +25,8 @@
     <string name="guests_tonight">Guests Tonight</string>
     <string name="nationalities_tonight">Tonight you can meet people from these countries:</string>
     <string name="venues_title">Bars &amp; Clubs</string>
+    <string name="popular">Popular</string>
+    <string name="alphabetic">Alphabetic</string>
     <string-array name="countries">
         <item>Afghanistan</item>
         <item>Aland Islands</item>

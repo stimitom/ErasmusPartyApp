@@ -103,36 +103,3 @@
 
 </androidx.cardview.widget.CardView>
 
-<!--<ImageView-->
-<!--android:id="@+id/venue_picture"-->
-<!--android:layout_width="66dp"-->
-<!--android:layout_height="55dp"-->
-<!--android:layout_marginTop="4dp"-->
-<!--android:layout_marginBottom="4dp"-->
-<!--android:contentDescription="@string/venue_picture"-->
-<!--app:layout_constraintBottom_toBottomOf="parent"-->
-<!--app:layout_constraintStart_toStartOf="parent"-->
-<!--app:layout_constraintTop_toTopOf="parent"-->
-<!--app:layout_constraintCircleRadius=""/>-->
-
-<!--<com.pkmmte.view.CircularImageView-->
-<!--android:layout_width="250dp"-->
-<!--android:layout_height="250dp"-->
-<!--android:src="@drawable/image"-->
-<!--app:border="true"-->
-<!--app:border_color="#EEEEEE"-->
-<!--app:border_width="4dp"-->
-<!--app:shadow="true" />-->
-
-
-<!--<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"-->
-<!--xmlns:app="http://schemas.android.com/apk/res-auto"-->
-<!--xmlns:tools="http://schemas.android.com/tools"-->
-<!--android:id="@+id/card_view_venue"-->
-<!--android:layout_width="match_parent"-->
-<!--android:layout_height="wrap_content"-->
-<!--android:layout_marginTop="8dp"-->
-<!--android:layout_marginStart="8dp"-->
-<!--android:layout_marginEnd="8dp"-->
-<!--app:cardBackgroundColor="#FFFFE8"-->
-<!--android:elevation="2dp">-->
