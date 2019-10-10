@@ -24,6 +24,7 @@
     <string name="sign_up">Sign Up</string>
     <string name="guests_tonight">Guests Tonight</string>
     <string name="nationalities_tonight">Tonight you can meet people from these countries:</string>
+    <string name="nobody_attends_yet">Nobody attends this venue tonight yet. Be the first one!</string>
     <string name="venues_title">Bars &amp; Clubs</string>
     <string name="popular">Popular</string>
     <string name="alphabetic">Alphabetic</string>

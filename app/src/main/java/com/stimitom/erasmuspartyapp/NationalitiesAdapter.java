@@ -29,7 +29,6 @@ public class NationalitiesAdapter extends FirestoreRecyclerAdapter<User, Nationa
     @Override
     protected void onBindViewHolder(@NonNull NationalitiesViewHolder holder, int position, @NonNull User user) {
         holder.nationality.setText(user.getNationality());
-
     }
 
     class NationalitiesViewHolder extends RecyclerView.ViewHolder{
