@@ -14,6 +14,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.SearchView;
 
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
@@ -37,7 +39,12 @@ public class VenuesListActivity extends AppCompatActivity {
     private FirebaseUser user;
     DocumentReference userRef;
 
-    private VenuesAdapter adapter;
+    private Button popularButton;
+    private Button alphabeticButton;
+    private Boolean popularSortActive;
+
+    private VenuesAdapter popularAdapter;
+    private VenuesAdapter alphabeticAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,14 +52,24 @@ public class VenuesListActivity extends AppCompatActivity {
         setContentView(R.layout.activity_venues_list);
         Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
         setSupportActionBar(myToolbar);
+        popularButton = (Button) findViewById(R.id.button_popular);
+        alphabeticButton = (Button) findViewById(R.id.button_alphabetic);
+
+        popularButton.setBackgroundResource(R.drawable.button_venues_list_selected);
+        alphabeticButton.setBackgroundResource(R.drawable.button_venues_list_not_selected);
+        popularButton.setOnClickListener(popularSortListener);
+        alphabeticButton.setOnClickListener(alphabeticSortListener);
+
         reloader = this;
         user = FirebaseAuth.getInstance().getCurrentUser();
-        if (user!=null) {
+        if (user != null) {
             checkIfDialogNeeded();
-        }else{
+        } else {
             Intent intent = new Intent(context, LoginActivity.class);
             context.startActivity(intent);
         }
+
+
 //            DatabaseMethods.saveVenueToDatabase(new Venue("Dzempub", R.drawable.bk_logo, "3/5"));
 //            DatabaseMethods.saveVenueToDatabase(new Venue("Taboo", R.drawable.bk_logo, "2/5"));
 //            DatabaseMethods.saveVenueToDatabase(new Venue("Listas", R.drawable.bk_logo, "1/5"));
@@ -71,50 +88,23 @@ public class VenuesListActivity extends AppCompatActivity {
 //            DatabaseMethods.saveVenueToDatabase(new Venue("Magenta", R.drawable.bk_logo, "5/5"));
 //            DatabaseMethods.saveVenueToDatabase(new Venue("Some Shithole", R.drawable.bk_logo, "5/5"));
 
-        setUpRecyclerView();
-    }
+        setUpPopularRecyclerView(true);
 
-    private void setUpRecyclerView() {
-        Query query = venuesRef.orderBy("numberOfAttendees", Query.Direction.DESCENDING)
-                .orderBy("venueName", Query.Direction.ASCENDING);
-
-        FirestoreRecyclerOptions<Venue> options = new FirestoreRecyclerOptions.Builder<Venue>()
-                .setQuery(query, Venue.class)
-                .build();
-        adapter = new VenuesAdapter(options);
-
-        recyclerView = (RecyclerView) findViewById(R.id.recycler_view_venues_list);
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(adapter);
-
-        attachItemClickListenerToAdapter(adapter);
-
-    }
-
-    public void attachItemClickListenerToAdapter(VenuesAdapter adapter) {
-        /**Handles the Clicks**/
-        adapter.setOnItemClickListener(new VenuesAdapter.OnItemClickListener() {
-            @Override
-            public void onItemClick(DocumentSnapshot documentSnapshot, int position) {
-                Venue clickedVenue = documentSnapshot.toObject(Venue.class);
-                Intent intent = new Intent(context, AttendPartyActivity.class);
-                intent.putExtra("clickedVenue", clickedVenue);
-                startActivity(intent);
-            }
-        });
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
-        adapter.startListening();
+    protected void onResume() {
+        super.onResume();
+        Log.e(TAG, "onResume: isCalled");
+        popularAdapter.startListening();
     }
+
 
     @Override
     protected void onStop() {
         super.onStop();
-        adapter.stopListening();
+        if(popularSortActive) popularAdapter.stopListening();
+        else alphabeticAdapter.stopListening();
     }
 
     /********************************/
@@ -146,12 +136,12 @@ public class VenuesListActivity extends AppCompatActivity {
                 VenuesAdapter searchAdapter = new VenuesAdapter(options);
                 if (newText.trim().isEmpty()) {
                     searchAdapter.stopListening();
-                    recyclerView.setAdapter(adapter);
-                    attachItemClickListenerToAdapter(adapter);
-                    adapter.startListening();
+                    recyclerView.setAdapter(popularAdapter);
+                    attachItemClickListenerToAdapter(popularAdapter);
+                    popularAdapter.startListening();
                     return false;
                 } else {
-                    adapter.stopListening();
+                    popularAdapter.stopListening();
                     recyclerView.setAdapter(searchAdapter);
                     attachItemClickListenerToAdapter(searchAdapter);
                     searchAdapter.startListening();
@@ -163,11 +153,8 @@ public class VenuesListActivity extends AppCompatActivity {
         return true;
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        Log.e(TAG, "onResume: isCalled");
-    }
+
+
 
     //Checks which item in the Action Bar was clicked and performs its action
     @Override
@@ -227,6 +214,84 @@ public class VenuesListActivity extends AppCompatActivity {
                     }
                 });
     }
+
+
+    /**
+     * RecyclerView setups, Sorting
+     **/
+
+    private void setUpPopularRecyclerView(Boolean firstSetup) {
+        Query query = venuesRef.orderBy("numberOfAttendees", Query.Direction.DESCENDING)
+                .orderBy("venueName", Query.Direction.ASCENDING);
+
+        FirestoreRecyclerOptions<Venue> options = new FirestoreRecyclerOptions.Builder<Venue>()
+                .setQuery(query, Venue.class)
+                .build();
+        popularAdapter = new VenuesAdapter(options);
+
+        if (firstSetup) {
+            recyclerView = (RecyclerView) findViewById(R.id.recycler_view_venues_list);
+            recyclerView.setHasFixedSize(true);
+            recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        }else {
+            alphabeticAdapter.stopListening();
+        }
+        recyclerView.setAdapter(popularAdapter);
+        attachItemClickListenerToAdapter(popularAdapter);
+        popularAdapter.startListening();
+        popularSortActive = true;
+
+    }
+    public void setUpAlphabeticRecyclerView() {
+        Query query = venuesRef.orderBy("venueName", Query.Direction.ASCENDING);
+
+        FirestoreRecyclerOptions<Venue> options = new FirestoreRecyclerOptions.Builder<Venue>()
+                .setQuery(query, Venue.class)
+                .build();
+        alphabeticAdapter = new VenuesAdapter(options);
+        popularAdapter.stopListening();
+        recyclerView.setAdapter(alphabeticAdapter);
+        attachItemClickListenerToAdapter(alphabeticAdapter);
+        alphabeticAdapter.startListening();
+        popularSortActive = false;
+    }
+
+    public void attachItemClickListenerToAdapter(VenuesAdapter adapter) {
+        /**Handles the Clicks**/
+        adapter.setOnItemClickListener(new VenuesAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(DocumentSnapshot documentSnapshot, int position) {
+                Venue clickedVenue = documentSnapshot.toObject(Venue.class);
+                Intent intent = new Intent(context, AttendPartyActivity.class);
+                intent.putExtra("clickedVenue", clickedVenue);
+                startActivity(intent);
+            }
+        });
+    }
+
+    View.OnClickListener popularSortListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            if (!popularSortActive) {
+                popularButton.setBackgroundResource(R.drawable.button_venues_list_selected);
+                alphabeticButton.setBackgroundResource(R.drawable.button_venues_list_not_selected);
+                setUpPopularRecyclerView(false);
+            }
+        }
+    };
+
+
+    View.OnClickListener alphabeticSortListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            if (popularSortActive) {
+                alphabeticButton.setBackgroundResource(R.drawable.button_venues_list_selected);
+                popularButton.setBackgroundResource(R.drawable.button_venues_list_not_selected);
+                setUpAlphabeticRecyclerView();
+            }
+        }
+    };
+
 
 
 }
