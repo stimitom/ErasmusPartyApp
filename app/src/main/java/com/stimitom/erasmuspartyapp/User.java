@@ -7,8 +7,13 @@ public class User {
     private String username;
     private String nationality;
     private String email;
-    private List<String> venuesattending;
-    private int venuecount;
+    private List<String> dateList;
+    private List<String> venuesattendingTD;
+    private int venuecountTD;
+    private List<String> venuesattendingTM;
+    private int venuecountTM;
+    private List<String> venuesattendingTDAT;
+    private int venuecountTDAT;
 
 
     public User() {
@@ -58,20 +63,59 @@ public class User {
         this.email = email;
     }
 
-    public List<String> getVenuesattending() {
-        return venuesattending;
+    public List<String> getDateList() {
+        return dateList;
     }
 
-    public void setVenuesattending(List<String> venuesattending) {
-        this.venuesattending = venuesattending;
+    public void setDateList(List<String> dateList) {
+        this.dateList = dateList;
     }
 
-    public int getVenuecount() {
-        return venuecount;
+    public List<String> getVenuesattendingTD() {
+        return venuesattendingTD;
     }
 
-    public void setVenuecount(int venuecount) {
-        this.venuecount = venuecount;
+    public void setVenuesattendingTD(List<String> venuesattendingTD) {
+        this.venuesattendingTD = venuesattendingTD;
     }
 
+    public int getVenuecountTD() {
+        return venuecountTD;
+    }
+
+    public void setVenuecountTD(int venuecountTD) {
+        this.venuecountTD = venuecountTD;
+    }
+
+    public List<String> getVenuesattendingTM() {
+        return venuesattendingTM;
+    }
+
+    public void setVenuesattendingTM(List<String> venuesattendingTM) {
+        this.venuesattendingTM = venuesattendingTM;
+    }
+
+    public int getVenuecountTM() {
+        return venuecountTM;
+    }
+
+    public void setVenuecountTM(int venuecountTM) {
+        this.venuecountTM = venuecountTM;
+    }
+
+    public List<String> getVenuesattendingTDAT() {
+        return venuesattendingTDAT;
+    }
+
+    public void setVenuesattendingTDAT(List<String> venuesattendingTDAT) {
+        this.venuesattendingTDAT = venuesattendingTDAT;
+    }
+
+    public int getVenuecountTDAT() {
+        return venuecountTDAT;
+    }
+
+    public void setVenuecountTDAT(int venuecountTDAT) {
+        this.venuecountTDAT = venuecountTDAT;
+    }
 }
