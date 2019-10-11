@@ -80,5 +80,4 @@ public class Venue implements Parcelable{
     public List<String> getGuestList() {
         return guestList;
     }
-
 }

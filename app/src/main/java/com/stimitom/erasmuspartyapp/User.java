@@ -10,16 +10,18 @@ public class User {
     private List<String> venuesattending;
     private int venuecount;
 
-    public User(){}
 
-    public User(String userID, String userName, String nationality, String email){
+    public User() {
+    }
+
+    public User(String userID, String userName, String nationality, String email) {
         this.userid = userID;
         this.username = userName;
         this.nationality = nationality;
         this.email = email;
     }
 
-    public User(String username, String email){
+    public User(String username, String email) {
         this.username = username;
         this.email = email;
     }
@@ -71,4 +73,5 @@ public class User {
     public void setVenuecount(int venuecount) {
         this.venuecount = venuecount;
     }
+
 }

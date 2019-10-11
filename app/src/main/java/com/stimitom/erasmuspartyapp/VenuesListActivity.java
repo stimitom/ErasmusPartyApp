@@ -29,6 +29,12 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 
+import java.text.Format;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
+
 public class VenuesListActivity extends AppCompatActivity {
     private final String TAG = "VenuesListActivity";
     private Context context = this;
@@ -43,6 +49,11 @@ public class VenuesListActivity extends AppCompatActivity {
     private Button alphabeticButton;
     private Boolean popularSortActive;
 
+    private Button dateButton;
+    private Boolean today;
+    private Boolean tomorrow;
+    private Boolean theDayAfterTomorrow;
+
     private VenuesAdapter popularAdapter;
     private VenuesAdapter alphabeticAdapter;
 
@@ -54,11 +65,14 @@ public class VenuesListActivity extends AppCompatActivity {
         setSupportActionBar(myToolbar);
         popularButton = (Button) findViewById(R.id.button_popular);
         alphabeticButton = (Button) findViewById(R.id.button_alphabetic);
+        dateButton = (Button) findViewById(R.id.button_date);
 
         popularButton.setBackgroundResource(R.drawable.button_venues_list_selected);
         alphabeticButton.setBackgroundResource(R.drawable.button_venues_list_not_selected);
         popularButton.setOnClickListener(popularSortListener);
         alphabeticButton.setOnClickListener(alphabeticSortListener);
+
+//        setUpDateButton();
 
         reloader = this;
         user = FirebaseAuth.getInstance().getCurrentUser();
@@ -69,24 +83,24 @@ public class VenuesListActivity extends AppCompatActivity {
             context.startActivity(intent);
         }
 
-//
-//            DatabaseMethods.saveVenueToDatabase(new Venue("Dzempub", R.drawable.bk_logo, "3/5"));
-//            DatabaseMethods.saveVenueToDatabase(new Venue("Taboo", R.drawable.bk_logo, "2/5"));
-//            DatabaseMethods.saveVenueToDatabase(new Venue("Listas", R.drawable.bk_logo, "1/5"));
-//            DatabaseMethods.saveVenueToDatabase(new Venue("DejaVu", R.drawable.bk_logo, "3/5"));
-//            DatabaseMethods.saveVenueToDatabase(new Venue("Pjazz", R.drawable.bk_logo, "4/5"));
-//            DatabaseMethods.saveVenueToDatabase(new Venue("B20", R.drawable.bk_logo, "3/5"));
-//            DatabaseMethods.saveVenueToDatabase(new Venue("Blue", R.drawable.bk_logo, "3/5"));
-//            DatabaseMethods.saveVenueToDatabase(new Venue("Green", R.drawable.bk_logo, "3/5"));
-//            DatabaseMethods.saveVenueToDatabase(new Venue("Yellow", R.drawable.bk_logo, "3/5"));
-//            DatabaseMethods.saveVenueToDatabase(new Venue("Brown", R.drawable.bk_logo, "2/5"));
-//            DatabaseMethods.saveVenueToDatabase(new Venue("Black", R.drawable.bk_logo, "3/5"));
-//            DatabaseMethods.saveVenueToDatabase(new Venue("Grey", R.drawable.bk_logo, "3/5"));
-//            DatabaseMethods.saveVenueToDatabase(new Venue("White", R.drawable.bk_logo, "4/5"));
-//            DatabaseMethods.saveVenueToDatabase(new Venue("Purple", R.drawable.bk_logo, "3/5"));
-//            DatabaseMethods.saveVenueToDatabase(new Venue("Red", R.drawable.bk_logo, "1/5"));
-//            DatabaseMethods.saveVenueToDatabase(new Venue("Magenta", R.drawable.bk_logo, "5/5"));
-//            DatabaseMethods.saveVenueToDatabase(new Venue("Some Shithole", R.drawable.bk_logo, "5/5"));
+
+            DatabaseMethods.saveVenueToDatabase(new Venue("Dzempub", R.drawable.bk_logo, "3/5"));
+            DatabaseMethods.saveVenueToDatabase(new Venue("Taboo", R.drawable.bk_logo, "2/5"));
+            DatabaseMethods.saveVenueToDatabase(new Venue("Listas", R.drawable.bk_logo, "1/5"));
+            DatabaseMethods.saveVenueToDatabase(new Venue("DejaVu", R.drawable.bk_logo, "3/5"));
+            DatabaseMethods.saveVenueToDatabase(new Venue("Pjazz", R.drawable.bk_logo, "4/5"));
+            DatabaseMethods.saveVenueToDatabase(new Venue("B20", R.drawable.bk_logo, "3/5"));
+            DatabaseMethods.saveVenueToDatabase(new Venue("Blue", R.drawable.bk_logo, "3/5"));
+            DatabaseMethods.saveVenueToDatabase(new Venue("Green", R.drawable.bk_logo, "3/5"));
+            DatabaseMethods.saveVenueToDatabase(new Venue("Yellow", R.drawable.bk_logo, "3/5"));
+            DatabaseMethods.saveVenueToDatabase(new Venue("Brown", R.drawable.bk_logo, "2/5"));
+            DatabaseMethods.saveVenueToDatabase(new Venue("Black", R.drawable.bk_logo, "3/5"));
+            DatabaseMethods.saveVenueToDatabase(new Venue("Grey", R.drawable.bk_logo, "3/5"));
+            DatabaseMethods.saveVenueToDatabase(new Venue("White", R.drawable.bk_logo, "4/5"));
+            DatabaseMethods.saveVenueToDatabase(new Venue("Purple", R.drawable.bk_logo, "3/5"));
+            DatabaseMethods.saveVenueToDatabase(new Venue("Red", R.drawable.bk_logo, "1/5"));
+            DatabaseMethods.saveVenueToDatabase(new Venue("Magenta", R.drawable.bk_logo, "5/5"));
+            DatabaseMethods.saveVenueToDatabase(new Venue("Some Shithole", R.drawable.bk_logo, "5/5"));
 
         setUpPopularRecyclerView(true);
 
@@ -121,7 +135,7 @@ public class VenuesListActivity extends AppCompatActivity {
 
     private void setUpPopularRecyclerView(Boolean firstSetup) {
         Query query = venuesRef.orderBy("numberOfAttendees", Query.Direction.DESCENDING)
-                .orderBy("venueName", Query.Direction.ASCENDING);
+                    .orderBy("venueName", Query.Direction.ASCENDING);
 
         FirestoreRecyclerOptions<Venue> options = new FirestoreRecyclerOptions.Builder<Venue>()
                 .setQuery(query, Venue.class)
@@ -139,7 +153,6 @@ public class VenuesListActivity extends AppCompatActivity {
         attachItemClickListenerToAdapter(popularAdapter);
         popularAdapter.startListening();
         popularSortActive = true;
-
     }
 
     public void setUpAlphabeticRecyclerView() {
@@ -308,6 +321,49 @@ public class VenuesListActivity extends AppCompatActivity {
                     }
                 });
     }
+
+//    /** Date Button **/
+//
+//    public void setUpDateButton(){
+//        Date date;
+//        Format formatter;
+//        Calendar calendar = Calendar.getInstance();
+//
+//        date = calendar.getTime();
+//        formatter = new SimpleDateFormat("dd/MMM/yyyy");
+//        final String todayDate = formatter.format(date);
+//        calendar.add(Calendar.DATE, 1);
+//        date = calendar.getTime();
+//        final String tomorrowDate = formatter.format(date);
+//        calendar.add(Calendar.DATE, 1);
+//        date = calendar.getTime();
+//        final String theDayAfterTomorrowDate = formatter.format(date);
+//        Log.e(TAG, "setUpDateButton: " + today + " " + tomorrow + " " + theDayAfterTomorrow);
+//
+//        dateButton.setText(todayDate);
+//        this.today = true;
+//        this.tomorrow = false;
+//        this.theDayAfterTomorrow = false;
+//        dateButton.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                if (today){
+//                    dateButton.setText(tomorrowDate);
+//                    today = false;
+//                    tomorrow = true;
+//                }else if(tomorrow){
+//                    dateButton.setText(theDayAfterTomorrowDate);
+//                    tomorrow = false;
+//                    theDayAfterTomorrow = true;
+//                }else{
+//                    dateButton.setText(todayDate);
+//                    today = true;
+//                    theDayAfterTomorrow = false;
+//                }
+//            }
+//        });
+//    }
+
 
 
 }
