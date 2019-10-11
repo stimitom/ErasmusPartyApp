@@ -13,10 +13,9 @@ public class DatabaseMethods {
     private static final String TAG = "DatabaseMethods";
     private static FirebaseFirestore db = FirebaseFirestore.getInstance();
     private static CollectionReference venuesRef = db.collection("venues");
+    private static CollectionReference datesRef = db.collection("dates");
 
-    public static void saveVenueToDatabase(Venue v) {
-        Venue venue = v;
-
+    public static void saveVenueToDatabase(Venue venue) {
         venuesRef.document(venue.getVenueName())
                 .set(venue)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -28,8 +27,25 @@ public class DatabaseMethods {
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Log.e(TAG, "Venue upload to database FAILED");
-                        Log.e(TAG, e.toString());
+                        Log.e(TAG, "Venue upload to database FAILED" + e.toString());
+                    }
+                });
+    }
+
+    public static void saveDayVenueToDB(String date, Venue venue){
+        datesRef.document(date).collection("day_venues")
+                .document(venue.getVenueName())
+                .set(venue)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.i(TAG, "Day_venue upload database succesful");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.e(TAG, "Day_venue upload to database FAILED"  + e.toString());
                     }
                 });
     }

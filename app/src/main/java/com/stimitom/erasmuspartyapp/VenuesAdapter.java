@@ -14,7 +14,7 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.pkmmte.view.CircularImageView;
@@ -31,7 +31,7 @@ public class VenuesAdapter extends FirestoreRecyclerAdapter<Venue, VenuesAdapter
     private OnItemClickListener listener;
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-    private DocumentReference venueRef;
+    private CollectionReference dayVenueRef;
     private String currentUserId = getUserId();
 
     public VenuesAdapter(@NonNull FirestoreRecyclerOptions<Venue> options) {
@@ -55,8 +55,10 @@ public class VenuesAdapter extends FirestoreRecyclerAdapter<Venue, VenuesAdapter
 
         //Make going button visible on attended Venues
         if (user != null) {
-            venueRef = db.collection("venues").document(venue.getVenueName());
-            venueRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            dayVenueRef = VenuesListActivity.getDayVenuesRef();
+            dayVenueRef.document(venue.getVenueName())
+                    .get()
+                    .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                 @Override
                 public void onSuccess(DocumentSnapshot documentSnapshot) {
                     if (documentSnapshot.contains("guestList")) {

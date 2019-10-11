@@ -102,12 +102,10 @@ public class UsernameNationalityDialog extends AppCompatDialogFragment implement
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Log.e(TAG, "user upload to database FAILED");
-                        Log.e(TAG, e.toString());
+                        Log.e(TAG, "user upload to database FAILED" + e.toString());
                     }
                 });
     }
-
 }
 
 /*
