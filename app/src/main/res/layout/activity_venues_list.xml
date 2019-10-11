@@ -18,11 +18,21 @@
         android:theme="@style/ActionBarTheme"
         />
 
+    <Button
+        android:id="@+id/button_date"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/TextColorOnPrimary"
+        android:background="@color/colorPrimaryLight"
+        android:textAlignment="center"
+        />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:background="@color/colorPrimaryLight">
+
         <Button
             android:id="@+id/button_popular"
             android:layout_width="0dp"
