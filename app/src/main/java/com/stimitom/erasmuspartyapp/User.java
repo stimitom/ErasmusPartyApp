@@ -1,7 +1,9 @@
 package com.stimitom.erasmuspartyapp;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class User {
     private String userid;
@@ -10,10 +12,10 @@ public class User {
     private String email;
 
     private List<String> listnames = new ArrayList<>();
-    private long listcount = 0;
     private long counterpos0;
     private long counterpos1;
     private long counterpos2;
+    private Map<String,String> countermapping = new HashMap<>();
 
     public User() {
     }
@@ -50,10 +52,6 @@ public class User {
         return listnames;
     }
 
-    public long getListcount() {
-        return listcount;
-    }
-
     public long getCounterpos0() {
         return counterpos0;
     }
@@ -64,5 +62,9 @@ public class User {
 
     public long getCounterpos2() {
         return counterpos2;
+    }
+
+    public Map<String, String> getCountermapping() {
+        return countermapping;
     }
 }

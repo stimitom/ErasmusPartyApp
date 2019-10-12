@@ -75,12 +75,12 @@ public class VenuesListActivity extends AppCompatActivity {
         alphabeticButton.setOnClickListener(alphabeticSortListener);
 
         setUpDateButton();
-         setUpThreeDaysInDB();
-
+        setUpThreeDaysInDB();
 
         reloader = this;
         user = FirebaseAuth.getInstance().getCurrentUser();
-        if (user != null) {setDayVenuesRef();
+        if (user != null) {
+            setDayVenuesRef();
             checkIfDialogNeeded();
         } else {
             Intent intent = new Intent(context, LoginActivity.class);
@@ -88,7 +88,7 @@ public class VenuesListActivity extends AppCompatActivity {
         }
 
 
-        setUpPopularRecyclerView(true,false);
+        setUpPopularRecyclerView(true, false);
 
     }
 
@@ -130,7 +130,9 @@ public class VenuesListActivity extends AppCompatActivity {
             recyclerView.setHasFixedSize(true);
             recyclerView.setLayoutManager(new LinearLayoutManager(this));
         } else {
-            alphabeticAdapter.stopListening();
+            if (!daySwitch) {
+                alphabeticAdapter.stopListening();
+            }
         }
         recyclerView.setAdapter(popularAdapter);
         attachItemClickListenerToAdapter(popularAdapter);
@@ -156,16 +158,16 @@ public class VenuesListActivity extends AppCompatActivity {
         popularSortActive = false;
     }
 
-    public void setDayVenuesRef(){
+    public void setDayVenuesRef() {
         if (todayBool) {
             dayVenuesRef = db.collection("dates")
                     .document(today)
                     .collection("day_venues");
-        }else if(tomorrowBool){
+        } else if (tomorrowBool) {
             dayVenuesRef = db.collection("dates")
                     .document(tomorrow)
                     .collection("day_venues");
-        }else{
+        } else {
             dayVenuesRef = db.collection("dates")
                     .document(theDayAfterTomorrow)
                     .collection("day_venues");
@@ -181,14 +183,14 @@ public class VenuesListActivity extends AppCompatActivity {
                 Intent intent = new Intent(context, AttendPartyActivity.class);
                 intent.putExtra("clickedVenue", clickedVenue);
                 String day;
-                if (todayBool){
+                if (todayBool) {
                     day = today;
-                }else if(tomorrowBool){
+                } else if (tomorrowBool) {
                     day = tomorrow;
-                }else {
+                } else {
                     day = theDayAfterTomorrow;
                 }
-                intent.putExtra("dateGiven",day);
+                intent.putExtra("dateGiven", day);
                 startActivity(intent);
             }
         });
@@ -200,7 +202,7 @@ public class VenuesListActivity extends AppCompatActivity {
             if (!popularSortActive) {
                 popularButton.setBackgroundResource(R.drawable.button_venues_list_selected);
                 alphabeticButton.setBackgroundResource(R.drawable.button_venues_list_not_selected);
-                setUpPopularRecyclerView(false,false);
+                setUpPopularRecyclerView(false, false);
             }
         }
     };
@@ -362,50 +364,52 @@ public class VenuesListActivity extends AppCompatActivity {
                     dateButton.setText(today);
                     todayBool = true;
                 }
-                if (popularSortActive) setUpPopularRecyclerView(false,true);
+                if (popularSortActive) setUpPopularRecyclerView(false, true);
                 else setUpAlphabeticRecyclerView(true);
             }
         });
     }
 
-    /** DB Method **/
+    /**
+     * DB Method
+     **/
     public void setUpThreeDaysInDB() {
-        DatabaseMethods.saveDayVenueToDB(today, new Venue("Dzempub", R.drawable.bk_logo, "3/5"));
-        DatabaseMethods.saveDayVenueToDB(today, new Venue("Taboo", R.drawable.bk_logo, "2/5"));
-        DatabaseMethods.saveDayVenueToDB(today, new Venue("Listas", R.drawable.bk_logo, "1/5"));
-        DatabaseMethods.saveDayVenueToDB(today, new Venue("DejaVu", R.drawable.bk_logo, "3/5"));
-        DatabaseMethods.saveDayVenueToDB(today, new Venue("Pjazz", R.drawable.bk_logo, "4/5"));
-        DatabaseMethods.saveDayVenueToDB(today, new Venue("B20", R.drawable.bk_logo, "3/5"));
-        DatabaseMethods.saveDayVenueToDB(today, new Venue("Blue", R.drawable.bk_logo, "3/5"));
-        DatabaseMethods.saveDayVenueToDB(today, new Venue("Green", R.drawable.bk_logo, "3/5"));
-        DatabaseMethods.saveDayVenueToDB(today, new Venue("Yellow", R.drawable.bk_logo, "3/5"));
-        DatabaseMethods.saveDayVenueToDB(today, new Venue("Brown", R.drawable.bk_logo, "2/5"));
-        DatabaseMethods.saveDayVenueToDB(today, new Venue("Black", R.drawable.bk_logo, "3/5"));
-        DatabaseMethods.saveDayVenueToDB(today, new Venue("Grey", R.drawable.bk_logo, "3/5"));
-        DatabaseMethods.saveDayVenueToDB(today, new Venue("White", R.drawable.bk_logo, "4/5"));
-        DatabaseMethods.saveDayVenueToDB(today, new Venue("Purple", R.drawable.bk_logo, "3/5"));
-        DatabaseMethods.saveDayVenueToDB(today, new Venue("Red", R.drawable.bk_logo, "1/5"));
-        DatabaseMethods.saveDayVenueToDB(today, new Venue("Magenta", R.drawable.bk_logo, "5/5"));
-        DatabaseMethods.saveDayVenueToDB(today, new Venue("Some Shithole", R.drawable.bk_logo, "5/5"));
-
-
-        DatabaseMethods.saveDayVenueToDB(tomorrow, new Venue("Dzempub", R.drawable.bk_logo, "3/5"));
-        DatabaseMethods.saveDayVenueToDB(tomorrow, new Venue("Taboo", R.drawable.bk_logo, "2/5"));
-        DatabaseMethods.saveDayVenueToDB(tomorrow, new Venue("Listas", R.drawable.bk_logo, "1/5"));
-        DatabaseMethods.saveDayVenueToDB(tomorrow, new Venue("DejaVu", R.drawable.bk_logo, "3/5"));
-        DatabaseMethods.saveDayVenueToDB(tomorrow, new Venue("Pjazz", R.drawable.bk_logo, "4/5"));
-        DatabaseMethods.saveDayVenueToDB(tomorrow, new Venue("B20", R.drawable.bk_logo, "3/5"));
-        DatabaseMethods.saveDayVenueToDB(tomorrow, new Venue("Blue", R.drawable.bk_logo, "3/5"));
-        DatabaseMethods.saveDayVenueToDB(tomorrow, new Venue("Green", R.drawable.bk_logo, "3/5"));
-        DatabaseMethods.saveDayVenueToDB(tomorrow, new Venue("Yellow", R.drawable.bk_logo, "3/5"));
-        DatabaseMethods.saveDayVenueToDB(tomorrow, new Venue("Brown", R.drawable.bk_logo, "2/5"));
-        DatabaseMethods.saveDayVenueToDB(tomorrow, new Venue("Black", R.drawable.bk_logo, "3/5"));
-        DatabaseMethods.saveDayVenueToDB(tomorrow, new Venue("Grey", R.drawable.bk_logo, "3/5"));
-        DatabaseMethods.saveDayVenueToDB(tomorrow, new Venue("White", R.drawable.bk_logo, "4/5"));
-        DatabaseMethods.saveDayVenueToDB(tomorrow, new Venue("Purple", R.drawable.bk_logo, "3/5"));
-        DatabaseMethods.saveDayVenueToDB(tomorrow, new Venue("Red", R.drawable.bk_logo, "1/5"));
-        DatabaseMethods.saveDayVenueToDB(tomorrow, new Venue("Magenta", R.drawable.bk_logo, "5/5"));
-        DatabaseMethods.saveDayVenueToDB(tomorrow, new Venue("Some Shithole", R.drawable.bk_logo, "5/5"));
+//        DatabaseMethods.saveDayVenueToDB(today, new Venue("Dzempub", R.drawable.bk_logo, "3/5"));
+//        DatabaseMethods.saveDayVenueToDB(today, new Venue("Taboo", R.drawable.bk_logo, "2/5"));
+//        DatabaseMethods.saveDayVenueToDB(today, new Venue("Listas", R.drawable.bk_logo, "1/5"));
+//        DatabaseMethods.saveDayVenueToDB(today, new Venue("DejaVu", R.drawable.bk_logo, "3/5"));
+//        DatabaseMethods.saveDayVenueToDB(today, new Venue("Pjazz", R.drawable.bk_logo, "4/5"));
+//        DatabaseMethods.saveDayVenueToDB(today, new Venue("B20", R.drawable.bk_logo, "3/5"));
+//        DatabaseMethods.saveDayVenueToDB(today, new Venue("Blue", R.drawable.bk_logo, "3/5"));
+//        DatabaseMethods.saveDayVenueToDB(today, new Venue("Green", R.drawable.bk_logo, "3/5"));
+//        DatabaseMethods.saveDayVenueToDB(today, new Venue("Yellow", R.drawable.bk_logo, "3/5"));
+//        DatabaseMethods.saveDayVenueToDB(today, new Venue("Brown", R.drawable.bk_logo, "2/5"));
+//        DatabaseMethods.saveDayVenueToDB(today, new Venue("Black", R.drawable.bk_logo, "3/5"));
+//        DatabaseMethods.saveDayVenueToDB(today, new Venue("Grey", R.drawable.bk_logo, "3/5"));
+//        DatabaseMethods.saveDayVenueToDB(today, new Venue("White", R.drawable.bk_logo, "4/5"));
+//        DatabaseMethods.saveDayVenueToDB(today, new Venue("Purple", R.drawable.bk_logo, "3/5"));
+//        DatabaseMethods.saveDayVenueToDB(today, new Venue("Red", R.drawable.bk_logo, "1/5"));
+//        DatabaseMethods.saveDayVenueToDB(today, new Venue("Magenta", R.drawable.bk_logo, "5/5"));
+//        DatabaseMethods.saveDayVenueToDB(today, new Venue("Some Shithole", R.drawable.bk_logo, "5/5"));
+//
+//
+//        DatabaseMethods.saveDayVenueToDB(tomorrow, new Venue("Dzempub", R.drawable.bk_logo, "3/5"));
+//        DatabaseMethods.saveDayVenueToDB(tomorrow, new Venue("Taboo", R.drawable.bk_logo, "2/5"));
+//        DatabaseMethods.saveDayVenueToDB(tomorrow, new Venue("Listas", R.drawable.bk_logo, "1/5"));
+//        DatabaseMethods.saveDayVenueToDB(tomorrow, new Venue("DejaVu", R.drawable.bk_logo, "3/5"));
+//        DatabaseMethods.saveDayVenueToDB(tomorrow, new Venue("Pjazz", R.drawable.bk_logo, "4/5"));
+//        DatabaseMethods.saveDayVenueToDB(tomorrow, new Venue("B20", R.drawable.bk_logo, "3/5"));
+//        DatabaseMethods.saveDayVenueToDB(tomorrow, new Venue("Blue", R.drawable.bk_logo, "3/5"));
+//        DatabaseMethods.saveDayVenueToDB(tomorrow, new Venue("Green", R.drawable.bk_logo, "3/5"));
+//        DatabaseMethods.saveDayVenueToDB(tomorrow, new Venue("Yellow", R.drawable.bk_logo, "3/5"));
+//        DatabaseMethods.saveDayVenueToDB(tomorrow, new Venue("Brown", R.drawable.bk_logo, "2/5"));
+//        DatabaseMethods.saveDayVenueToDB(tomorrow, new Venue("Black", R.drawable.bk_logo, "3/5"));
+//        DatabaseMethods.saveDayVenueToDB(tomorrow, new Venue("Grey", R.drawable.bk_logo, "3/5"));
+//        DatabaseMethods.saveDayVenueToDB(tomorrow, new Venue("White", R.drawable.bk_logo, "4/5"));
+//        DatabaseMethods.saveDayVenueToDB(tomorrow, new Venue("Purple", R.drawable.bk_logo, "3/5"));
+//        DatabaseMethods.saveDayVenueToDB(tomorrow, new Venue("Red", R.drawable.bk_logo, "1/5"));
+//        DatabaseMethods.saveDayVenueToDB(tomorrow, new Venue("Magenta", R.drawable.bk_logo, "5/5"));
+//        DatabaseMethods.saveDayVenueToDB(tomorrow, new Venue("Some Shithole", R.drawable.bk_logo, "5/5"));
 
         DatabaseMethods.saveDayVenueToDB(theDayAfterTomorrow, new Venue("Dzempub", R.drawable.bk_logo, "3/5"));
         DatabaseMethods.saveDayVenueToDB(theDayAfterTomorrow, new Venue("Taboo", R.drawable.bk_logo, "2/5"));

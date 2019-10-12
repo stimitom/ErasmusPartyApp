@@ -26,9 +26,10 @@ import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class AttendPartyActivity extends AppCompatActivity {
     private final String TAG = "AttendPartyActivity";
@@ -63,6 +64,8 @@ public class AttendPartyActivity extends AppCompatActivity {
     private long usersVenueCountNumber;
     private String usersVenueCountName;
     private Boolean containsList;
+    private Map<String, String> usersHashMap;
+    private Boolean usersCounterMappingChanged;
 
 
     @Override
@@ -133,7 +136,7 @@ public class AttendPartyActivity extends AppCompatActivity {
     View.OnClickListener attendButtonListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            if (containsList) {
+            if (containsList || ButtonIsRed) {
                 Log.e(TAG, "onClick: Contains List");
                 if (usersVenueCountNumber < 3 || ButtonIsRed) {
                     if (!ButtonIsRed) {
@@ -143,9 +146,9 @@ public class AttendPartyActivity extends AppCompatActivity {
 
                         //Update db user side
                         addToUserListOfAttendedVenues();
-                        makeButtonGreen();
+                        makeButtonRed();
                         venueNumberOfAttendees_TextView.setText(Integer.toString(venueNumberOfAttendees));
-                        ButtonIsRed = false;
+                        ButtonIsRed = true;
                     } else {
                         //Update db day_venue side
                         deleteUserFromVenueGuestList(currentUserId);
@@ -161,16 +164,16 @@ public class AttendPartyActivity extends AppCompatActivity {
                     Toast.makeText(context, "Sorry, you can only attend 3 venues per night!", Toast.LENGTH_SHORT).show();
                 }
 
-            }else {
+            } else {
                 //Update db day_venue Side
                 dayVenueRef.update("numberOfAttendees", ++venueNumberOfAttendees);
                 addUserToVenueGuestList(currentUserId);
 
                 //Update db user side
                 addToUserListOfAttendedVenues();
-                makeButtonGreen();
+                makeButtonRed();
                 venueNumberOfAttendees_TextView.setText(Integer.toString(venueNumberOfAttendees));
-                ButtonIsRed = false;
+                ButtonIsRed = true;
             }
         }
     };
@@ -206,42 +209,61 @@ public class AttendPartyActivity extends AppCompatActivity {
         }
     }
 
+    //sets containsList, usersVenueCountName and usersVenueCountNumber depending on state of user
     public void getUserData() {
         userRef.get()
                 .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                     @Override
                     public void onSuccess(DocumentSnapshot documentSnapshot) {
                         User user = documentSnapshot.toObject(User.class);
+                        usersHashMap = new HashMap<>();
                         int listSize = user.getListnames().size();
-                        if (documentSnapshot.contains(dateGiven)) {
-                            containsList = true;
+                        Log.e(TAG, "onSuccess: List size : " + listSize );
 
-                            for (int i = 0; i < listSize; i++) {
-                                if (user.getListnames().get(i).equals(dateGiven)) {
-                                    if (i == 0) {
-                                        usersVenueCountNumber = user.getCounterpos0();
-                                        usersVenueCountName = "counterpos0";
-                                    } else if (i == 1) {
-                                        usersVenueCountNumber = user.getCounterpos1();
-                                        usersVenueCountName = "counterpos1";
-                                    } else {
-                                        usersVenueCountNumber = user.getCounterpos2();
-                                        usersVenueCountName = "counterpos2";
-                                    }
-                                }
+                        //Check if user already has list for givenDate and adjust user accordingly
+                        if (documentSnapshot.contains(dateGiven)) {
+                            usersCounterMappingChanged = false;
+                            containsList = true;
+                            usersVenueCountName = user.getCountermapping().get(dateGiven);
+                            switch (usersVenueCountName) {
+                                case "counterpos0":
+                                    usersVenueCountNumber = user.getCounterpos0();
+                                    break;
+                                case "counterpos1":
+                                    usersVenueCountNumber = user.getCounterpos1();
+                                    break;
+                                case "counterpos2":
+                                    usersVenueCountNumber = user.getCounterpos2();
+                                    break;
+                                default:
+                                    Log.e(TAG, "onSuccess: no correct counter found... Should not happen!");
+                                    break;
                             }
                         } else {
-                            if (listSize == 3) {
-                                cleanUser(user.getListnames());
-                                // new date will be added to users datelist  at position 0
-                                usersVenueCountName = "counterpos0";
-                            } else if (listSize == 2) {
-                                // new date will be added to datelist at position 2
-                                usersVenueCountName = "counterpos2";
-                            } else {
-                                // new date will be added to datelist at position 1
-                                usersVenueCountName = "counterpos1";
+                            Log.e(TAG, "onSuccess: switchStatement in else reached");
+                            usersCounterMappingChanged = true;
+                            // new List wil be initialized,a counter needs to be set
+                            switch (listSize) {
+                                case 3:
+                                    cleanUser(user.getListnames());
+                                    usersVenueCountName = "counterpos0";
+                                    break;
+                                case 2:
+                                    usersVenueCountName = "counterpos2";
+                                    usersHashMap.putAll(user.getCountermapping());
+                                    usersHashMap.put(dateGiven,usersVenueCountName);
+                                    break;
+                                case 1:
+                                    usersVenueCountName = "counterpos1";
+                                    usersHashMap.putAll(user.getCountermapping());
+                                    usersHashMap.put(dateGiven,usersVenueCountName);
+                                     break;
+                                default:
+                                    usersVenueCountName = "counterpos0";
+                                    usersHashMap.put(dateGiven,usersVenueCountName);
+                                    break;
                             }
+                            Log.e(TAG, "onSuccess: counterName: " + usersVenueCountName);
                             containsList = false;
                             usersVenueCountNumber = 0;
                         }
@@ -257,9 +279,12 @@ public class AttendPartyActivity extends AppCompatActivity {
 
     public void cleanUser(List<String> listnames) {
         for (String listname : listnames) {
-            userRef.update(listname, FieldValue.delete());
             userRef.update("listnames", FieldValue.arrayRemove(listname));
         }
+        userRef.update("countermapping", new HashMap<>());
+        userRef.update("counterpos0", 0);
+        userRef.update("counterpos1", 0);
+        userRef.update("counterpos2", 0);
     }
 
     /**
@@ -336,8 +361,8 @@ public class AttendPartyActivity extends AppCompatActivity {
         //Update Db variables
         userRef.update(dateGiven, FieldValue.arrayUnion(venueName));
         userRef.update(usersVenueCountName, usersVenueCountNumber);
-        //Will not copy the givenDate, but add if non existent
         userRef.update("listnames", FieldValue.arrayUnion(dateGiven));
+        if (usersCounterMappingChanged) userRef.update("countermapping",usersHashMap);
 
         Log.d(TAG, "addToUserListOfAttendedVenues: Updated");
     }
