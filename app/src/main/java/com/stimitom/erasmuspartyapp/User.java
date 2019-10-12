@@ -1,5 +1,6 @@
 package com.stimitom.erasmuspartyapp;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class User {
@@ -7,14 +8,12 @@ public class User {
     private String username;
     private String nationality;
     private String email;
-    private List<String> dateList;
-    private List<String> venuesattendingTD;
-    private int venuecountTD;
-    private List<String> venuesattendingTM;
-    private int venuecountTM;
-    private List<String> venuesattendingTDAT;
-    private int venuecountTDAT;
 
+    private List<String> listnames = new ArrayList<>();
+    private long listcount = 0;
+    private long counterpos0;
+    private long counterpos1;
+    private long counterpos2;
 
     public User() {
     }
@@ -35,87 +34,35 @@ public class User {
         return userid;
     }
 
-    public void setUserid(String userid) {
-        this.userid = userid;
-    }
-
     public String getUsername() {
         return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
     }
 
     public String getNationality() {
         return nationality;
     }
 
-    public void setNationality(String nationality) {
-        this.nationality = nationality;
-    }
-
     public String getEmail() {
         return email;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public List<String> getListnames() {
+        return listnames;
     }
 
-    public List<String> getDateList() {
-        return dateList;
+    public long getListcount() {
+        return listcount;
     }
 
-    public void setDateList(List<String> dateList) {
-        this.dateList = dateList;
+    public long getCounterpos0() {
+        return counterpos0;
     }
 
-    public List<String> getVenuesattendingTD() {
-        return venuesattendingTD;
+    public long getCounterpos1() {
+        return counterpos1;
     }
 
-    public void setVenuesattendingTD(List<String> venuesattendingTD) {
-        this.venuesattendingTD = venuesattendingTD;
-    }
-
-    public int getVenuecountTD() {
-        return venuecountTD;
-    }
-
-    public void setVenuecountTD(int venuecountTD) {
-        this.venuecountTD = venuecountTD;
-    }
-
-    public List<String> getVenuesattendingTM() {
-        return venuesattendingTM;
-    }
-
-    public void setVenuesattendingTM(List<String> venuesattendingTM) {
-        this.venuesattendingTM = venuesattendingTM;
-    }
-
-    public int getVenuecountTM() {
-        return venuecountTM;
-    }
-
-    public void setVenuecountTM(int venuecountTM) {
-        this.venuecountTM = venuecountTM;
-    }
-
-    public List<String> getVenuesattendingTDAT() {
-        return venuesattendingTDAT;
-    }
-
-    public void setVenuesattendingTDAT(List<String> venuesattendingTDAT) {
-        this.venuesattendingTDAT = venuesattendingTDAT;
-    }
-
-    public int getVenuecountTDAT() {
-        return venuecountTDAT;
-    }
-
-    public void setVenuecountTDAT(int venuecountTDAT) {
-        this.venuecountTDAT = venuecountTDAT;
+    public long getCounterpos2() {
+        return counterpos2;
     }
 }

@@ -22,9 +22,11 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,13 +38,18 @@ public class AttendPartyActivity extends AppCompatActivity {
     private TextView venueRating_TextView;
     private ImageView venuePicture_ImageView;
     private TextView venueNumberOfAttendees_TextView;
-    private TextView currentVenueState;
+    private TextView currentVenueState_TextView;
 
     private Button attendButton;
     private Boolean ButtonIsRed;
 
-    private FirebaseFirestore db = FirebaseFirestore.getInstance();
-    private FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+    private Query query;
+    private RecyclerView recyclerView;
+    private NationalitiesAdapter adapter;
+    private FirestoreRecyclerOptions<User> options;
+
+    private FirebaseFirestore db;
+    private FirebaseUser firebaseUser;
     DocumentReference userRef;
     DocumentReference dayVenueRef;
     private String venueName;
@@ -52,47 +59,37 @@ public class AttendPartyActivity extends AppCompatActivity {
     private List<String> venueGuestList;
     private String currentUserId;
 
-    private long usersCurrentVenueCount = 0;
-    private List<String> usersCurrentAttendedVenuesList;
-    private List<String> usersDateList;
-    private String date;
-    private String day;
+    private String dateGiven;
+    private long usersVenueCountNumber;
+    private String usersVenueCountName;
+    private Boolean containsList;
 
-    private String activeList;
-    private String activeVenueCount;
-
-    private Query query;
-    private RecyclerView recyclerView;
-    private NationalitiesAdapter adapter;
-    private FirestoreRecyclerOptions<User> options;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_attend_party);
-        usersCurrentAttendedVenuesList = new ArrayList<String>();
-
         venueName_TextView = (TextView) findViewById(R.id.venue_name_tv);
         venueRating_TextView = (TextView) findViewById(R.id.venue_rating_tv);
         venuePicture_ImageView = (ImageView) findViewById(R.id.venue_picture_iv);
         attendButton = (Button) findViewById(R.id.attend_button);
         venueNumberOfAttendees_TextView = (TextView) findViewById(R.id.number_of_attendees1);
-        currentVenueState = (TextView) findViewById(R.id.text_view_meet_people_from);
+        currentVenueState_TextView = (TextView) findViewById(R.id.text_view_meet_people_from);
 
         Intent intent = getIntent();
         final Venue venue = intent.getParcelableExtra("clickedVenue");
-        date = intent.getStringExtra("date");
-        day = intent.getStringExtra("whichDay");
-
+        dateGiven = intent.getStringExtra("dateGiven");
         final String venue_name = venue.getVenueName();
 
-
-        dayVenueRef = db.collection("dates").document(date)
+        db = FirebaseFirestore.getInstance();
+        dayVenueRef = db.collection("dates").document(dateGiven)
                 .collection("day_venues")
                 .document(venue_name);
+        firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
 
-        // Check current user
-        if (user != null) {
+
+        // Check current firebaseUser
+        if (firebaseUser != null) {
             currentUserId = getUserId();
             userRef = db.collection("users")
                     .document(currentUserId);
@@ -101,51 +98,61 @@ public class AttendPartyActivity extends AppCompatActivity {
             context.startActivity(intent1);
         }
 
-        readVenueData(new GetDataListener() {
-            @Override
-            public void onSuccess(DocumentSnapshot snapshot) {
-                Venue venue = snapshot.toObject(Venue.class);
-                venueGuestList = new ArrayList<String>();
-                if (venue.getGuestList() != null) venueGuestList.addAll(venue.getGuestList());
-                venueName = venue.getVenueName();
-                venueRating = venue.getRating();
-                venueImageId = venue.getImageId();
-                venueNumberOfAttendees = venue.getNumberOfAttendees();
+        readVenueData(venueDataListener);
+        attendButton.setOnClickListener(attendButtonListener);
+        setUpRecyclerView(venue_name);
+    }
 
-                venueName_TextView.setText(venueName);
-                venuePicture_ImageView.setImageResource(venueImageId);
-                venueRating_TextView.setText(venueRating);
-                venueNumberOfAttendees_TextView.setText(Integer.toString(venueNumberOfAttendees));
+    /**
+     * Listener
+     ***/
+    GetDataListener venueDataListener = new GetDataListener() {
+        @Override
+        public void onSuccess(DocumentSnapshot snapshot) {
+            Venue venue = snapshot.toObject(Venue.class);
+            venueGuestList = new ArrayList<String>();
+            if (venue.getGuestList() != null) venueGuestList.addAll(venue.getGuestList());
+            venueName = venue.getVenueName();
+            venueRating = venue.getRating();
+            venueImageId = venue.getImageId();
+            venueNumberOfAttendees = venue.getNumberOfAttendees();
 
-                //Called here to ensure sequential execution
-                getUserData();
-                setButtonColorAndText();
-                setDescriptiveText();
+            venueName_TextView.setText(venueName);
+            venuePicture_ImageView.setImageResource(venueImageId);
+            venueRating_TextView.setText(venueRating);
+            venueNumberOfAttendees_TextView.setText(Integer.toString(venueNumberOfAttendees));
 
-            }
-        });
+            //Called here to ensure sequential execution
+            getUserData();
+            setButtonColorAndText();
+            setDescriptiveText();
+        }
+    };
 
 
-        attendButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (usersCurrentVenueCount < 3 || ButtonIsRed) {
+    View.OnClickListener attendButtonListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            if (containsList) {
+                Log.e(TAG, "onClick: Contains List");
+                if (usersVenueCountNumber < 3 || ButtonIsRed) {
                     if (!ButtonIsRed) {
-                        Log.d(TAG, "onClick: update of Venue and User will be performed");
-                        // Update db venueSide
+                        //Update db day_venue Side
                         dayVenueRef.update("numberOfAttendees", ++venueNumberOfAttendees);
                         addUserToVenueGuestList(currentUserId);
-                        //update db userSide
-                        addToUserListOfAttendedVenues(venueName);
-                        makeButtonRed();
+
+                        //Update db user side
+                        addToUserListOfAttendedVenues();
+                        makeButtonGreen();
                         venueNumberOfAttendees_TextView.setText(Integer.toString(venueNumberOfAttendees));
-                        ButtonIsRed = true;
+                        ButtonIsRed = false;
                     } else {
-                        //update db venueSide
+                        //Update db day_venue side
                         deleteUserFromVenueGuestList(currentUserId);
                         dayVenueRef.update("numberOfAttendees", --venueNumberOfAttendees);
-                        //update db userSide
-                        deleteFromUserListOfAttendedVenues(venueName);
+
+                        // Update db user side
+                        deleteFromUserListOfAttendedVenues();
                         makeButtonGreen();
                         venueNumberOfAttendees_TextView.setText(Integer.toString(venueNumberOfAttendees));
                         ButtonIsRed = false;
@@ -153,11 +160,20 @@ public class AttendPartyActivity extends AppCompatActivity {
                 } else {
                     Toast.makeText(context, "Sorry, you can only attend 3 venues per night!", Toast.LENGTH_SHORT).show();
                 }
-            }
-        });
 
-        setUpRecyclerView(venue_name);
-    }
+            }else {
+                //Update db day_venue Side
+                dayVenueRef.update("numberOfAttendees", ++venueNumberOfAttendees);
+                addUserToVenueGuestList(currentUserId);
+
+                //Update db user side
+                addToUserListOfAttendedVenues();
+                makeButtonGreen();
+                venueNumberOfAttendees_TextView.setText(Integer.toString(venueNumberOfAttendees));
+                ButtonIsRed = false;
+            }
+        }
+    };
 
     @Override
     protected void onStart() {
@@ -177,13 +193,13 @@ public class AttendPartyActivity extends AppCompatActivity {
     /**
      * UserInfo
      **/
-    //Returns String of ID if user is logged in
+    //Returns String of ID if firebaseUser is logged in
     //null otherwise
     public String getUserId() {
-        if (user != null) {
+        if (firebaseUser != null) {
             //User is logged in
-            Log.d(TAG, "getUserId: " + user.getUid());
-            return user.getUid();
+            Log.d(TAG, "getUserId: " + firebaseUser.getUid());
+            return firebaseUser.getUid();
         } else {
             //User not logged in
             return null;
@@ -196,58 +212,39 @@ public class AttendPartyActivity extends AppCompatActivity {
                     @Override
                     public void onSuccess(DocumentSnapshot documentSnapshot) {
                         User user = documentSnapshot.toObject(User.class);
-                        List<String> usersDateList = new ArrayList<String>();
-                        if (user.getDateList() != null) {
-                            //random unreachable number
-                            int listChooser = 99;
-                            for (int i = 0; i < user.getDateList().size(); i++) {
-                                if (user.getDateList().get(i).equals(date)) {
-                                    listChooser = i;
-                                    i = user.getDateList().size();
+                        int listSize = user.getListnames().size();
+                        if (documentSnapshot.contains(dateGiven)) {
+                            containsList = true;
+
+                            for (int i = 0; i < listSize; i++) {
+                                if (user.getListnames().get(i).equals(dateGiven)) {
+                                    if (i == 0) {
+                                        usersVenueCountNumber = user.getCounterpos0();
+                                        usersVenueCountName = "counterpos0";
+                                    } else if (i == 1) {
+                                        usersVenueCountNumber = user.getCounterpos1();
+                                        usersVenueCountName = "counterpos1";
+                                    } else {
+                                        usersVenueCountNumber = user.getCounterpos2();
+                                        usersVenueCountName = "counterpos2";
+                                    }
                                 }
                             }
-                            if (listChooser != 99) {
-                                // that means that date was already in the list
-
-                                switch (listChooser) {
-                                    case 0:
-                                        activeList = "venuesattendingTD";
-                                        activeVenueCount = "venuecountTD";
-                                        usersCurrentVenueCount = user.getVenuecountTD();
-                                        if (usersCurrentVenueCount != 0) {
-                                            usersCurrentAttendedVenuesList.addAll(user.getVenuesattendingTD());
-                                        }
-                                        break;
-                                    case 1:
-                                        activeList = "venuesattendingTM";
-                                        activeVenueCount = "venuecountTM";
-                                        usersCurrentVenueCount = user.getVenuecountTM();
-                                        if (usersCurrentVenueCount != 0) {
-                                            usersCurrentAttendedVenuesList.addAll(user.getVenuesattendingTM());
-                                        }
-                                        break;
-                                    case 2:
-                                        activeList = "venuesattendingTDAT";
-                                        activeVenueCount = "venuecountTDAT";
-                                        usersCurrentVenueCount = user.getVenuecountTDAT();
-                                        if (usersCurrentVenueCount != 0) {
-                                            usersCurrentAttendedVenuesList.addAll(user.getVenuesattendingTDAT());
-                                        }
-                                        break;
-                                    default:
-                                        activeList = null;
-                                        Log.e(TAG, "SWITCH STATEMENT: something went wrong in getUserData");
-                                        break;
-                                }
-                            }else{
-                                //date was not in the list
-                                if (day.equals("today")){
-                                    //TODO A LOT
-                                }
-
+                        } else {
+                            if (listSize == 3) {
+                                cleanUser(user.getListnames());
+                                // new date will be added to users datelist  at position 0
+                                usersVenueCountName = "counterpos0";
+                            } else if (listSize == 2) {
+                                // new date will be added to datelist at position 2
+                                usersVenueCountName = "counterpos2";
+                            } else {
+                                // new date will be added to datelist at position 1
+                                usersVenueCountName = "counterpos1";
                             }
+                            containsList = false;
+                            usersVenueCountNumber = 0;
                         }
-
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -257,6 +254,17 @@ public class AttendPartyActivity extends AppCompatActivity {
                     }
                 });
     }
+
+    public void cleanUser(List<String> listnames) {
+        for (String listname : listnames) {
+            userRef.update(listname, FieldValue.delete());
+            userRef.update("listnames", FieldValue.arrayRemove(listname));
+        }
+    }
+
+    /**
+     * UserInterface Code
+     **/
 
     public void setButtonColorAndText() {
 
@@ -288,8 +296,8 @@ public class AttendPartyActivity extends AppCompatActivity {
 
     public void setDescriptiveText() {
         if (venueNumberOfAttendees == 0) {
-            currentVenueState.setText(R.string.nobody_attends_yet);
-        } else currentVenueState.setText(R.string.nationalities_tonight);
+            currentVenueState_TextView.setText(R.string.nobody_attends_yet);
+        } else currentVenueState_TextView.setText(R.string.nationalities_tonight);
     }
 
     /**
@@ -322,23 +330,24 @@ public class AttendPartyActivity extends AppCompatActivity {
      * User Side
      **/
 
-    public void addToUserListOfAttendedVenues(String venueName) {
-        //Update Local Variables
-        usersCurrentAttendedVenuesList.add(venueName);
-        usersCurrentVenueCount++;
+    public void addToUserListOfAttendedVenues() {
+        //Update Local Variable
+        usersVenueCountNumber++;
         //Update Db variables
-        userRef.update(activeList, usersCurrentAttendedVenuesList);
-        userRef.update(activeVenueCount, usersCurrentVenueCount);
+        userRef.update(dateGiven, FieldValue.arrayUnion(venueName));
+        userRef.update(usersVenueCountName, usersVenueCountNumber);
+        //Will not copy the givenDate, but add if non existent
+        userRef.update("listnames", FieldValue.arrayUnion(dateGiven));
+
         Log.d(TAG, "addToUserListOfAttendedVenues: Updated");
     }
 
-    public void deleteFromUserListOfAttendedVenues(String venueName) {
+    public void deleteFromUserListOfAttendedVenues() {
         // Update Local variables
-        usersCurrentAttendedVenuesList.remove(venueName);
-        usersCurrentVenueCount--;
+        usersVenueCountNumber--;
         //Update db Variables
-        userRef.update(activeList, usersCurrentAttendedVenuesList);
-        userRef.update(activeVenueCount, usersCurrentVenueCount);
+        userRef.update(dateGiven, FieldValue.arrayRemove(venueName));
+        userRef.update(usersVenueCountName, usersVenueCountNumber);
     }
 
     /**
@@ -361,7 +370,9 @@ public class AttendPartyActivity extends AppCompatActivity {
      **/
 
     private void setUpRecyclerView(String venueName) {
-        query = db.collection("users").whereArrayContains("venuesattending", venueName);
+        //TODO query should only include those where right array of the dayGiven contains venue Name
+
+        query = db.collection("users").whereArrayContains(dateGiven, venueName);
         options = new FirestoreRecyclerOptions.Builder<User>()
                 .setQuery(query, User.class)
                 .build();
@@ -373,36 +384,3 @@ public class AttendPartyActivity extends AppCompatActivity {
         adapter.startListening();
     }
 }
-
-
-//    private void setUpRecyclerView(String venueName) {
-//        nationalitiesAttending = new ArrayList<String>();
-//        db.collection("users")
-//                .whereArrayContains("venuesattending", venueName)
-//                .get()
-//                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-//                    @Override
-//                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-//
-//                        for (QueryDocumentSnapshot documentSnapshot: queryDocumentSnapshots){
-//                            User user = documentSnapshot.toObject(User.class);
-//                            String nationality = user.getNationality();
-//                            if (!nationalitiesAttending.contains(nationality)){
-//                                nationalitiesAttending.add(nationality);
-//                            }
-//                        }
-//                        if (nationalitiesAttending.size() != 0) {
-//                            currentVenueState.setText(R.string.nationalities_tonight);
-//                            recyclerView = (RecyclerView) findViewById(R.id.recycler_view_attend_party);
-//                            adapter = new CountriesAdapter(nationalitiesAttending);
-//                            recyclerView.setHasFixedSize(true);
-//                            recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-//                            recyclerView.setAdapter(adapter);
-//                        }else {
-//                            currentVenueState.setText(R.string.nobody_attends_yet);
-//
-//                        }
-//                    }
-//                });
-//
-//    }
