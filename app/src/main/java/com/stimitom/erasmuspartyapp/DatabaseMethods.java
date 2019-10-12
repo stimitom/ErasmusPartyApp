@@ -7,6 +7,11 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.text.Format;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+
 import androidx.annotation.NonNull;
 
 public class DatabaseMethods {
@@ -14,6 +19,7 @@ public class DatabaseMethods {
     private static FirebaseFirestore db = FirebaseFirestore.getInstance();
     private static CollectionReference venuesRef = db.collection("venues");
     private static CollectionReference datesRef = db.collection("dates");
+
 
     public static void saveVenueToDatabase(Venue venue) {
         venuesRef.document(venue.getVenueName())
@@ -48,6 +54,35 @@ public class DatabaseMethods {
                         Log.e(TAG, "Day_venue upload to database FAILED"  + e.toString());
                     }
                 });
+    }
+
+    public static String getDateToday(){
+        Date date;
+        Format formatter = new SimpleDateFormat("dd-MM-yyyy");
+        Calendar calendar = Calendar.getInstance();
+
+        date = calendar.getTime();
+        return formatter.format(date);
+    }
+
+    public static String getDateTomorrow(){
+        Date date;
+        Format formatter = new SimpleDateFormat("dd-MM-yyyy");
+        Calendar calendar = Calendar.getInstance();
+
+        calendar.add(Calendar.DATE, 1);
+        date = calendar.getTime();
+        return formatter.format(date);
+    }
+
+    public static String getDateTheDayAfterTomorrow(){
+        Date date;
+        Format formatter = new SimpleDateFormat("dd-MM-yyyy");
+        Calendar calendar = Calendar.getInstance();
+
+        calendar.add(Calendar.DATE, 2);
+        date = calendar.getTime();
+        return formatter.format(date);
     }
 }
 

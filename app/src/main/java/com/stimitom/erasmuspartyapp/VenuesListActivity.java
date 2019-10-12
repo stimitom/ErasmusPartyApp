@@ -75,8 +75,8 @@ public class VenuesListActivity extends AppCompatActivity {
         alphabeticButton.setOnClickListener(alphabeticSortListener);
 
         setUpDateButton();
-//        setUpThreeDaysInDB();
-        setDayVenuesRef();
+         setUpThreeDaysInDB();
+
 
         reloader = this;
         user = FirebaseAuth.getInstance().getCurrentUser();
@@ -88,7 +88,7 @@ public class VenuesListActivity extends AppCompatActivity {
         }
 
 
-        setUpPopularRecyclerView(true);
+        setUpPopularRecyclerView(true,false);
 
     }
 
@@ -112,7 +112,11 @@ public class VenuesListActivity extends AppCompatActivity {
      * RecyclerView setups, Sorting
      **/
 
-    private void setUpPopularRecyclerView(Boolean firstSetup) {
+    private void setUpPopularRecyclerView(Boolean firstSetup, Boolean daySwitch) {
+        if (daySwitch) {
+            setDayVenuesRef();
+            popularAdapter.stopListening();
+        }
         Query query = dayVenuesRef.orderBy("numberOfAttendees", Query.Direction.DESCENDING)
                 .orderBy("venueName", Query.Direction.ASCENDING);
 
@@ -134,7 +138,11 @@ public class VenuesListActivity extends AppCompatActivity {
         popularSortActive = true;
     }
 
-    public void setUpAlphabeticRecyclerView() {
+    public void setUpAlphabeticRecyclerView(Boolean daySwitch) {
+        if (daySwitch) {
+            setDayVenuesRef();
+            alphabeticAdapter.stopListening();
+        }
         Query query = dayVenuesRef.orderBy("venueName", Query.Direction.ASCENDING);
 
         FirestoreRecyclerOptions<Venue> options = new FirestoreRecyclerOptions.Builder<Venue>()
@@ -174,16 +182,13 @@ public class VenuesListActivity extends AppCompatActivity {
                 intent.putExtra("clickedVenue", clickedVenue);
                 String day;
                 if (todayBool){
-                    day= today;
-                    intent.putExtra("whichDay", "today");
+                    day = today;
                 }else if(tomorrowBool){
                     day = tomorrow;
-                    intent.putExtra("whichDay", "tomorrow");
                 }else {
                     day = theDayAfterTomorrow;
-                    intent.putExtra("whichDay", "theDayAfterTomorrow");
                 }
-                intent.putExtra("day",day);
+                intent.putExtra("dateGiven",day);
                 startActivity(intent);
             }
         });
@@ -195,7 +200,7 @@ public class VenuesListActivity extends AppCompatActivity {
             if (!popularSortActive) {
                 popularButton.setBackgroundResource(R.drawable.button_venues_list_selected);
                 alphabeticButton.setBackgroundResource(R.drawable.button_venues_list_not_selected);
-                setUpPopularRecyclerView(false);
+                setUpPopularRecyclerView(false,false);
             }
         }
     };
@@ -207,7 +212,7 @@ public class VenuesListActivity extends AppCompatActivity {
             if (popularSortActive) {
                 alphabeticButton.setBackgroundResource(R.drawable.button_venues_list_selected);
                 popularButton.setBackgroundResource(R.drawable.button_venues_list_not_selected);
-                setUpAlphabeticRecyclerView();
+                setUpAlphabeticRecyclerView(false);
             }
         }
     };
@@ -334,24 +339,14 @@ public class VenuesListActivity extends AppCompatActivity {
      **/
 
     public void setUpDateButton() {
-        Date date;
-        Format formatter;
-        Calendar calendar = Calendar.getInstance();
+        today = DatabaseMethods.getDateToday();
+        tomorrow = DatabaseMethods.getDateTomorrow();
+        theDayAfterTomorrow = DatabaseMethods.getDateTheDayAfterTomorrow();
 
-        date = calendar.getTime();
-        formatter = new SimpleDateFormat("dd.MM.yyyy");
-        today = formatter.format(date);
-        calendar.add(Calendar.DATE, 1);
-        date = calendar.getTime();
-        tomorrow = formatter.format(date);
-        calendar.add(Calendar.DATE, 1);
-        date = calendar.getTime();
-        theDayAfterTomorrow = formatter.format(date);
-        Log.e(TAG, "setUpDateButton: " + today + " " + tomorrow + " " + theDayAfterTomorrow);
+        dateButton.setText(today);
 
         todayBool = true;
         tomorrowBool = false;
-        dateButton.setText(today);
         dateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -359,6 +354,7 @@ public class VenuesListActivity extends AppCompatActivity {
                     dateButton.setText(tomorrow);
                     todayBool = false;
                     tomorrowBool = true;
+
                 } else if (tomorrowBool) {
                     dateButton.setText(theDayAfterTomorrow);
                     tomorrowBool = false;
@@ -366,6 +362,8 @@ public class VenuesListActivity extends AppCompatActivity {
                     dateButton.setText(today);
                     todayBool = true;
                 }
+                if (popularSortActive) setUpPopularRecyclerView(false,true);
+                else setUpAlphabeticRecyclerView(true);
             }
         });
     }
