@@ -1,6 +1,7 @@
 package com.stimitom.erasmuspartyapp;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,7 +16,7 @@ public class User {
     private long counterpos0;
     private long counterpos1;
     private long counterpos2;
-    private Map<String,String> countermapping = new HashMap<>();
+    private Map<String, String> countermapping = new HashMap<>();
 
     public User() {
     }

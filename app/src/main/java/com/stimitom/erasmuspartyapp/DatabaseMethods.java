@@ -84,5 +84,15 @@ public class DatabaseMethods {
         date = calendar.getTime();
         return formatter.format(date);
     }
+
+    public static String getDateInThreeDays(){
+        Date date;
+        Format formatter = new SimpleDateFormat("dd-MM-yyyy");
+        Calendar calendar = Calendar.getInstance();
+
+        calendar.add(Calendar.DATE, 3);
+        date = calendar.getTime();
+        return formatter.format(date);
+    }
 }
 

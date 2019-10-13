@@ -26,7 +26,11 @@ import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -60,7 +64,8 @@ public class AttendPartyActivity extends AppCompatActivity {
     private List<String> venueGuestList;
     private String currentUserId;
 
-    private String dateGiven;
+    private String dateGivenString;
+    private Date dateGivenDate;
     private long usersVenueCountNumber;
     private String usersVenueCountName;
     private Boolean containsList;
@@ -81,11 +86,19 @@ public class AttendPartyActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         final Venue venue = intent.getParcelableExtra("clickedVenue");
-        dateGiven = intent.getStringExtra("dateGiven");
+        dateGivenString = intent.getStringExtra("dateGiven");
+
+//        DateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
+//        try {
+//             dateGivenDate = formatter.parse(dateGivenString);
+//        }catch (ParseException e){
+//            Log.e(TAG, "onCreate: date could not be parsed" + e.toString());
+//        }
+
         final String venue_name = venue.getVenueName();
 
         db = FirebaseFirestore.getInstance();
-        dayVenueRef = db.collection("dates").document(dateGiven)
+        dayVenueRef = db.collection("dates").document(dateGivenString)
                 .collection("day_venues")
                 .document(venue_name);
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
@@ -218,13 +231,13 @@ public class AttendPartyActivity extends AppCompatActivity {
                         User user = documentSnapshot.toObject(User.class);
                         usersHashMap = new HashMap<>();
                         int listSize = user.getListnames().size();
-                        Log.e(TAG, "onSuccess: List size : " + listSize );
+                        Log.e(TAG, "onSuccess: List size : " + listSize);
 
                         //Check if user already has list for givenDate and adjust user accordingly
-                        if (documentSnapshot.contains(dateGiven)) {
+                        if (documentSnapshot.contains(dateGivenString)) {
                             usersCounterMappingChanged = false;
                             containsList = true;
-                            usersVenueCountName = user.getCountermapping().get(dateGiven);
+                            usersVenueCountName = user.getCountermapping().get(dateGivenString);
                             switch (usersVenueCountName) {
                                 case "counterpos0":
                                     usersVenueCountNumber = user.getCounterpos0();
@@ -245,22 +258,21 @@ public class AttendPartyActivity extends AppCompatActivity {
                             // new List wil be initialized,a counter needs to be set
                             switch (listSize) {
                                 case 3:
-                                    cleanUser(user.getListnames());
-                                    usersVenueCountName = "counterpos0";
+                                    usersVenueCountName = cleanMapAndCounter(user.getCountermapping());
                                     break;
                                 case 2:
                                     usersVenueCountName = "counterpos2";
                                     usersHashMap.putAll(user.getCountermapping());
-                                    usersHashMap.put(dateGiven,usersVenueCountName);
+                                    usersHashMap.put(dateGivenString, usersVenueCountName);
                                     break;
                                 case 1:
                                     usersVenueCountName = "counterpos1";
                                     usersHashMap.putAll(user.getCountermapping());
-                                    usersHashMap.put(dateGiven,usersVenueCountName);
-                                     break;
+                                    usersHashMap.put(dateGivenString, usersVenueCountName);
+                                    break;
                                 default:
                                     usersVenueCountName = "counterpos0";
-                                    usersHashMap.put(dateGiven,usersVenueCountName);
+                                    usersHashMap.put(dateGivenString, usersVenueCountName);
                                     break;
                             }
                             Log.e(TAG, "onSuccess: counterName: " + usersVenueCountName);
@@ -277,14 +289,37 @@ public class AttendPartyActivity extends AppCompatActivity {
                 });
     }
 
-    public void cleanUser(List<String> listnames) {
-        for (String listname : listnames) {
-            userRef.update("listnames", FieldValue.arrayRemove(listname));
+    public String cleanMapAndCounter(Map<String, String> counterMapping) {
+        //Finds and cleans the oldest counter and deletes it from map
+        //returns String of the oldest COunter that can be used again
+        usersHashMap.putAll(counterMapping);
+
+        Date oldestDate = null;
+        Date checkDate = null;
+        DateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
+        for (String dateStringKey : usersHashMap.keySet()) {
+            if (oldestDate == null) {
+                try {
+                    oldestDate = formatter.parse(usersHashMap.get(dateStringKey));
+                } catch (ParseException e) {
+                    Log.e(TAG, "onCreate: date could not be parsed" + e.toString());
+                }
+            } else {
+                try {
+                    checkDate = formatter.parse(usersHashMap.get(dateStringKey));
+                } catch (ParseException e) {
+                    Log.e(TAG, "onCreate: date could not be parsed" + e.toString());
+                }
+                if (checkDate.before(oldestDate)) {
+                    oldestDate = checkDate;
+                }
+            }
         }
-        userRef.update("countermapping", new HashMap<>());
-        userRef.update("counterpos0", 0);
-        userRef.update("counterpos1", 0);
-        userRef.update("counterpos2", 0);
+
+        String oldestDateString = oldestDate.toString();
+        String oldestCounter = usersHashMap.get(oldestDateString);
+        usersHashMap.remove(oldestDateString);
+        return oldestCounter;
     }
 
     /**
@@ -359,10 +394,10 @@ public class AttendPartyActivity extends AppCompatActivity {
         //Update Local Variable
         usersVenueCountNumber++;
         //Update Db variables
-        userRef.update(dateGiven, FieldValue.arrayUnion(venueName));
+        userRef.update(dateGivenString, FieldValue.arrayUnion(venueName));
         userRef.update(usersVenueCountName, usersVenueCountNumber);
-        userRef.update("listnames", FieldValue.arrayUnion(dateGiven));
-        if (usersCounterMappingChanged) userRef.update("countermapping",usersHashMap);
+        userRef.update("listnames", FieldValue.arrayUnion(dateGivenString));
+        if (usersCounterMappingChanged) userRef.update("countermapping", usersHashMap);
 
         Log.d(TAG, "addToUserListOfAttendedVenues: Updated");
     }
@@ -371,7 +406,7 @@ public class AttendPartyActivity extends AppCompatActivity {
         // Update Local variables
         usersVenueCountNumber--;
         //Update db Variables
-        userRef.update(dateGiven, FieldValue.arrayRemove(venueName));
+        userRef.update(dateGivenString, FieldValue.arrayRemove(venueName));
         userRef.update(usersVenueCountName, usersVenueCountNumber);
     }
 
@@ -397,7 +432,7 @@ public class AttendPartyActivity extends AppCompatActivity {
     private void setUpRecyclerView(String venueName) {
         //TODO query should only include those where right array of the dayGiven contains venue Name
 
-        query = db.collection("users").whereArrayContains(dateGiven, venueName);
+        query = db.collection("users").whereArrayContains(dateGivenString, venueName);
         options = new FirestoreRecyclerOptions.Builder<User>()
                 .setQuery(query, User.class)
                 .build();
