@@ -21,7 +21,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".Lab1ExtrasActivity" />
-        <activity android:name=".AddVenueActivity" />
+        <activity android:name=".RequestVenueActivity" />
         <activity
             android:name="com.facebook.FacebookActivity"
             android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"

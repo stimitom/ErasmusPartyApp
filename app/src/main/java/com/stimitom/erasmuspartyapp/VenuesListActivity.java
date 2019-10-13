@@ -29,11 +29,6 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 
-import java.text.Format;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-
 public class VenuesListActivity extends AppCompatActivity {
     private final String TAG = "VenuesListActivity";
     private Context context = this;
@@ -75,7 +70,7 @@ public class VenuesListActivity extends AppCompatActivity {
         alphabeticButton.setOnClickListener(alphabeticSortListener);
 
         setUpDateButton();
-        setUpThreeDaysInDB();
+//        setUpThreeDaysInDB();
 
         reloader = this;
         user = FirebaseAuth.getInstance().getCurrentUser();
@@ -281,9 +276,8 @@ public class VenuesListActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.action_add_venue:
-                // User chose the "add_venue" item, show the app action_add_venue UI
-                Intent intent = new Intent(this, AddVenueActivity.class);
+            case R.id.action_request_venue:
+                Intent intent = new Intent(this, RequestVenueActivity.class);
                 startActivity(intent);
                 return true;
             default:
@@ -552,25 +546,3 @@ public class VenuesListActivity extends AppCompatActivity {
         return dayVenuesRef;
     }
 }
-
-
-/*
-//            DatabaseMethods.saveVenueToDatabase(new Venue("Dzempub", R.drawable.bk_logo, "3/5"));
-//            DatabaseMethods.saveVenueToDatabase(new Venue("Taboo", R.drawable.bk_logo, "2/5"));
-//            DatabaseMethods.saveVenueToDatabase(new Venue("Listas", R.drawable.bk_logo, "1/5"));
-//            DatabaseMethods.saveVenueToDatabase(new Venue("DejaVu", R.drawable.bk_logo, "3/5"));
-//            DatabaseMethods.saveVenueToDatabase(new Venue("Pjazz", R.drawable.bk_logo, "4/5"));
-//            DatabaseMethods.saveVenueToDatabase(new Venue("B20", R.drawable.bk_logo, "3/5"));
-//            DatabaseMethods.saveVenueToDatabase(new Venue("Blue", R.drawable.bk_logo, "3/5"));
-//            DatabaseMethods.saveVenueToDatabase(new Venue("Green", R.drawable.bk_logo, "3/5"));
-//            DatabaseMethods.saveVenueToDatabase(new Venue("Yellow", R.drawable.bk_logo, "3/5"));
-//            DatabaseMethods.saveVenueToDatabase(new Venue("Brown", R.drawable.bk_logo, "2/5"));
-//            DatabaseMethods.saveVenueToDatabase(new Venue("Black", R.drawable.bk_logo, "3/5"));
-//            DatabaseMethods.saveVenueToDatabase(new Venue("Grey", R.drawable.bk_logo, "3/5"));
-//            DatabaseMethods.saveVenueToDatabase(new Venue("White", R.drawable.bk_logo, "4/5"));
-//            DatabaseMethods.saveVenueToDatabase(new Venue("Purple", R.drawable.bk_logo, "3/5"));
-//            DatabaseMethods.saveVenueToDatabase(new Venue("Red", R.drawable.bk_logo, "1/5"));
-//            DatabaseMethods.saveVenueToDatabase(new Venue("Magenta", R.drawable.bk_logo, "5/5"));
-//            DatabaseMethods.saveVenueToDatabase(new Venue("Some Shithole", R.drawable.bk_logo, "5/5"));
-
- */

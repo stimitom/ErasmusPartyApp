@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".AddVenueActivity">
+    tools:context=".RequestVenueActivity"
+   >
 
     <EditText
         android:id="@+id/input_venue_name"
@@ -43,10 +44,15 @@
         app:layout_constraintTop_toBottomOf="@+id/input_venue_name"
         android:inputType="text" />
 
-    <ImageView
-        android:id="@+id/input_venue_picture"
+    <com.pkmmte.view.CircularImageView
         android:layout_width="80dp"
         android:layout_height="80dp"
+        android:id= "@+id/input_venue_picture_round"
+        app:border="true"
+        app:border_color="#EEEEEE"
+        app:border_width="4dp"
+        app:shadow="true"
+        android:contentDescription="@string/venue_picture"
         android:layout_marginStart="16dp"
         android:layout_marginLeft="16dp"
         android:layout_marginTop="16dp"
@@ -55,7 +61,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/input_venue_rating"
-        app:srcCompat="@drawable/bk_logo" />
+        />
 
     <Button
         android:id="@+id/add_venue_button"
@@ -66,9 +72,10 @@
         android:layout_marginTop="32dp"
         android:layout_marginEnd="16dp"
         android:layout_marginRight="16dp"
-        android:text="@string/action_add_venue"
+        android:text="@string/action_request_venue"
+        android:background="@drawable/button_style_selector_request_venues"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/input_venue_picture" />
+        app:layout_constraintTop_toBottomOf="@+id/input_venue_picture_round" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

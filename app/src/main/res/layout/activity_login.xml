@@ -15,7 +15,7 @@
             android:id="@+id/email_edit_text_registration"
             android:textColor="#fff"
             android:textColorHint="#fff"
-            android:background="@drawable/edittextstylelogin"
+            android:background="@drawable/edit_text_style_login"
             android:layout_width="300dp"
             android:layout_height="60dp"
             android:layout_gravity="center"
@@ -25,7 +25,7 @@
             android:id="@+id/password_edit_text_registration"
             android:textColor="#fff"
             android:textColorHint="#fff"
-            android:background="@drawable/edittextstylelogin"
+            android:background="@drawable/edit_text_style_login"
             android:layout_marginTop="10dp"
             android:layout_width="300dp"
             android:layout_height="60dp"
@@ -37,7 +37,7 @@
             android:layout_height="60dp"
             android:layout_width="match_parent"
             android:layout_marginTop="30dp"
-            android:background="@drawable/buttonstyleselector"
+            android:background="@drawable/button_style_selector_login"
             android:gravity="center"
             android:text="@string/login" />
 
