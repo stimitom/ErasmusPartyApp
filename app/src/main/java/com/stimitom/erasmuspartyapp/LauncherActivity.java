@@ -16,6 +16,7 @@ public class LauncherActivity extends AppCompatActivity {
     String TAG = "LauncherActivity";
 
     private Button  lab1Button;
+    private Button lab2Button;
     private Button coreAppButton;
 
     private Context context = this;
@@ -28,9 +29,12 @@ public class LauncherActivity extends AppCompatActivity {
         setSupportActionBar(myToolbar);
 
         lab1Button = (Button) findViewById(R.id.button_lab_1);
+        lab2Button = (Button) findViewById(R.id.button_lab_2);
         coreAppButton = (Button) findViewById(R.id.button_core_app);
 
+
         lab1Button.setOnClickListener(startLab1ExtrasActivity);
+        lab2Button.setOnClickListener(startLab2ExtrasActivity);
         coreAppButton.setOnClickListener(startNextActivity);
     }
 
@@ -50,6 +54,12 @@ public class LauncherActivity extends AppCompatActivity {
             runLab1ExtrasActivity();
         }
     };
+    View.OnClickListener startLab2ExtrasActivity = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            runLab2ExtrasActivity();
+        }
+    };
 
     public void runVenuesListActivity(){
         Intent intent = new Intent(context,VenuesListActivity.class);
@@ -57,6 +67,11 @@ public class LauncherActivity extends AppCompatActivity {
     }
     public void runLab1ExtrasActivity(){
         Intent intent = new Intent(context,Lab1ExtrasActivity.class);
+        context.startActivity(intent);
+    }
+
+    public void runLab2ExtrasActivity(){
+        Intent intent = new Intent(context,Lab2ExtrasActivity.class);
         context.startActivity(intent);
     }
 
