@@ -170,4 +170,5 @@ public class RegistrationActivity extends AppCompatActivity {
         Intent intent = new Intent(context, VenuesListActivity.class);
         context.startActivity(intent);
     }
+
 }

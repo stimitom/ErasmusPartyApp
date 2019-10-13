@@ -18,9 +18,12 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.SearchView;
 
+import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
@@ -228,49 +231,51 @@ public class VenuesListActivity extends AppCompatActivity {
         MenuItem searchItem = menu.findItem(R.id.action_search);
         SearchView searchView = (SearchView) searchItem.getActionView();
 
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                Query query = dayVenuesRef.orderBy("venueName", Query.Direction.ASCENDING).startAt(newText.toUpperCase());
-
-                FirestoreRecyclerOptions<Venue> options = new FirestoreRecyclerOptions.Builder<Venue>()
-                        .setQuery(query, Venue.class)
-                        .build();
-                VenuesAdapter searchAdapter = new VenuesAdapter(options);
-                if (newText.trim().isEmpty()) {
-                    searchAdapter.stopListening();
-                    if (popularSortActive) {
-                        recyclerView.setAdapter(popularAdapter);
-                        attachItemClickListenerToAdapter(popularAdapter);
-                        popularAdapter.startListening();
-                    } else {
-                        recyclerView.setAdapter(alphabeticAdapter);
-                        attachItemClickListenerToAdapter(alphabeticAdapter);
-                        alphabeticAdapter.startListening();
-                    }
-                    return false;
-                } else {
-                    if (popularSortActive) {
-                        popularAdapter.stopListening();
-                    } else {
-                        alphabeticAdapter.stopListening();
-                    }
-                    recyclerView.setAdapter(searchAdapter);
-                    attachItemClickListenerToAdapter(searchAdapter);
-                    searchAdapter.startListening();
-                    return false;
-                }
-
-            }
-        });
+        searchView.setOnQueryTextListener(searchListener);
         return true;
     }
 
+    //Search function
+    SearchView.OnQueryTextListener searchListener = new SearchView.OnQueryTextListener() {
+        @Override
+        public boolean onQueryTextSubmit(String query) {
+            return false;
+        }
+
+        @Override
+        public boolean onQueryTextChange(String newText) {
+            Query query = dayVenuesRef.orderBy("venueName", Query.Direction.ASCENDING).startAt(newText.toUpperCase());
+
+            FirestoreRecyclerOptions<Venue> options = new FirestoreRecyclerOptions.Builder<Venue>()
+                    .setQuery(query, Venue.class)
+                    .build();
+            VenuesAdapter searchAdapter = new VenuesAdapter(options);
+            if (newText.trim().isEmpty()) {
+                searchAdapter.stopListening();
+                if (popularSortActive) {
+                    recyclerView.setAdapter(popularAdapter);
+                    attachItemClickListenerToAdapter(popularAdapter);
+                    popularAdapter.startListening();
+                } else {
+                    recyclerView.setAdapter(alphabeticAdapter);
+                    attachItemClickListenerToAdapter(alphabeticAdapter);
+                    alphabeticAdapter.startListening();
+                }
+                return false;
+            } else {
+                if (popularSortActive) {
+                    popularAdapter.stopListening();
+                } else {
+                    alphabeticAdapter.stopListening();
+                }
+                recyclerView.setAdapter(searchAdapter);
+                attachItemClickListenerToAdapter(searchAdapter);
+                searchAdapter.startListening();
+                return false;
+            }
+
+        }
+    };
 
     //Checks which item in the Action Bar was clicked and performs its action
     @Override
@@ -280,6 +285,17 @@ public class VenuesListActivity extends AppCompatActivity {
                 Intent intent = new Intent(this, RequestVenueActivity.class);
                 startActivity(intent);
                 return true;
+            case R.id.action_logout:
+                AuthUI.getInstance()
+                        .signOut(context)
+                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                            public void onComplete(@NonNull Task<Void> task) {
+                                // user is now signed out
+                                startActivity(new Intent(context, RegistrationActivity.class));
+                                finish();
+                            }
+                        });
+                return true;
             default:
                 // If we got here, the user's action was not recognized.
                 // Invoke the superclass to handle it.
@@ -287,6 +303,7 @@ public class VenuesListActivity extends AppCompatActivity {
 
         }
     }
+
 
     /**
      * DIALOG

@@ -7,10 +7,21 @@
     android:paddingHorizontal="16dp">
 
     <LinearLayout
-        android:paddingTop="230dp"
+        android:paddingTop="150dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginBottom="30dp"
+            android:fontFamily="@font/baumans"
+            android:text="@string/erasmus_party_app"
+            android:textColor="@color/TextColorOnPrimary"
+            android:textSize="37sp" />
+
         <EditText
             android:id="@+id/email_edit_text_registration"
             android:textColor="#fff"
@@ -19,7 +30,8 @@
             android:layout_width="300dp"
             android:layout_height="60dp"
             android:layout_gravity="center"
-            android:hint="@string/email" />
+            android:hint="@string/email"
+            />
 
         <EditText
             android:layout_marginTop="10dp"
