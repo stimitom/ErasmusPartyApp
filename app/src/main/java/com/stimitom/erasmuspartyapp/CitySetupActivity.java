@@ -75,7 +75,7 @@ public class CitySetupActivity extends AppCompatActivity implements AdapterView.
 
         letsGoButton.setOnClickListener(letsGoListener);
     }
-//TODO A LOOOOOOOT
+    //TODO A LOOOOOOOT
     View.OnClickListener letsGoListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {

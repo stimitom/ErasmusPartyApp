@@ -6,6 +6,8 @@
     android:layout_height="match_parent"
     tools:context=".LauncherActivity">
 
+
+
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/my_toolbar"
         android:layout_width="match_parent"
@@ -56,5 +58,15 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/welcome_text_view" />
 
+    <Button
+        android:id="@+id/button_lab_2"
+        android:layout_width="140dp"
+        android:layout_height="110dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="32dp"
+        android:text="LAB 2"
+        android:textSize="24sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/button_lab_1" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
