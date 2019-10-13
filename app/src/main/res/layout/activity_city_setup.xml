@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/activity_registration"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorPrimaryLight"
+    android:paddingHorizontal="16dp">
+
+    <LinearLayout
+        android:id="@+id/linear_layout_city_setup"
+        android:paddingTop="100dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginBottom="30dp"
+            android:fontFamily="@font/baumans"
+            android:text="@string/erasmus_party_app"
+            android:textColor="@color/TextColorOnPrimary"
+            android:textSize="37sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/text_view_tell_city"
+            android:textColor="#fff"
+            android:textColorHint="#fff"
+            android:textSize="20sp"
+            android:layout_gravity="center"
+            android:text="@string/tell_city"/>
+
+
+        <Spinner
+            android:layout_marginTop="10dp"
+            android:id="@+id/spinner_cities"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="text"
+            />
+
+        <TextView
+            android:layout_marginTop="30dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/text_view_tell_nationality"
+            android:textColor="#fff"
+            android:textSize="20sp"
+            android:layout_gravity="center"
+            android:text="@string/tell_nationality"/>
+
+        <Spinner
+            android:id="@+id/spinner_nationality"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/nationality"
+            android:inputType ="text"
+            android:layout_marginTop="10dp"
+            />
+
+        <Button
+            android:id="@+id/lets_go_button"
+            android:layout_height="60dp"
+            android:layout_width="match_parent"
+            android:layout_marginTop="40dp"
+            android:background="@drawable/button_style_selector_login"
+            android:gravity="center"
+            android:text="@string/lets_go_party" />
+
+
+    </LinearLayout>
+
+    <ProgressBar
+        android:id="@+id/progress_bar_registration"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="450dp"
+        />
+
+
+</RelativeLayout>

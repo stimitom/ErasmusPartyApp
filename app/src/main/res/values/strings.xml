@@ -2,6 +2,7 @@
     <string name="app_name">Erasmus Party</string>
     <string name="welcome">Welcome to the Erasmus Party App</string>
     <string name="button_lab1">LAB 1</string>
+    <string name="erasmus_party_app">Erasmus Party App</string>
     <string name="button_core_app">Core App</string>
     <string name="venue_picture">venuePicture</string>
     <string name="action_add_venue">Add Venue</string>
@@ -29,6 +30,12 @@
     <string name="venues_title">Bars &amp; Clubs</string>
     <string name="popular">Popular</string>
     <string name="alphabetic">Alphabetic</string>
+    <string name="logout">Log Out</string>
+    <string name="tell_city">Tell us which city you are staying in: </string>
+    <string name="cannot_find_city">Can\'t find your city? Become your cities host!</string>
+    <string name="tell_nationality">Tell us your nationality please: </string>
+    <string name="lets_go_party">Let\'s go Party!</string>
+
     <string-array name="countries">
         <item>Afghanistan</item>
         <item>Aland Islands</item>
