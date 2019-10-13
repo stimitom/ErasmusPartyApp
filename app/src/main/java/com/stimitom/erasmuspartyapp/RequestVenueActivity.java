@@ -16,30 +16,33 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.pkmmte.view.CircularImageView;
 
 
-
-public class AddVenueActivity extends AppCompatActivity {
+public class RequestVenueActivity extends AppCompatActivity {
 
     public EditText venueNameEditText;
     private EditText venueRatingEditText;
     private ImageView venuePicture;
-    private Button addVenueButton;
-    private String TAG = "AddVenueActivity";
+    private Button requestVenueButton;
+    private String TAG = "RequestVenueActivity";
     private Context context = this;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_add_venue);
+        setContentView(R.layout.activity_request_venue);
 
         venueNameEditText = (EditText) findViewById(R.id.input_venue_name);
         venueRatingEditText = (EditText) findViewById(R.id.input_venue_rating);
-        venuePicture = (ImageView) findViewById(R.id.input_venue_picture);
-        addVenueButton = (Button) findViewById(R.id.add_venue_button);
+        venuePicture = (CircularImageView) findViewById(R.id.input_venue_picture_round);
+        requestVenueButton = (Button) findViewById(R.id.add_venue_button);
 
-        addVenueButton.setOnClickListener(addVenue);
+
+        venuePicture.setImageResource(R.drawable.bk_logo);
+
+        requestVenueButton.setOnClickListener(addVenue);
     }
 
     View.OnClickListener addVenue = new View.OnClickListener() {
@@ -55,9 +58,8 @@ public class AddVenueActivity extends AppCompatActivity {
                 toast.show();
                 return;
             }
-            saveVenueToDatabase(new Venue(venueNameInput, venuePictureId, venueRatingInput));
-            Toast toast = Toast.makeText(context, "" + venueNameInput + "was added to list", Toast.LENGTH_SHORT);
-            toast.show();
+            saveRequestToDatabase(new Venue(venueNameInput, venuePictureId, venueRatingInput));
+            Toast.makeText(context, "Your request of " + venueNameInput + " will be checked and added shortly.", Toast.LENGTH_SHORT).show();
         }
     };
 
@@ -66,23 +68,21 @@ public class AddVenueActivity extends AppCompatActivity {
      **/
 
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
-    private CollectionReference venuesRef = db.collection("venues");
+    private CollectionReference venueRequests = db.collection("venuerequests");
 
-    private void saveVenueToDatabase(Venue v) {
-        Venue venue = v;
-        venuesRef.document(venue.getVenueName())
+    private void saveRequestToDatabase(Venue venue) {
+        venueRequests.document(venue.getVenueName())
                 .set(venue)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-                        Log.d(TAG, "Venue upload database succesful");
+                        Log.d(TAG, "Venue request was saved to db succesfully");
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Log.e(TAG, "Venue upload to database FAILED");
-                        Log.e(TAG, e.toString());
+                        Log.e(TAG, "Venue request upload to DB failed" + e.toString());
                     }
                 });
     }
