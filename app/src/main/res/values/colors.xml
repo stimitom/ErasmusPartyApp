@@ -9,5 +9,5 @@
     <color name="redButtonColor">#ff5851</color>
     <color name="buttonlogincolor">#f23557</color>
     <color name="buttonloginclickedcolor">#f16a82</color>
-
+    <color name="colorShimmerBackground">#dddddd</color>
 </resources>

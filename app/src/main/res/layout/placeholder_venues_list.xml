@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/card_view_venue"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="8dp"
+    android:layout_marginStart="8dp"
+    android:layout_marginEnd="8dp"
+    app:cardBackgroundColor="@android:color/white"
+    app:cardElevation="2dp"
+    app:cardCornerRadius="5dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="8dp">
+
+        <View
+            android:id="@+id/placeholder_venue_rating"
+            android:layout_width="30dp"
+            android:layout_height="@dimen/placeholderTextHeight"
+            android:layout_marginStart="16dp"
+            android:layout_marginBottom="16dp"
+            android:background="@color/colorShimmerBackground"
+            android:padding="8dp"
+
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/placeholder_venue_name" />
+
+
+        <View
+            android:id="@+id/placeholder_venue_name"
+            android:layout_width="100dp"
+            android:layout_height="@dimen/placeholderTextHeightLarge"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_toEndOf="@+id/placeholder_venue_picture_round"
+            android:background="@color/colorShimmerBackground"
+            android:padding="8dp"
+            app:layout_constraintStart_toEndOf="@+id/placeholder_venue_picture_round"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <View
+            android:id="@+id/placeholder_guests_text_view"
+            android:layout_width="50dp"
+            android:layout_height="@dimen/placeholderTextHeight"
+            android:layout_marginTop="4dp"
+            android:layout_marginEnd="24dp"
+            android:layout_marginBottom="2dp"
+            android:background="@color/colorShimmerBackground"
+            android:text="@string/guests_tonight"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/placeholder_number_of_attendees"
+            app:layout_constraintVertical_bias="0.696" />
+
+        <View
+            android:id="@+id/placeholder_number_of_attendees"
+            android:layout_width="65dp"
+            android:layout_height="@dimen/placeholderTextHeight"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            android:background="@color/colorShimmerBackground"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <View
+            android:id="@+id/placeholder_venue_picture_round"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="4dp"
+            android:background="@drawable/placeholder_round_image_view"
+            android:contentDescription="@string/venue_picture"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+             />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.cardview.widget.CardView>
+
+
+<!--<com.pkmmte.view.CircularImageView-->
+<!--android:id="@+id/placeholder_venue_picture_round"-->
+<!--android:layout_width="70dp"-->
+<!--android:layout_height="70dp"-->
+<!--android:layout_marginTop="4dp"-->
+<!--android:layout_marginBottom="4dp"-->
+<!--android:background="@color/colorShimmerBackground"-->
+<!--android:contentDescription="@string/venue_picture"-->
+<!--app:border="true"-->
+<!--app:border_color="#EEEEEE"-->
+<!--app:border_width="4dp"-->
+<!--app:layout_constraintBottom_toBottomOf="parent"-->
+<!--app:layout_constraintStart_toStartOf="parent"-->
+<!--app:layout_constraintTop_toTopOf="parent"-->
+<!--app:shadow="true" />-->
