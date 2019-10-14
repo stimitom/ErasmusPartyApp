@@ -18,6 +18,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.SearchView;
 
+import com.facebook.shimmer.ShimmerFrameLayout;
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -57,6 +58,8 @@ public class VenuesListActivity extends AppCompatActivity {
     private VenuesAdapter popularAdapter;
     private VenuesAdapter alphabeticAdapter;
 
+    private ShimmerFrameLayout shimmerViewContainer;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -66,6 +69,8 @@ public class VenuesListActivity extends AppCompatActivity {
         popularButton = (Button) findViewById(R.id.button_popular);
         alphabeticButton = (Button) findViewById(R.id.button_alphabetic);
         dateButton = (Button) findViewById(R.id.button_date);
+
+        shimmerViewContainer = (ShimmerFrameLayout) findViewById(R.id.shimmer_view_container);
 
         popularButton.setBackgroundResource(R.drawable.button_venues_list_selected);
         alphabeticButton.setBackgroundResource(R.drawable.button_venues_list_not_selected);
@@ -88,11 +93,18 @@ public class VenuesListActivity extends AppCompatActivity {
 
 
         setUpPopularRecyclerView(true, false);
+    }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.e(TAG, "onResume: called" );
+        shimmerViewContainer.startShimmerAnimation();
     }
 
     @Override
     protected void onStart() {
+        Log.e(TAG, "onStart: called" );
         super.onStart();
         if (popularSortActive) popularAdapter.startListening();
         else alphabeticAdapter.startListening();
@@ -122,7 +134,7 @@ public class VenuesListActivity extends AppCompatActivity {
         FirestoreRecyclerOptions<Venue> options = new FirestoreRecyclerOptions.Builder<Venue>()
                 .setQuery(query, Venue.class)
                 .build();
-        popularAdapter = new VenuesAdapter(options);
+        popularAdapter = new VenuesAdapter(options, shimmerViewContainer);
 
         if (firstSetup) {
             recyclerView = (RecyclerView) findViewById(R.id.recycler_view_venues_list);
@@ -135,6 +147,7 @@ public class VenuesListActivity extends AppCompatActivity {
         }
         recyclerView.setAdapter(popularAdapter);
         attachItemClickListenerToAdapter(popularAdapter);
+
         popularAdapter.startListening();
         popularSortActive = true;
     }
@@ -149,7 +162,7 @@ public class VenuesListActivity extends AppCompatActivity {
         FirestoreRecyclerOptions<Venue> options = new FirestoreRecyclerOptions.Builder<Venue>()
                 .setQuery(query, Venue.class)
                 .build();
-        alphabeticAdapter = new VenuesAdapter(options);
+        alphabeticAdapter = new VenuesAdapter(options,shimmerViewContainer);
         popularAdapter.stopListening();
         recyclerView.setAdapter(alphabeticAdapter);
         attachItemClickListenerToAdapter(alphabeticAdapter);
@@ -192,8 +205,12 @@ public class VenuesListActivity extends AppCompatActivity {
                 intent.putExtra("dateGiven", day);
                 startActivity(intent);
             }
+
         });
     }
+
+
+
 
     View.OnClickListener popularSortListener = new View.OnClickListener() {
         @Override
@@ -250,7 +267,7 @@ public class VenuesListActivity extends AppCompatActivity {
             FirestoreRecyclerOptions<Venue> options = new FirestoreRecyclerOptions.Builder<Venue>()
                     .setQuery(query, Venue.class)
                     .build();
-            VenuesAdapter searchAdapter = new VenuesAdapter(options);
+            VenuesAdapter searchAdapter = new VenuesAdapter(options,shimmerViewContainer);
             if (newText.trim().isEmpty()) {
                 searchAdapter.stopListening();
                 if (popularSortActive) {

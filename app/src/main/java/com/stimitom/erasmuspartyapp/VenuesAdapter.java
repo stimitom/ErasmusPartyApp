@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.facebook.shimmer.ShimmerFrameLayout;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -33,9 +34,11 @@ public class VenuesAdapter extends FirestoreRecyclerAdapter<Venue, VenuesAdapter
     private FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     private CollectionReference dayVenueRef;
     private String currentUserId = getUserId();
+    private ShimmerFrameLayout shimmerFrameLayout;
 
-    public VenuesAdapter(@NonNull FirestoreRecyclerOptions<Venue> options) {
+    public VenuesAdapter(@NonNull FirestoreRecyclerOptions<Venue> options, ShimmerFrameLayout shimmercontainer) {
         super(options);
+        this.shimmerFrameLayout = shimmercontainer;
     }
 
     @Override
@@ -93,6 +96,13 @@ public class VenuesAdapter extends FirestoreRecyclerAdapter<Venue, VenuesAdapter
         }
     }
 
+    @Override
+    public void onDataChanged() {
+        if (shimmerFrameLayout != null) {
+//            shimmerFrameLayout.stopShimmerAnimation();
+//            shimmerFrameLayout.setVisibility(View.GONE);
+            }
+    }
 
     /*************************/
     /**
@@ -138,7 +148,6 @@ public class VenuesAdapter extends FirestoreRecyclerAdapter<Venue, VenuesAdapter
     public void setOnItemClickListener(OnItemClickListener listener) {
         this.listener = listener;
     }
-
 }
 
 

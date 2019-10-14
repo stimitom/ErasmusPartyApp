@@ -38,7 +38,7 @@ public class DatabaseMethods {
                 });
     }
 
-    public static void saveDayVenueToDB(String date, Venue venue){
+    public static void saveDayVenueToDB(String date, Venue venue) {
         datesRef.document(date).collection("day_venues")
                 .document(venue.getVenueName())
                 .set(venue)
@@ -51,12 +51,13 @@ public class DatabaseMethods {
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Log.e(TAG, "Day_venue upload to database FAILED"  + e.toString());
+                        Log.e(TAG, "Day_venue upload to database FAILED" + e.toString());
                     }
                 });
     }
 
-    public static String getDateToday(){
+
+    public static String getDateToday() {
         Date date;
         Format formatter = new SimpleDateFormat("dd-MM-yyyy");
         Calendar calendar = Calendar.getInstance();
@@ -65,7 +66,7 @@ public class DatabaseMethods {
         return formatter.format(date);
     }
 
-    public static String getDateTomorrow(){
+    public static String getDateTomorrow() {
         Date date;
         Format formatter = new SimpleDateFormat("dd-MM-yyyy");
         Calendar calendar = Calendar.getInstance();
@@ -75,7 +76,7 @@ public class DatabaseMethods {
         return formatter.format(date);
     }
 
-    public static String getDateTheDayAfterTomorrow(){
+    public static String getDateTheDayAfterTomorrow() {
         Date date;
         Format formatter = new SimpleDateFormat("dd-MM-yyyy");
         Calendar calendar = Calendar.getInstance();
@@ -85,7 +86,7 @@ public class DatabaseMethods {
         return formatter.format(date);
     }
 
-    public static String getDateInThreeDays(){
+    public static String getDateInThreeDays() {
         Date date;
         Format formatter = new SimpleDateFormat("dd-MM-yyyy");
         Calendar calendar = Calendar.getInstance();

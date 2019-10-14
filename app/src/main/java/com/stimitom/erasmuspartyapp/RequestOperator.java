@@ -29,7 +29,6 @@ public class RequestOperator extends Thread {
         super.run();
         try {
             ModelPost publication = request();
-
             if (publication != null) success(publication);
             else failed(responseCode);
         } catch (IOException e) {
