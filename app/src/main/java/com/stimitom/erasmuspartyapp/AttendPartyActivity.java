@@ -258,7 +258,7 @@ public class AttendPartyActivity extends AppCompatActivity {
                             // new List wil be initialized,a counter needs to be set
                             switch (listSize) {
                                 case 3:
-                                    usersVenueCountName = cleanMapAndCounter(user.getCountermapping());
+                                    cleanUser(user.getCountermapping());
                                     break;
                                 case 2:
                                     usersVenueCountName = "counterpos2";
@@ -276,8 +276,10 @@ public class AttendPartyActivity extends AppCompatActivity {
                                     break;
                             }
                             Log.e(TAG, "onSuccess: counterName: " + usersVenueCountName);
+
                             containsList = false;
                             usersVenueCountNumber = 0;
+                            Log.e(TAG, "onSuccess: counternumber" + usersVenueCountNumber );
                         }
                     }
                 })
@@ -289,7 +291,27 @@ public class AttendPartyActivity extends AppCompatActivity {
                 });
     }
 
-    public String cleanMapAndCounter(Map<String, String> counterMapping) {
+    public void cleanUser(Map<String, String> counterMapping) {
+        String oldestDateString = getOldestDateString(counterMapping);
+
+        //Find the oldest countername in the hashmap
+        String oldestCounter = usersHashMap.get(oldestDateString);
+
+        //remove the oldest key-value pair from the hashmap
+        usersHashMap.remove(oldestDateString);
+
+        //set the venuecountname to the oldest one which is now free
+        usersVenueCountName = oldestCounter;
+
+        //add the new date to the hashmap
+        usersHashMap.put(dateGivenString,usersVenueCountName);
+
+        //Clean oldest Date from Listnames
+        userRef.update("listnames", FieldValue.arrayRemove(oldestDateString));
+
+    }
+
+    public String getOldestDateString(Map<String,String> counterMapping){
         //Finds and cleans the oldest counter and deletes it from map
         //returns String of the oldest COunter that can be used again
         usersHashMap.putAll(counterMapping);
@@ -300,26 +322,28 @@ public class AttendPartyActivity extends AppCompatActivity {
         for (String dateStringKey : usersHashMap.keySet()) {
             if (oldestDate == null) {
                 try {
-                    oldestDate = formatter.parse(usersHashMap.get(dateStringKey));
+                    oldestDate = formatter.parse(dateStringKey);
+                    Log.e(TAG, "cleanUser: oldestDate start:"  +oldestDate );
                 } catch (ParseException e) {
                     Log.e(TAG, "onCreate: date could not be parsed" + e.toString());
                 }
             } else {
                 try {
-                    checkDate = formatter.parse(usersHashMap.get(dateStringKey));
+                    checkDate = formatter.parse(dateStringKey);
+                    Log.e(TAG, "cleanUser: checkDAte" + checkDate);
                 } catch (ParseException e) {
                     Log.e(TAG, "onCreate: date could not be parsed" + e.toString());
                 }
                 if (checkDate.before(oldestDate)) {
                     oldestDate = checkDate;
+                    Log.e(TAG, "cleanUser: if checkdate round1 before oldest , oldest: " +oldestDate );
                 }
             }
         }
 
-        String oldestDateString = oldestDate.toString();
-        String oldestCounter = usersHashMap.get(oldestDateString);
-        usersHashMap.remove(oldestDateString);
-        return oldestCounter;
+
+        String oldestDateString = formatter.format(oldestDate);
+        return oldestDateString;
     }
 
     /**
@@ -395,6 +419,7 @@ public class AttendPartyActivity extends AppCompatActivity {
         usersVenueCountNumber++;
         //Update Db variables
         userRef.update(dateGivenString, FieldValue.arrayUnion(venueName));
+        Log.e(TAG, "addToUserListOfAttendedVenues: usersVenueCountName" +usersVenueCountName );
         userRef.update(usersVenueCountName, usersVenueCountNumber);
         userRef.update("listnames", FieldValue.arrayUnion(dateGivenString));
         if (usersCounterMappingChanged) userRef.update("countermapping", usersHashMap);
