@@ -4,10 +4,11 @@
     <color name="colorPrimaryDark">#26418f</color>
     <color name="colorPrimaryLight">#8e99f3</color>
     <color name="colorAccent">#8e99f3</color>
-    <color name="TextColorOnPrimary">#ffffff</color>
-    <color name="greenButtonColor">#2fbf71</color>
-    <color name="redButtonColor">#ff5851</color>
-    <color name="buttonlogincolor">#f23557</color>
-    <color name="buttonloginclickedcolor">#f16a82</color>
+    <color name="colorTextOnPrimary">#ffffff</color>
+    <color name="colorGreenButton">#2fbf71</color>
+    <color name="colorRedButton">#ff5851</color>
+    <color name="colorRedButtonLogin">#f23557</color>
+    <color name="colorLightRedButtonLoginClicked">#f16a82</color>
     <color name="colorShimmerBackground">#dddddd</color>
+    <color name="colorGreyBackgroundDrawing">#D8D7D7</color>
 </resources>

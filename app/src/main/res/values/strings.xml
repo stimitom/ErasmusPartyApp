@@ -35,6 +35,10 @@
     <string name="cannot_find_city">Can\'t find your city? Become your cities host!</string>
     <string name="tell_nationality">Tell us your nationality please: </string>
     <string name="lets_go_party">Let\'s go Party!</string>
+    <string name="about">About</string>
+    <string name="donation_gag">Hey, if you think this App is worth something, you can donate some coins to \n\n<b>AT03 5100 0916 2661 3600</b>
+        \n\nSince it\'s Ad-free and I need a server for my database, I\'m actually paying for that shit. LOL
+    Anyways, thank you very much for using my app \nHere\'s an ugly drawing:</string>
 
     <string-array name="countries">
         <item>Afghanistan</item>

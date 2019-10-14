@@ -99,8 +99,8 @@ public class VenuesAdapter extends FirestoreRecyclerAdapter<Venue, VenuesAdapter
     @Override
     public void onDataChanged() {
         if (shimmerFrameLayout != null) {
-//            shimmerFrameLayout.stopShimmerAnimation();
-//            shimmerFrameLayout.setVisibility(View.GONE);
+            shimmerFrameLayout.stopShimmerAnimation();
+            shimmerFrameLayout.setVisibility(View.GONE);
             }
     }
 
