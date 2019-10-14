@@ -82,20 +82,3 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.cardview.widget.CardView>
-
-
-<!--<com.pkmmte.view.CircularImageView-->
-<!--android:id="@+id/placeholder_venue_picture_round"-->
-<!--android:layout_width="70dp"-->
-<!--android:layout_height="70dp"-->
-<!--android:layout_marginTop="4dp"-->
-<!--android:layout_marginBottom="4dp"-->
-<!--android:background="@color/colorShimmerBackground"-->
-<!--android:contentDescription="@string/venue_picture"-->
-<!--app:border="true"-->
-<!--app:border_color="#EEEEEE"-->
-<!--app:border_width="4dp"-->
-<!--app:layout_constraintBottom_toBottomOf="parent"-->
-<!--app:layout_constraintStart_toStartOf="parent"-->
-<!--app:layout_constraintTop_toTopOf="parent"-->
-<!--app:shadow="true" />-->

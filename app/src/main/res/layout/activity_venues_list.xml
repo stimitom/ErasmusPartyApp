@@ -22,7 +22,7 @@
         android:id="@+id/button_date"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColor="@color/TextColorOnPrimary"
+        android:textColor="@color/colorTextOnPrimary"
         android:background="@color/colorPrimaryLight"
         android:textAlignment="center"
         />
@@ -39,14 +39,14 @@
             android:layout_height="wrap_content"
             android:text="@string/popular"
             android:layout_weight="1"
-            android:textColor="@color/TextColorOnPrimary"/>
+            android:textColor="@color/colorTextOnPrimary"/>
         <Button
             android:id="@+id/button_alphabetic"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="@string/alphabetic"
             android:layout_weight="1"
-            android:textColor="@color/TextColorOnPrimary"/>
+            android:textColor="@color/colorTextOnPrimary"/>
     </LinearLayout>
 
     <com.facebook.shimmer.ShimmerFrameLayout
@@ -54,7 +54,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="0dp"
         android:orientation="vertical"
         shimmer:duration="800">
 

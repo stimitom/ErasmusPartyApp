@@ -314,6 +314,11 @@ public class VenuesListActivity extends AppCompatActivity {
                             }
                         });
                 return true;
+
+            case R.id.action_about:
+                Intent intent1 = new Intent(this,AboutActivity.class);
+                startActivity(intent1);
+                return true;
             default:
                 // If we got here, the user's action was not recognized.
                 // Invoke the superclass to handle it.
