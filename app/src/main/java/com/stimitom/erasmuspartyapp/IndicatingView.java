@@ -4,6 +4,8 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Path;
+import android.graphics.Point;
 import android.util.AttributeSet;
 import android.view.View;
 
@@ -46,9 +48,17 @@ public class IndicatingView extends View {
                 paint = new Paint();
                 paint.setColor(Color.GREEN);
                 paint.setStrokeWidth(20f);
-                canvas.drawLine(0, height, width / 2, 0, paint);
-                canvas.drawLine(width/2, 0, width, height, paint);
-                canvas.drawLine(width, height, 0, height, paint);
+                paint.setStyle(Paint.Style.FILL);
+                Point p1 = new Point(0,height);
+                Point p2 = new Point(width/2,0);
+                Point p3 = new Point(width,height);
+                Path path = new Path();
+                path.moveTo(p1.x,p1.y);
+                path.lineTo(p2.x,p2.y);
+                path.lineTo(p3.x,p3.y);
+                path.close();
+
+                canvas.drawPath(path,paint);
                 break;
             case FAILED:
                 paint = new Paint();
