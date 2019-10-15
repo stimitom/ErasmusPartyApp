@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -15,6 +16,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.facebook.share.model.ShareLinkContent;
+import com.facebook.share.widget.ShareButton;
+import com.facebook.share.widget.ShareDialog;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -44,6 +48,7 @@ public class AttendPartyActivity extends AppCompatActivity {
     private ImageView venuePicture_ImageView;
     private TextView venueNumberOfAttendees_TextView;
     private TextView currentVenueState_TextView;
+    private ShareButton facebookShareButton;
 
     private Button attendButton;
     private Boolean ButtonIsRed;
@@ -84,16 +89,15 @@ public class AttendPartyActivity extends AppCompatActivity {
         venueNumberOfAttendees_TextView = (TextView) findViewById(R.id.number_of_attendees1);
         currentVenueState_TextView = (TextView) findViewById(R.id.text_view_meet_people_from);
 
+        ShareLinkContent content = new ShareLinkContent.Builder()
+                .setContentUrl(Uri.parse("https://developers.facebook.com"))
+                .build();
+        facebookShareButton = (ShareButton) findViewById(R.id.facebook_share_button);
+        facebookShareButton.setShareContent(content);
+
         Intent intent = getIntent();
         final Venue venue = intent.getParcelableExtra("clickedVenue");
         dateGivenString = intent.getStringExtra("dateGiven");
-
-//        DateFormat formatter = new SimpleDateFormat("dd-MM-yyyy");
-//        try {
-//             dateGivenDate = formatter.parse(dateGivenString);
-//        }catch (ParseException e){
-//            Log.e(TAG, "onCreate: date could not be parsed" + e.toString());
-//        }
 
         final String venue_name = venue.getVenueName();
 
@@ -116,6 +120,7 @@ public class AttendPartyActivity extends AppCompatActivity {
 
         readVenueData(venueDataListener);
         attendButton.setOnClickListener(attendButtonListener);
+        //facebookShareButton.setOnClickListener(facebookShareListener);
         setUpRecyclerView(venue_name);
     }
 

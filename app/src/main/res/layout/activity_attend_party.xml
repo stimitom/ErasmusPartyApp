@@ -21,6 +21,15 @@
         android:background="@drawable/button_green_round"/>
 
 
+    <com.facebook.share.widget.ShareButton
+        android:id="@+id/facebook_share_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="32dp"
+        app:layout_constraintBaseline_toBaselineOf="@+id/text_view_meet_people_from"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/text_view_meet_people_from" />
+
     <ImageView
         android:id="@+id/venue_picture_iv"
         android:layout_width="90dp"
