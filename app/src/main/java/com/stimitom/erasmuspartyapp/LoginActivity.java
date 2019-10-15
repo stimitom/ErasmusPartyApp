@@ -155,6 +155,7 @@ public class LoginActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             runVenuesListActivity();
                         } else {
+                            Toast.makeText(context, "No user registered with this email/password. Please Sign Up.",Toast.LENGTH_LONG).show();
                             Log.e(TAG, "onComplete: user signIn not successful" + task.getException().getMessage());
                         }
                     }
