@@ -60,6 +60,8 @@ public class VenuesListActivity extends AppCompatActivity {
 
     private ShimmerFrameLayout shimmerViewContainer;
 
+    private Boolean  newDayExistsInD = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -78,8 +80,8 @@ public class VenuesListActivity extends AppCompatActivity {
         alphabeticButton.setOnClickListener(alphabeticSortListener);
 
         setUpDateButton();
-//        setUpThreeDaysInDB();
-//        setUpNewDayInDB();
+       // setUpThreeDaysInDB();
+          setUpNewDayInDB();
 
         reloader = this;
         user = FirebaseAuth.getInstance().getCurrentUser();
@@ -469,23 +471,34 @@ public class VenuesListActivity extends AppCompatActivity {
     }
 
     public void setUpNewDayInDB(){
-        DatabaseMethods.saveDayVenueToDB(theDayAfterTomorrow, new Venue("Dzempub", R.drawable.bk_logo, "3/5"));
-        DatabaseMethods.saveDayVenueToDB(theDayAfterTomorrow, new Venue("Taboo", R.drawable.bk_logo, "2/5"));
-        DatabaseMethods.saveDayVenueToDB(theDayAfterTomorrow, new Venue("Listas", R.drawable.bk_logo, "1/5"));
-        DatabaseMethods.saveDayVenueToDB(theDayAfterTomorrow, new Venue("DejaVu", R.drawable.bk_logo, "3/5"));
-        DatabaseMethods.saveDayVenueToDB(theDayAfterTomorrow, new Venue("Pjazz", R.drawable.bk_logo, "4/5"));
-        DatabaseMethods.saveDayVenueToDB(theDayAfterTomorrow, new Venue("B20", R.drawable.bk_logo, "3/5"));
-        DatabaseMethods.saveDayVenueToDB(theDayAfterTomorrow, new Venue("Blue", R.drawable.bk_logo, "3/5"));
-        DatabaseMethods.saveDayVenueToDB(theDayAfterTomorrow, new Venue("Green", R.drawable.bk_logo, "3/5"));
-        DatabaseMethods.saveDayVenueToDB(theDayAfterTomorrow, new Venue("Yellow", R.drawable.bk_logo, "3/5"));
-        DatabaseMethods.saveDayVenueToDB(theDayAfterTomorrow, new Venue("Brown", R.drawable.bk_logo, "2/5"));
-        DatabaseMethods.saveDayVenueToDB(theDayAfterTomorrow, new Venue("Black", R.drawable.bk_logo, "3/5"));
-        DatabaseMethods.saveDayVenueToDB(theDayAfterTomorrow, new Venue("Grey", R.drawable.bk_logo, "3/5"));
-        DatabaseMethods.saveDayVenueToDB(theDayAfterTomorrow, new Venue("White", R.drawable.bk_logo, "4/5"));
-        DatabaseMethods.saveDayVenueToDB(theDayAfterTomorrow, new Venue("Purple", R.drawable.bk_logo, "3/5"));
-        DatabaseMethods.saveDayVenueToDB(theDayAfterTomorrow, new Venue("Red", R.drawable.bk_logo, "1/5"));
-        DatabaseMethods.saveDayVenueToDB(theDayAfterTomorrow, new Venue("Magenta", R.drawable.bk_logo, "5/5"));
-        DatabaseMethods.saveDayVenueToDB(theDayAfterTomorrow, new Venue("Some Shithole", R.drawable.bk_logo, "5/5"));
+
+        db.collection("dates").document(theDayAfterTomorrow).get().
+                addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                if (documentSnapshot.exists()) newDayExistsInD = true;
+            }
+        });
+
+        if (!newDayExistsInD) {
+            DatabaseMethods.saveDayVenueToDB(theDayAfterTomorrow, new Venue("Dzempub", R.drawable.bk_logo, "3/5"));
+            DatabaseMethods.saveDayVenueToDB(theDayAfterTomorrow, new Venue("Taboo", R.drawable.bk_logo, "2/5"));
+            DatabaseMethods.saveDayVenueToDB(theDayAfterTomorrow, new Venue("Listas", R.drawable.bk_logo, "1/5"));
+            DatabaseMethods.saveDayVenueToDB(theDayAfterTomorrow, new Venue("DejaVu", R.drawable.bk_logo, "3/5"));
+            DatabaseMethods.saveDayVenueToDB(theDayAfterTomorrow, new Venue("Pjazz", R.drawable.bk_logo, "4/5"));
+            DatabaseMethods.saveDayVenueToDB(theDayAfterTomorrow, new Venue("B20", R.drawable.bk_logo, "3/5"));
+            DatabaseMethods.saveDayVenueToDB(theDayAfterTomorrow, new Venue("Blue", R.drawable.bk_logo, "3/5"));
+            DatabaseMethods.saveDayVenueToDB(theDayAfterTomorrow, new Venue("Green", R.drawable.bk_logo, "3/5"));
+            DatabaseMethods.saveDayVenueToDB(theDayAfterTomorrow, new Venue("Yellow", R.drawable.bk_logo, "3/5"));
+            DatabaseMethods.saveDayVenueToDB(theDayAfterTomorrow, new Venue("Brown", R.drawable.bk_logo, "2/5"));
+            DatabaseMethods.saveDayVenueToDB(theDayAfterTomorrow, new Venue("Black", R.drawable.bk_logo, "3/5"));
+            DatabaseMethods.saveDayVenueToDB(theDayAfterTomorrow, new Venue("Grey", R.drawable.bk_logo, "3/5"));
+            DatabaseMethods.saveDayVenueToDB(theDayAfterTomorrow, new Venue("White", R.drawable.bk_logo, "4/5"));
+            DatabaseMethods.saveDayVenueToDB(theDayAfterTomorrow, new Venue("Purple", R.drawable.bk_logo, "3/5"));
+            DatabaseMethods.saveDayVenueToDB(theDayAfterTomorrow, new Venue("Red", R.drawable.bk_logo, "1/5"));
+            DatabaseMethods.saveDayVenueToDB(theDayAfterTomorrow, new Venue("Magenta", R.drawable.bk_logo, "5/5"));
+            DatabaseMethods.saveDayVenueToDB(theDayAfterTomorrow, new Venue("Some Shithole", R.drawable.bk_logo, "5/5"));
+        }
     }
 
     public static CollectionReference getDayVenuesRef() {
