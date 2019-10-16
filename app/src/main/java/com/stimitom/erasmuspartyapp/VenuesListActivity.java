@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -17,10 +18,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.SearchView;
+import android.widget.Toast;
 
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -61,6 +65,8 @@ public class VenuesListActivity extends AppCompatActivity {
     private ShimmerFrameLayout shimmerViewContainer;
 
     private Boolean  newDayExistsInD = false;
+
+    private static final int ERROR_DIALOG_REQUEST = 90001;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -302,7 +308,7 @@ public class VenuesListActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_request_venue:
-                Intent intent = new Intent(this, RequestVenueActivity.class);
+                Intent intent = new Intent(this, AddGooglePlaceActivity.class);
                 startActivity(intent);
                 return true;
             case R.id.action_logout:
@@ -316,10 +322,16 @@ public class VenuesListActivity extends AppCompatActivity {
                             }
                         });
                 return true;
-
             case R.id.action_about:
                 Intent intent1 = new Intent(this,AboutActivity.class);
                 startActivity(intent1);
+                return true;
+            case R.id.action_maps:
+                if (isServicesOk()) {
+                    Intent intent2 = new Intent(this, MapsActivity.class);
+                    intent2.putExtra("city", "Kaunas");
+                    startActivity(intent2);
+                }
                 return true;
             default:
                 // If we got here, the user's action was not recognized.
@@ -327,6 +339,24 @@ public class VenuesListActivity extends AppCompatActivity {
                 return super.onOptionsItemSelected(item);
 
         }
+    }
+
+
+    public boolean isServicesOk(){
+        int availabe = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(this);
+
+        if (availabe == ConnectionResult.SUCCESS) {
+            //Everything okay
+            return true;
+        }else if(GoogleApiAvailability.getInstance().isUserResolvableError(availabe)) {
+            //An resolveable error occured
+            Dialog dialog = GoogleApiAvailability.getInstance().getErrorDialog(this,availabe,ERROR_DIALOG_REQUEST);
+            dialog.show();
+        }else {
+            //Nothing can be done, maps cannot be used
+            Toast.makeText(this,"Your phone does not fulfill the requirements for this function.", Toast.LENGTH_SHORT).show();
+        }
+        return false;
     }
 
 
