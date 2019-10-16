@@ -18,6 +18,12 @@
         android:title="@string/logout"
         app:showAsAction="never"
         />
+    <item
+        android:id="@+id/action_maps"
+        android:title="@string/maps"
+        android:icon="@drawable/ic_map_white_24dp"
+        app:showAsAction="ifRoom"
+        />
 
     <item
         android:id="@+id/action_search"

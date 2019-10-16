@@ -4,6 +4,8 @@ import android.content.Context;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -18,6 +20,8 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.pkmmte.view.CircularImageView;
 
+import java.net.URL;
+
 
 public class RequestVenueActivity extends AppCompatActivity {
 
@@ -29,6 +33,7 @@ public class RequestVenueActivity extends AppCompatActivity {
     private Context context = this;
 
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,7 +43,6 @@ public class RequestVenueActivity extends AppCompatActivity {
         venueRatingEditText = (EditText) findViewById(R.id.input_venue_rating);
         venuePicture = (CircularImageView) findViewById(R.id.input_venue_picture_round);
         requestVenueButton = (Button) findViewById(R.id.add_venue_button);
-
 
         venuePicture.setImageResource(R.drawable.bk_logo);
 
@@ -86,4 +90,22 @@ public class RequestVenueActivity extends AppCompatActivity {
                     }
                 });
     }
+
+//    public static Bitmap getFacebookProfilePicture(String userID) throws Exception {
+//        URL imageURL = new URL("https://graph.facebook.com/" + userID + "/picture?type=large");
+//        Bitmap bitmap = BitmapFactory.decodeStream(imageURL.openConnection().getInputStream());
+//
+//        return bitmap;
+//    }
+//
+//    Bitmap bitmap;
+//
+//    View.OnClickListener faceButtonListener = new View.OnClickListener() {
+//        @Override
+//        public void onClick(View v) {
+//            bitmap = getFacebookProfilePicture()
+//        }
+//    }
+//
+//    }
 }
