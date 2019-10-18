@@ -1,6 +1,7 @@
 package com.stimitom.erasmuspartyapp;
 
 import android.util.Log;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -17,35 +18,17 @@ import androidx.annotation.NonNull;
 public class DatabaseMethods {
     private static final String TAG = "DatabaseMethods";
     private static FirebaseFirestore db = FirebaseFirestore.getInstance();
-    private static CollectionReference venuesRef = db.collection("venues");
     private static CollectionReference datesRef = db.collection("dates");
+    private static CollectionReference citiesRef = db.collection("cities");
 
-
-    public static void saveVenueToDatabase(Venue venue) {
-        venuesRef.document(venue.getVenueName())
-                .set(venue)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        Log.i(TAG, "Venue upload database succesful");
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.e(TAG, "Venue upload to database FAILED" + e.toString());
-                    }
-                });
-    }
-
-    public static void saveDayVenueToDB(String date, Venue venue) {
-        datesRef.document(date).collection("day_venues")
+    public static void addVenueToCityDB(String city, Venue venue) {
+        citiesRef.document(city).collection("venues")
                 .document(venue.getVenueName())
                 .set(venue)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-                        Log.i(TAG, "Day_venue upload database succesful");
+                        Log.d(TAG, "Venue upload database succesful");
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -55,6 +38,48 @@ public class DatabaseMethods {
                     }
                 });
     }
+
+    public static void addVenueToDate(Venue venue, String date, String city){
+        db.collection(city+"_dates").document(date)
+                .collection("day_venues")
+                .document(venue.getVenueName())
+                .set(venue)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d(TAG, "Day_venue upload database succesful");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.e(TAG, "Day_venue upload to database FAILED" + e.toString());
+                    }
+                });
+    }
+
+    public static void addCityToDB(String city) {
+        citiesRef.document("city");
+    }
+
+//
+//    public static void addVenueToDate(String date, Venue venue) {
+//        datesRef.document(date).collection("day_venues")
+//                .document(venue.getVenueName())
+//                .set(venue)
+//                .addOnSuccessListener(new OnSuccessListener<Void>() {
+//                    @Override
+//                    public void onSuccess(Void aVoid) {
+//                        Log.i(TAG, "Day_venue upload database succesful");
+//                    }
+//                })
+//                .addOnFailureListener(new OnFailureListener() {
+//                    @Override
+//                    public void onFailure(@NonNull Exception e) {
+//                        Log.e(TAG, "Day_venue upload to database FAILED" + e.toString());
+//                    }
+//                });
+//    }
 
 
     public static String getDateToday() {
@@ -95,5 +120,6 @@ public class DatabaseMethods {
         date = calendar.getTime();
         return formatter.format(date);
     }
+
 }
 

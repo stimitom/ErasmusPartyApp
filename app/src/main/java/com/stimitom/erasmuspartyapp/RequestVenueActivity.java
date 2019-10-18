@@ -62,7 +62,7 @@ public class RequestVenueActivity extends AppCompatActivity {
                 toast.show();
                 return;
             }
-            saveRequestToDatabase(new Venue(venueNameInput, venuePictureId, venueRatingInput));
+      //TODO UNCOMMENT      saveRequestToDatabase(new Venue(venueNameInput, venuePictureId, venueRatingInput));
             Toast.makeText(context, "Your request of " + venueNameInput + " will be checked and added shortly.", Toast.LENGTH_SHORT).show();
         }
     };
