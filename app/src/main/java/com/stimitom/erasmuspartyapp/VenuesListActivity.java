@@ -36,6 +36,8 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 public class VenuesListActivity extends AppCompatActivity {
     private final String TAG = "VenuesListActivity";
@@ -65,7 +67,7 @@ public class VenuesListActivity extends AppCompatActivity {
 
     private ShimmerFrameLayout shimmerViewContainer;
 
-    private Boolean  newDayExistsInD = false;
+    private Boolean newDayExistsInDB = false;
 
     private static final int ERROR_DIALOG_REQUEST = 90001;
 
@@ -88,7 +90,9 @@ public class VenuesListActivity extends AppCompatActivity {
 
         city = "Kaunas,LT";
         setUpDateButton();
-        //setUpNewDayInDB();
+        setUpTodayInDB();
+        setUpTomorrowInDB();
+        addNewDayToDateDB();
 
         reloader = this;
         user = FirebaseAuth.getInstance().getCurrentUser();
@@ -181,15 +185,15 @@ public class VenuesListActivity extends AppCompatActivity {
 
     public void setDayVenuesRef() {
         if (todayBool) {
-            dayVenuesRef = db.collection("dates")
+            dayVenuesRef = db.collection(city+"_dates")
                     .document(today)
                     .collection("day_venues");
         } else if (tomorrowBool) {
-            dayVenuesRef = db.collection("dates")
+            dayVenuesRef = db.collection(city+"_dates")
                     .document(tomorrow)
                     .collection("day_venues");
         } else {
-            dayVenuesRef = db.collection("dates")
+            dayVenuesRef = db.collection(city+"_dates")
                     .document(theDayAfterTomorrow)
                     .collection("day_venues");
         }
@@ -212,6 +216,7 @@ public class VenuesListActivity extends AppCompatActivity {
                     day = theDayAfterTomorrow;
                 }
                 intent.putExtra("dateGiven", day);
+                intent.putExtra("city",city);
                 startActivity(intent);
             }
 
@@ -439,97 +444,97 @@ public class VenuesListActivity extends AppCompatActivity {
     }
 
     /**
-     * DB Method
+     * DB Methods
      **/
-    public void setUpThreeDaysInDB() {
-//        DatabaseMethods.addVenueToDate(today, new Venue("Dzempub", R.drawable.bk_logo, "3/5"));
-//        DatabaseMethods.addVenueToDate(today, new Venue("Taboo", R.drawable.bk_logo, "2/5"));
-//        DatabaseMethods.addVenueToDate(today, new Venue("Listas", R.drawable.bk_logo, "1/5"));
-//        DatabaseMethods.addVenueToDate(today, new Venue("DejaVu", R.drawable.bk_logo, "3/5"));
-//        DatabaseMethods.addVenueToDate(today, new Venue("Pjazz", R.drawable.bk_logo, "4/5"));
-//        DatabaseMethods.addVenueToDate(today, new Venue("B20", R.drawable.bk_logo, "3/5"));
-//        DatabaseMethods.addVenueToDate(today, new Venue("Blue", R.drawable.bk_logo, "3/5"));
-//        DatabaseMethods.addVenueToDate(today, new Venue("Green", R.drawable.bk_logo, "3/5"));
-//        DatabaseMethods.addVenueToDate(today, new Venue("Yellow", R.drawable.bk_logo, "3/5"));
-//        DatabaseMethods.addVenueToDate(today, new Venue("Brown", R.drawable.bk_logo, "2/5"));
-//        DatabaseMethods.addVenueToDate(today, new Venue("Black", R.drawable.bk_logo, "3/5"));
-//        DatabaseMethods.addVenueToDate(today, new Venue("Grey", R.drawable.bk_logo, "3/5"));
-//        DatabaseMethods.addVenueToDate(today, new Venue("White", R.drawable.bk_logo, "4/5"));
-//        DatabaseMethods.addVenueToDate(today, new Venue("Purple", R.drawable.bk_logo, "3/5"));
-//        DatabaseMethods.addVenueToDate(today, new Venue("Red", R.drawable.bk_logo, "1/5"));
-//        DatabaseMethods.addVenueToDate(today, new Venue("Magenta", R.drawable.bk_logo, "5/5"));
-//        DatabaseMethods.addVenueToDate(today, new Venue("Some Shithole", R.drawable.bk_logo, "5/5"));
-//
-//
-//        DatabaseMethods.addVenueToDate(tomorrow, new Venue("Dzempub", R.drawable.bk_logo, "3/5"));
-//        DatabaseMethods.addVenueToDate(tomorrow, new Venue("Taboo", R.drawable.bk_logo, "2/5"));
-//        DatabaseMethods.addVenueToDate(tomorrow, new Venue("Listas", R.drawable.bk_logo, "1/5"));
-//        DatabaseMethods.addVenueToDate(tomorrow, new Venue("DejaVu", R.drawable.bk_logo, "3/5"));
-//        DatabaseMethods.addVenueToDate(tomorrow, new Venue("Pjazz", R.drawable.bk_logo, "4/5"));
-//        DatabaseMethods.addVenueToDate(tomorrow, new Venue("B20", R.drawable.bk_logo, "3/5"));
-//        DatabaseMethods.addVenueToDate(tomorrow, new Venue("Blue", R.drawable.bk_logo, "3/5"));
-//        DatabaseMethods.addVenueToDate(tomorrow, new Venue("Green", R.drawable.bk_logo, "3/5"));
-//        DatabaseMethods.addVenueToDate(tomorrow, new Venue("Yellow", R.drawable.bk_logo, "3/5"));
-//        DatabaseMethods.addVenueToDate(tomorrow, new Venue("Brown", R.drawable.bk_logo, "2/5"));
-//        DatabaseMethods.addVenueToDate(tomorrow, new Venue("Black", R.drawable.bk_logo, "3/5"));
-//        DatabaseMethods.addVenueToDate(tomorrow, new Venue("Grey", R.drawable.bk_logo, "3/5"));
-//        DatabaseMethods.addVenueToDate(tomorrow, new Venue("White", R.drawable.bk_logo, "4/5"));
-//        DatabaseMethods.addVenueToDate(tomorrow, new Venue("Purple", R.drawable.bk_logo, "3/5"));
-//        DatabaseMethods.addVenueToDate(tomorrow, new Venue("Red", R.drawable.bk_logo, "1/5"));
-//        DatabaseMethods.addVenueToDate(tomorrow, new Venue("Magenta", R.drawable.bk_logo, "5/5"));
-//        DatabaseMethods.addVenueToDate(tomorrow, new Venue("Some Shithole", R.drawable.bk_logo, "5/5"));
-//
-//        DatabaseMethods.addVenueToDate(theDayAfterTomorrow, new Venue("Dzempub", R.drawable.bk_logo, "3/5"));
-//        DatabaseMethods.addVenueToDate(theDayAfterTomorrow, new Venue("Taboo", R.drawable.bk_logo, "2/5"));
-//        DatabaseMethods.addVenueToDate(theDayAfterTomorrow, new Venue("Listas", R.drawable.bk_logo, "1/5"));
-//        DatabaseMethods.addVenueToDate(theDayAfterTomorrow, new Venue("DejaVu", R.drawable.bk_logo, "3/5"));
-//        DatabaseMethods.addVenueToDate(theDayAfterTomorrow, new Venue("Pjazz", R.drawable.bk_logo, "4/5"));
-//        DatabaseMethods.addVenueToDate(theDayAfterTomorrow, new Venue("B20", R.drawable.bk_logo, "3/5"));
-//        DatabaseMethods.addVenueToDate(theDayAfterTomorrow, new Venue("Blue", R.drawable.bk_logo, "3/5"));
-//        DatabaseMethods.addVenueToDate(theDayAfterTomorrow, new Venue("Green", R.drawable.bk_logo, "3/5"));
-//        DatabaseMethods.addVenueToDate(theDayAfterTomorrow, new Venue("Yellow", R.drawable.bk_logo, "3/5"));
-//        DatabaseMethods.addVenueToDate(theDayAfterTomorrow, new Venue("Brown", R.drawable.bk_logo, "2/5"));
-//        DatabaseMethods.addVenueToDate(theDayAfterTomorrow, new Venue("Black", R.drawable.bk_logo, "3/5"));
-//        DatabaseMethods.addVenueToDate(theDayAfterTomorrow, new Venue("Grey", R.drawable.bk_logo, "3/5"));
-//        DatabaseMethods.addVenueToDate(theDayAfterTomorrow, new Venue("White", R.drawable.bk_logo, "4/5"));
-//        DatabaseMethods.addVenueToDate(theDayAfterTomorrow, new Venue("Purple", R.drawable.bk_logo, "3/5"));
-//        DatabaseMethods.addVenueToDate(theDayAfterTomorrow, new Venue("Red", R.drawable.bk_logo, "1/5"));
-//        DatabaseMethods.addVenueToDate(theDayAfterTomorrow, new Venue("Magenta", R.drawable.bk_logo, "5/5"));
-//        DatabaseMethods.addVenueToDate(theDayAfterTomorrow, new Venue("Some Shithole", R.drawable.bk_logo, "5/5"));
-//
-//
 
 
-    }
-
-    public void setUpNewDayInDB(){
-
-        db.collection("dates").document(theDayAfterTomorrow).get().
+    public void addNewDayToDateDB(){
+        db.collection(city+"_dates").document(theDayAfterTomorrow).get().
                 addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
-                if (documentSnapshot.exists()) newDayExistsInD = true;
+                if (documentSnapshot.exists()) newDayExistsInDB = true;
             }
         });
 
-        if (!newDayExistsInD) {
-//            DatabaseMethods.addVenueToDate(theDayAfterTomorrow, new Venue("Dzempub", R.drawable.bk_logo, "3/5"));
-//            DatabaseMethods.addVenueToDate(theDayAfterTomorrow, new Venue("Taboo", R.drawable.bk_logo, "2/5"));
-//            DatabaseMethods.addVenueToDate(theDayAfterTomorrow, new Venue("Listas", R.drawable.bk_logo, "1/5"));
-//            DatabaseMethods.addVenueToDate(theDayAfterTomorrow, new Venue("DejaVu", R.drawable.bk_logo, "3/5"));
-//            DatabaseMethods.addVenueToDate(theDayAfterTomorrow, new Venue("Pjazz", R.drawable.bk_logo, "4/5"));
-//            DatabaseMethods.addVenueToDate(theDayAfterTomorrow, new Venue("B20", R.drawable.bk_logo, "3/5"));
-//            DatabaseMethods.addVenueToDate(theDayAfterTomorrow, new Venue("Blue", R.drawable.bk_logo, "3/5"));
-//            DatabaseMethods.addVenueToDate(theDayAfterTomorrow, new Venue("Green", R.drawable.bk_logo, "3/5"));
-//            DatabaseMethods.addVenueToDate(theDayAfterTomorrow, new Venue("Yellow", R.drawable.bk_logo, "3/5"));
-//            DatabaseMethods.addVenueToDate(theDayAfterTomorrow, new Venue("Brown", R.drawable.bk_logo, "2/5"));
-//            DatabaseMethods.addVenueToDate(theDayAfterTomorrow, new Venue("Black", R.drawable.bk_logo, "3/5"));
-//            DatabaseMethods.addVenueToDate(theDayAfterTomorrow, new Venue("Grey", R.drawable.bk_logo, "3/5"));
-//            DatabaseMethods.addVenueToDate(theDayAfterTomorrow, new Venue("White", R.drawable.bk_logo, "4/5"));
-//            DatabaseMethods.addVenueToDate(theDayAfterTomorrow, new Venue("Purple", R.drawable.bk_logo, "3/5"));
-//            DatabaseMethods.addVenueToDate(theDayAfterTomorrow, new Venue("Red", R.drawable.bk_logo, "1/5"));
-//            DatabaseMethods.addVenueToDate(theDayAfterTomorrow, new Venue("Magenta", R.drawable.bk_logo, "5/5"));
-//            DatabaseMethods.addVenueToDate(theDayAfterTomorrow, new Venue("Some Shithole", R.drawable.bk_logo, "5/5"));
+        if (!newDayExistsInDB) {
+            db.collection("cities").document(city)
+                    .collection("venues").get()
+                    .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                        @Override
+                        public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                            for (QueryDocumentSnapshot snapshot: queryDocumentSnapshots) {
+                                Venue venue = snapshot.toObject(Venue.class);
+                                DatabaseMethods.addVenueToDate(venue, theDayAfterTomorrow, city);
+                            }
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Log.e(TAG, "onFailure: venues could not be added to date" + e.toString() );
+                        }
+                    });
+        }
+    }
+
+    public void setUpTodayInDB(){
+        db.collection(city+"_dates").document(today).get().
+                addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        if (documentSnapshot.exists()) newDayExistsInDB = true;
+                    }
+                });
+
+        if (!newDayExistsInDB) {
+            db.collection("cities").document(city)
+                    .collection("venues").get()
+                    .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                        @Override
+                        public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                            for (QueryDocumentSnapshot snapshot: queryDocumentSnapshots) {
+                                Venue venue = snapshot.toObject(Venue.class);
+                                DatabaseMethods.addVenueToDate(venue, today, city);
+                            }
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Log.e(TAG, "onFailure: venues could not be added to date" + e.toString() );
+                        }
+                    });
+        }
+    }
+
+    public void setUpTomorrowInDB(){
+        db.collection(city+"_dates").document(tomorrow).get().
+                addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        if (documentSnapshot.exists()) newDayExistsInDB = true;
+                    }
+                });
+
+        if (!newDayExistsInDB) {
+            db.collection("cities").document(city)
+                    .collection("venues").get()
+                    .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                        @Override
+                        public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                            for (QueryDocumentSnapshot snapshot: queryDocumentSnapshots) {
+                                Venue venue = snapshot.toObject(Venue.class);
+                                DatabaseMethods.addVenueToDate(venue, tomorrow, city);
+                            }
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Log.e(TAG, "onFailure: venues could not be added to date" + e.toString() );
+                        }
+                    });
         }
     }
 

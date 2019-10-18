@@ -71,6 +71,8 @@ public class AttendPartyActivity extends AppCompatActivity {
 
     private String dateGivenString;
     private Date dateGivenDate;
+    private String city;
+
     private long usersVenueCountNumber;
     private String usersVenueCountName;
     private Boolean containsList;
@@ -98,11 +100,12 @@ public class AttendPartyActivity extends AppCompatActivity {
         Intent intent = getIntent();
         final Venue venue = intent.getParcelableExtra("clickedVenue");
         dateGivenString = intent.getStringExtra("dateGiven");
+        city = intent.getStringExtra("city");
 
         final String venue_name = venue.getVenueName();
 
         db = FirebaseFirestore.getInstance();
-        dayVenueRef = db.collection("dates").document(dateGivenString)
+        dayVenueRef = db.collection(city+"_dates").document(dateGivenString)
                 .collection("day_venues")
                 .document(venue_name);
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();

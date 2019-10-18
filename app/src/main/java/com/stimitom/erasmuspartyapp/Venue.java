@@ -50,13 +50,13 @@ public class Venue implements Parcelable{
         rating = in.readString();
         address = in.readString();
         location = in.readString();
+        type = in.readString();
 
         imageId = in.readInt();
         numberOfAttendees = in.readInt();
 
-        type = in.readString();
-        openingHours = new ArrayList<String>();
-        in.readList(openingHours,null);
+//        openingHours = new ArrayList<String>();
+//        in.readList(openingHours,null);
         guestList = new ArrayList<String>();
         in.readList(guestList,null);
     }
@@ -89,7 +89,7 @@ public class Venue implements Parcelable{
         dest.writeInt(imageId);
         dest.writeInt(numberOfAttendees);
 
-        dest.writeStringList(openingHours);
+//      dest.writeStringList(openingHours);
         dest.writeStringList(guestList);
     }
 
@@ -119,7 +119,7 @@ public class Venue implements Parcelable{
         return location;
     }
 
-    public ArrayList<String> getOpeningHours() {
+    public List<String> getOpeningHours() {
         return openingHours;
     }
 
