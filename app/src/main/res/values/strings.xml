@@ -41,6 +41,8 @@
         \n\nSince it\'s Ad-free and I need a server for my database, I\'m actually paying for that shit. LOL
     Anyways, thank you very much for using my app \nHere\'s an ugly drawing:</string>
     <string name="needs_location">We need your location to show bars and clubs near you.</string>
+    <string name="add_google_place">Find a bar or nightclub that Erasmus people love and click to add it to your city\'s list.</string>
+    <string name="add_place_to_list">ADD PLACE</string>
 
     <string name="title_activity_maps">Map</string>
     <string-array name="countries">
