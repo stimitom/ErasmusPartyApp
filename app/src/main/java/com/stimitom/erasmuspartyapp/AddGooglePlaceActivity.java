@@ -163,5 +163,5 @@ public class AddGooglePlaceActivity extends AppCompatActivity {
                 });
     }
 
-    //TODO ADJUST VENUE CLASS; START ADDING TO DB; ADJUST ATTEND PARTY XML, ADJUST RATING, CREATE LOGOS FOR NIGHTCLUB,BAR
+    //TODO ADJUST ATTEND PARTY XML, ADJUST RATING
 }
