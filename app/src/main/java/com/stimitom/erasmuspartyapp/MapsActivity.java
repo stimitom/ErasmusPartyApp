@@ -36,7 +36,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        checkLocationPermission();
+
 
 
     }
@@ -97,6 +97,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+
+        checkLocationPermission();
 
         // Add a marker in Sydney and move the camera
         LatLng sydney = new LatLng(-34, 151);
