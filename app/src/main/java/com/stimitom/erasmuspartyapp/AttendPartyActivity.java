@@ -62,17 +62,21 @@ public class AttendPartyActivity extends AppCompatActivity {
     private FirebaseUser firebaseUser;
     DocumentReference userRef;
     DocumentReference dayVenueRef;
+
     private String venueName;
     private String venueRating;
     private int venueImageId;
     private int venueNumberOfAttendees;
     private List<String> venueGuestList;
-    private String currentUserId;
+    private List<String> venueNationsList;
+    private ArrayList<String> cleanedNationalities;
 
     private String dateGivenString;
     private Date dateGivenDate;
     private String city;
 
+    private String currentUserId;
+    private String currentUserNationality;
     private long usersVenueCountNumber;
     private String usersVenueCountName;
     private Boolean containsList;
@@ -98,14 +102,13 @@ public class AttendPartyActivity extends AppCompatActivity {
         facebookShareButton.setShareContent(content);
 
         Intent intent = getIntent();
-        final Venue venue = intent.getParcelableExtra("clickedVenue");
+        String venue_name = intent.getStringExtra("venueName");
         dateGivenString = intent.getStringExtra("dateGiven");
         city = intent.getStringExtra("city");
 
-        final String venue_name = venue.getVenueName();
 
         db = FirebaseFirestore.getInstance();
-        dayVenueRef = db.collection(city+"_dates").document(dateGivenString)
+        dayVenueRef = db.collection(city + "_dates").document(dateGivenString)
                 .collection("day_venues")
                 .document(venue_name);
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
@@ -116,6 +119,14 @@ public class AttendPartyActivity extends AppCompatActivity {
             currentUserId = getUserId();
             userRef = db.collection("users")
                     .document(currentUserId);
+
+            userRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                @Override
+                public void onSuccess(DocumentSnapshot documentSnapshot) {
+                    currentUserNationality = documentSnapshot.get("nationality").toString();
+                }
+            });
+
         } else {
             Intent intent1 = new Intent(context, LoginActivity.class);
             context.startActivity(intent1);
@@ -135,7 +146,11 @@ public class AttendPartyActivity extends AppCompatActivity {
         public void onSuccess(DocumentSnapshot snapshot) {
             Venue venue = snapshot.toObject(Venue.class);
             venueGuestList = new ArrayList<String>();
-            if (venue.getGuestList() != null) venueGuestList.addAll(venue.getGuestList());
+            venueNationsList = new ArrayList<String>();
+            if (venue.getGuestList() != null) {
+                venueGuestList.addAll(venue.getGuestList());
+                venueNationsList.addAll(venue.getNationalitiesList());
+            }
             venueName = venue.getVenueName();
             venueRating = venue.getRating();
             venueImageId = venue.getImageId();
@@ -147,6 +162,7 @@ public class AttendPartyActivity extends AppCompatActivity {
             venueNumberOfAttendees_TextView.setText(Integer.toString(venueNumberOfAttendees));
 
             //Called here to ensure sequential execution
+
             getUserData();
             setButtonColorAndText();
             setDescriptiveText();
@@ -163,7 +179,7 @@ public class AttendPartyActivity extends AppCompatActivity {
                     if (!ButtonIsRed) {
                         //Update db day_venue Side
                         dayVenueRef.update("numberOfAttendees", ++venueNumberOfAttendees);
-                        addUserToVenueGuestList(currentUserId);
+                        addUserToVenueGuestList();
 
                         //Update db user side
                         addToUserListOfAttendedVenues();
@@ -172,7 +188,7 @@ public class AttendPartyActivity extends AppCompatActivity {
                         ButtonIsRed = true;
                     } else {
                         //Update db day_venue side
-                        deleteUserFromVenueGuestList(currentUserId);
+                        deleteUserFromVenueGuestList();
                         dayVenueRef.update("numberOfAttendees", --venueNumberOfAttendees);
 
                         // Update db user side
@@ -188,7 +204,7 @@ public class AttendPartyActivity extends AppCompatActivity {
             } else {
                 //Update db day_venue Side
                 dayVenueRef.update("numberOfAttendees", ++venueNumberOfAttendees);
-                addUserToVenueGuestList(currentUserId);
+                addUserToVenueGuestList();
 
                 //Update db user side
                 addToUserListOfAttendedVenues();
@@ -202,13 +218,14 @@ public class AttendPartyActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        adapter.startListening();
+           adapter.startListening();
+//        updateRecyclerView();
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        adapter.stopListening();
+       adapter.stopListening();
     }
 
     /***************************/
@@ -287,7 +304,7 @@ public class AttendPartyActivity extends AppCompatActivity {
 
                             containsList = false;
                             usersVenueCountNumber = 0;
-                            Log.e(TAG, "onSuccess: counternumber" + usersVenueCountNumber );
+                            Log.e(TAG, "onSuccess: counternumber" + usersVenueCountNumber);
                         }
                     }
                 })
@@ -312,14 +329,14 @@ public class AttendPartyActivity extends AppCompatActivity {
         usersVenueCountName = oldestCounter;
 
         //add the new date to the hashmap
-        usersHashMap.put(dateGivenString,usersVenueCountName);
+        usersHashMap.put(dateGivenString, usersVenueCountName);
 
         //Clean oldest Date from Listnames
         userRef.update("listnames", FieldValue.arrayRemove(oldestDateString));
 
     }
 
-    public String getOldestDateString(Map<String,String> counterMapping){
+    public String getOldestDateString(Map<String, String> counterMapping) {
         //Finds and cleans the oldest counter and deletes it from map
         //returns String of the oldest COunter that can be used again
         usersHashMap.putAll(counterMapping);
@@ -331,7 +348,7 @@ public class AttendPartyActivity extends AppCompatActivity {
             if (oldestDate == null) {
                 try {
                     oldestDate = formatter.parse(dateStringKey);
-                    Log.e(TAG, "cleanUser: oldestDate start:"  +oldestDate );
+                    Log.e(TAG, "cleanUser: oldestDate start:" + oldestDate);
                 } catch (ParseException e) {
                     Log.e(TAG, "onCreate: date could not be parsed" + e.toString());
                 }
@@ -344,7 +361,7 @@ public class AttendPartyActivity extends AppCompatActivity {
                 }
                 if (checkDate.before(oldestDate)) {
                     oldestDate = checkDate;
-                    Log.e(TAG, "cleanUser: if checkdate round1 before oldest , oldest: " +oldestDate );
+                    Log.e(TAG, "cleanUser: if checkdate round1 before oldest , oldest: " + oldestDate);
                 }
             }
         }
@@ -427,7 +444,7 @@ public class AttendPartyActivity extends AppCompatActivity {
         usersVenueCountNumber++;
         //Update Db variables
         userRef.update(dateGivenString, FieldValue.arrayUnion(venueName));
-        Log.e(TAG, "addToUserListOfAttendedVenues: usersVenueCountName" +usersVenueCountName );
+        Log.e(TAG, "addToUserListOfAttendedVenues: usersVenueCountName" + usersVenueCountName);
         userRef.update(usersVenueCountName, usersVenueCountNumber);
         userRef.update("listnames", FieldValue.arrayUnion(dateGivenString));
         if (usersCounterMappingChanged) userRef.update("countermapping", usersHashMap);
@@ -447,15 +464,22 @@ public class AttendPartyActivity extends AppCompatActivity {
      * Venue Side
      **/
 
-    public void addUserToVenueGuestList(String userId) {
-        venueGuestList = new ArrayList<String>();
-        venueGuestList.add(userId);
-        dayVenueRef.update("guestList", venueGuestList);
+    public void addUserToVenueGuestList() {
+        venueGuestList.add(currentUserId);
+        venueNationsList.add(currentUserNationality);
+//        updateRecyclerView();
+        dayVenueRef.update("guestList", FieldValue.arrayUnion(currentUserId));
+        dayVenueRef.update("nationalitiesList", FieldValue.arrayUnion(currentUserNationality));
+
     }
 
-    public void deleteUserFromVenueGuestList(String userId) {
-        venueGuestList.remove(userId);
-        dayVenueRef.update("guestList", venueGuestList);
+    public void deleteUserFromVenueGuestList() {
+        venueGuestList.remove(currentUserId);
+        venueNationsList.remove(currentUserNationality);
+//        updateRecyclerView();
+        dayVenueRef.update("guestList", FieldValue.arrayRemove(currentUserId));
+        dayVenueRef.update("nationalitiesList", FieldValue.arrayRemove(currentUserNationality));
+
     }
 
     /**
@@ -463,17 +487,37 @@ public class AttendPartyActivity extends AppCompatActivity {
      **/
 
     private void setUpRecyclerView(String venueName) {
-        //TODO query should only include those where right array of the dayGiven contains venue Name
-
         query = db.collection("users").whereArrayContains(dateGivenString, venueName);
         options = new FirestoreRecyclerOptions.Builder<User>()
                 .setQuery(query, User.class)
                 .build();
 
-        adapter = new NationalitiesAdapter(options);
+        adapter = new NationalitiesAdapter(options,dayVenueRef);
         recyclerView = (RecyclerView) findViewById(R.id.recycler_view_attend_party);
         recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
         recyclerView.setAdapter(adapter);
         adapter.startListening();
     }
+
+//    private void setUpNationsRecyclerView(ArrayList<String> cleanedList) {
+//
+//        cleanedNationalities = new ArrayList<String>();
+//        for (String nation: venueNationsList) {
+//            if (!cleanedNationalities.contains(nation)) cleanedNationalities.add(nation);
+//        }
+//
+//        adapter = new NationsAdapter(cleanedList);
+//        recyclerView = (RecyclerView) findViewById(R.id.recycler_view_attend_party);
+//        recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+//        recyclerView.setAdapter(adapter);
+//    }
+//
+//    private void updateRecyclerView(){
+//        if (cleanedNationalities == null) cleanedNationalities = new ArrayList<String>();
+//        else cleanedNationalities.clear();
+//        for (String nation: venueNationsList) {
+//            if (!cleanedNationalities.contains(nation)) cleanedNationalities.add(nation);
+//        }
+//        adapter.notifyDataSetChanged();
+//    }
 }

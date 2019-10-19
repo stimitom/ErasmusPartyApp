@@ -39,6 +39,8 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.util.Map;
+
 public class VenuesListActivity extends AppCompatActivity {
     private final String TAG = "VenuesListActivity";
     private Context context = this;
@@ -67,8 +69,6 @@ public class VenuesListActivity extends AppCompatActivity {
 
     private ShimmerFrameLayout shimmerViewContainer;
 
-    private Boolean newDayExistsInDB = false;
-
     private static final int ERROR_DIALOG_REQUEST = 90001;
 
     @Override
@@ -90,8 +90,7 @@ public class VenuesListActivity extends AppCompatActivity {
 
         city = "Kaunas,LT";
         setUpDateButton();
-        setUpTodayInDB();
-        setUpTomorrowInDB();
+        setUpThreeDays();
         addNewDayToDateDB();
 
         reloader = this;
@@ -111,13 +110,13 @@ public class VenuesListActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        Log.e(TAG, "onResume: called" );
+        Log.e(TAG, "onResume: called");
         shimmerViewContainer.startShimmerAnimation();
     }
 
     @Override
     protected void onStart() {
-        Log.e(TAG, "onStart: called" );
+        Log.e(TAG, "onStart: called");
         super.onStart();
         if (popularSortActive) popularAdapter.startListening();
         else alphabeticAdapter.startListening();
@@ -175,7 +174,7 @@ public class VenuesListActivity extends AppCompatActivity {
         FirestoreRecyclerOptions<Venue> options = new FirestoreRecyclerOptions.Builder<Venue>()
                 .setQuery(query, Venue.class)
                 .build();
-        alphabeticAdapter = new VenuesAdapter(options,shimmerViewContainer);
+        alphabeticAdapter = new VenuesAdapter(options, shimmerViewContainer);
         popularAdapter.stopListening();
         recyclerView.setAdapter(alphabeticAdapter);
         attachItemClickListenerToAdapter(alphabeticAdapter);
@@ -185,15 +184,15 @@ public class VenuesListActivity extends AppCompatActivity {
 
     public void setDayVenuesRef() {
         if (todayBool) {
-            dayVenuesRef = db.collection(city+"_dates")
+            dayVenuesRef = db.collection(city + "_dates")
                     .document(today)
                     .collection("day_venues");
         } else if (tomorrowBool) {
-            dayVenuesRef = db.collection(city+"_dates")
+            dayVenuesRef = db.collection(city + "_dates")
                     .document(tomorrow)
                     .collection("day_venues");
         } else {
-            dayVenuesRef = db.collection(city+"_dates")
+            dayVenuesRef = db.collection(city + "_dates")
                     .document(theDayAfterTomorrow)
                     .collection("day_venues");
         }
@@ -206,7 +205,7 @@ public class VenuesListActivity extends AppCompatActivity {
             public void onItemClick(DocumentSnapshot documentSnapshot, int position) {
                 Venue clickedVenue = documentSnapshot.toObject(Venue.class);
                 Intent intent = new Intent(context, AttendPartyActivity.class);
-                intent.putExtra("clickedVenue", clickedVenue);
+                intent.putExtra("venueName", clickedVenue.getVenueName());
                 String day;
                 if (todayBool) {
                     day = today;
@@ -216,14 +215,12 @@ public class VenuesListActivity extends AppCompatActivity {
                     day = theDayAfterTomorrow;
                 }
                 intent.putExtra("dateGiven", day);
-                intent.putExtra("city",city);
+                intent.putExtra("city", city);
                 startActivity(intent);
             }
 
         });
     }
-
-
 
 
     View.OnClickListener popularSortListener = new View.OnClickListener() {
@@ -281,7 +278,7 @@ public class VenuesListActivity extends AppCompatActivity {
             FirestoreRecyclerOptions<Venue> options = new FirestoreRecyclerOptions.Builder<Venue>()
                     .setQuery(query, Venue.class)
                     .build();
-            VenuesAdapter searchAdapter = new VenuesAdapter(options,shimmerViewContainer);
+            VenuesAdapter searchAdapter = new VenuesAdapter(options, shimmerViewContainer);
             if (newText.trim().isEmpty()) {
                 searchAdapter.stopListening();
                 if (popularSortActive) {
@@ -330,7 +327,7 @@ public class VenuesListActivity extends AppCompatActivity {
                         });
                 return true;
             case R.id.action_about:
-                Intent intent1 = new Intent(this,AboutActivity.class);
+                Intent intent1 = new Intent(this, AboutActivity.class);
                 startActivity(intent1);
                 return true;
             case R.id.action_maps:
@@ -349,19 +346,19 @@ public class VenuesListActivity extends AppCompatActivity {
     }
 
 
-    public boolean isServicesOk(){
-        int availabe = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(this);
+    public boolean isServicesOk() {
+        int available = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(this);
 
-        if (availabe == ConnectionResult.SUCCESS) {
+        if (available == ConnectionResult.SUCCESS) {
             //Everything okay
             return true;
-        }else if(GoogleApiAvailability.getInstance().isUserResolvableError(availabe)) {
+        } else if (GoogleApiAvailability.getInstance().isUserResolvableError(available)) {
             //An resolveable error occured
-            Dialog dialog = GoogleApiAvailability.getInstance().getErrorDialog(this,availabe,ERROR_DIALOG_REQUEST);
+            Dialog dialog = GoogleApiAvailability.getInstance().getErrorDialog(this, available, ERROR_DIALOG_REQUEST);
             dialog.show();
-        }else {
+        } else {
             //Nothing can be done, maps cannot be used
-            Toast.makeText(this,"Your phone does not fulfill the requirements for this function.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Your phone does not fulfill the requirements for this function.", Toast.LENGTH_SHORT).show();
         }
         return false;
     }
@@ -448,94 +445,97 @@ public class VenuesListActivity extends AppCompatActivity {
      **/
 
 
-    public void addNewDayToDateDB(){
-        db.collection(city+"_dates").document(theDayAfterTomorrow).get().
-                addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+    public void addNewDayToDateDB() {
+        db.collection(city + "_dates").document(theDayAfterTomorrow).collection("day_venues").document("B2O bar")
+                .get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
-                if (documentSnapshot.exists()) newDayExistsInDB = true;
+                if (!documentSnapshot.exists()) {
+                    db.collection("cities").document(city)
+                            .collection("venues").get()
+                            .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                                @Override
+                                public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                                    for (QueryDocumentSnapshot snapshot : queryDocumentSnapshots) {
+                                        Venue venue = snapshot.toObject(Venue.class);
+                                        DatabaseMethods.addVenueToDate(venue, theDayAfterTomorrow, city);
+                                    }
+                                }
+                            })
+                            .addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    Log.e(TAG, "onFailure: venues could not be added to date" + e.toString());
+                                }
+                            });
+
+                }
+            }
+        });
+    }
+
+    public void setUpTodayInDB() {
+        db.collection(city + "_dates").document(today).collection("day_venues").document("B2O bar")
+                .get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                if (!documentSnapshot.exists()) {
+                    db.collection("cities").document(city)
+                            .collection("venues").get()
+                            .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                                @Override
+                                public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                                    for (QueryDocumentSnapshot snapshot : queryDocumentSnapshots) {
+                                        Venue venue = snapshot.toObject(Venue.class);
+                                        DatabaseMethods.addVenueToDate(venue, today, city);
+                                    }
+                                }
+                            })
+                            .addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    Log.e(TAG, "onFailure: venues could not be added to date" + e.toString());
+                                }
+                            });
+
+                }
             }
         });
 
-        if (!newDayExistsInDB) {
-            db.collection("cities").document(city)
-                    .collection("venues").get()
-                    .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-                        @Override
-                        public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                            for (QueryDocumentSnapshot snapshot: queryDocumentSnapshots) {
-                                Venue venue = snapshot.toObject(Venue.class);
-                                DatabaseMethods.addVenueToDate(venue, theDayAfterTomorrow, city);
-                            }
-                        }
-                    })
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Log.e(TAG, "onFailure: venues could not be added to date" + e.toString() );
-                        }
-                    });
-        }
     }
 
-    public void setUpTodayInDB(){
-        db.collection(city+"_dates").document(today).get().
-                addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                    @Override
-                    public void onSuccess(DocumentSnapshot documentSnapshot) {
-                        if (documentSnapshot.exists()) newDayExistsInDB = true;
-                    }
-                });
+    public void setUpTomorrowInDB() {
+        db.collection(city + "_dates").document(tomorrow).collection("day_venues").document("B2O bar")
+                .get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                if (!documentSnapshot.exists()) {
+                    db.collection("cities").document(city)
+                            .collection("venues").get()
+                            .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                                @Override
+                                public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                                    for (QueryDocumentSnapshot snapshot : queryDocumentSnapshots) {
+                                        Venue venue = snapshot.toObject(Venue.class);
+                                        DatabaseMethods.addVenueToDate(venue, tomorrow, city);
+                                    }
+                                }
+                            })
+                            .addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    Log.e(TAG, "onFailure: venues could not be added to date" + e.toString());
+                                }
+                            });
 
-        if (!newDayExistsInDB) {
-            db.collection("cities").document(city)
-                    .collection("venues").get()
-                    .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-                        @Override
-                        public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                            for (QueryDocumentSnapshot snapshot: queryDocumentSnapshots) {
-                                Venue venue = snapshot.toObject(Venue.class);
-                                DatabaseMethods.addVenueToDate(venue, today, city);
-                            }
-                        }
-                    })
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Log.e(TAG, "onFailure: venues could not be added to date" + e.toString() );
-                        }
-                    });
-        }
+                }
+            }
+        });
     }
 
-    public void setUpTomorrowInDB(){
-        db.collection(city+"_dates").document(tomorrow).get().
-                addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                    @Override
-                    public void onSuccess(DocumentSnapshot documentSnapshot) {
-                        if (documentSnapshot.exists()) newDayExistsInDB = true;
-                    }
-                });
-
-        if (!newDayExistsInDB) {
-            db.collection("cities").document(city)
-                    .collection("venues").get()
-                    .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-                        @Override
-                        public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                            for (QueryDocumentSnapshot snapshot: queryDocumentSnapshots) {
-                                Venue venue = snapshot.toObject(Venue.class);
-                                DatabaseMethods.addVenueToDate(venue, tomorrow, city);
-                            }
-                        }
-                    })
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Log.e(TAG, "onFailure: venues could not be added to date" + e.toString() );
-                        }
-                    });
-        }
+    public void setUpThreeDays(){
+        setUpTodayInDB();
+        setUpTomorrowInDB();
     }
 
     public static CollectionReference getDayVenuesRef() {
