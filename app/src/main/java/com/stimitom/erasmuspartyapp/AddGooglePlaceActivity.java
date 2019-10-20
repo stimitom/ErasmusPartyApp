@@ -108,11 +108,14 @@ public class AddGooglePlaceActivity extends AppCompatActivity {
 
                 //Location LATLNG
                 String location = place.getLatLng().toString();
+//                "lat/lng: (54.8951866,23.921321)"
+                String cleanedLocation = location.substring(10,location.length()-1);
                 Log.d(TAG, "onPlaceSelected: LATLNG: " + location);
+                Log.d(TAG, "onPlaceSelected: Cleaned LATLNG " + cleanedLocation);
 
 
                 //PROCEED ADDING TO VENUES LIST
-                Venue venue = new Venue(name,rating,address,location,openingHoursList,type);
+                Venue venue = new Venue(name,rating,address,cleanedLocation,openingHoursList,type);
                 startAddVenuesProcedure(venue);
 
             } else {
