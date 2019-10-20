@@ -108,7 +108,6 @@ public class AddGooglePlaceActivity extends AppCompatActivity {
 
                 //Location LATLNG
                 String location = place.getLatLng().toString();
-//                "lat/lng: (54.8951866,23.921321)"
                 String cleanedLocation = location.substring(10,location.length()-1);
                 Log.d(TAG, "onPlaceSelected: LATLNG: " + location);
                 Log.d(TAG, "onPlaceSelected: Cleaned LATLNG " + cleanedLocation);

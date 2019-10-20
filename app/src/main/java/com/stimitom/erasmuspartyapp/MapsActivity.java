@@ -6,14 +6,12 @@ import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
 
 import android.Manifest;
-import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 
-import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -22,12 +20,9 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
-
-import java.lang.reflect.Array;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
     private static final String TAG = "MapsActivity";
@@ -35,6 +30,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private GoogleMap mMap;
     private String city;
     private LocationManager locationManager;
+    private   FirebaseFirestore db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,10 +40,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+        db = FirebaseFirestore.getInstance();
         city = getIntent().getStringExtra("city");
-
-
-
     }
 
 
@@ -108,27 +102,32 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap = googleMap;
 
         checkLocationPermission();
-       setAllVenueMarkers();
 
+        String comesFromVenueLATLNG = getIntent().getStringExtra("location");
+        if (comesFromVenueLATLNG != null) {
+            setAllVenueMarkers(true);
+            moveCameraToVenue(comesFromVenueLATLNG);
+        }else setAllVenueMarkers(false);
 
     }
 
-    FirebaseFirestore db = FirebaseFirestore.getInstance();
-    public void setAllVenueMarkers(){
+    public void setAllVenueMarkers(final Boolean cameraMovedElsewhere){
         db.collection("cities").document(city).collection("venues").get()
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override
                     public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
 
-                        Boolean movedCamera = false;
+                        Boolean movedCameraAlready = false;
 
                         for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
                             Venue venue = documentSnapshot.toObject(Venue.class);
                             String[] array = venue.getLocation().split(",");
                             LatLng point = new LatLng(Double.parseDouble(array[0]),Double.parseDouble(array[1]));
                             mMap.addMarker(new MarkerOptions().position(point).title(venue.getVenueName()));
-                            if (!movedCamera) {
-                                mMap.moveCamera(CameraUpdateFactory.newLatLng(point));
+                            if (!cameraMovedElsewhere) {
+                                if (!movedCameraAlready) {
+                                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(point, 10));
+                                }
                             }
                         }
                     }
@@ -141,6 +140,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     }
                 });
 
+    }
+
+    public void moveCameraToVenue(String latlng){
+        String[] array = latlng.split(",");
+        LatLng point = new LatLng(Double.parseDouble(array[0]),Double.parseDouble(array[1]));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(point,20));
     }
 
 

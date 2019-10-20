@@ -16,4 +16,8 @@
         <item name="android:background">@color/colorPrimaryLight</item>
     </style>
 
+    <style name="TextAppearanceBold" parent = "TextAppearance.AppCompat">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
 </resources>

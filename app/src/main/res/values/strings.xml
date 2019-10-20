@@ -43,7 +43,8 @@
     <string name="needs_location">We need your location to show bars and clubs near you.</string>
     <string name="add_google_place">Find a bar or nightclub that Erasmus people love and click to add it to your city\'s list.</string>
     <string name="add_place_to_list">ADD PLACE</string>
-
+    <string name="map_iv_description">Click here for seeing the venue on the map.</string>
+    <string name="google_rating">Google Rating:\u0020</string>
     <string name="title_activity_maps">Map</string>
     <string-array name="countries">
         <item>Afghanistan</item>
