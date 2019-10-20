@@ -333,7 +333,7 @@ public class VenuesListActivity extends AppCompatActivity {
             case R.id.action_maps:
                 if (isServicesOk()) {
                     Intent intent2 = new Intent(this, MapsActivity.class);
-                    intent2.putExtra("city", "Kaunas");
+                    intent2.putExtra("city", "Kaunas,LT");
                     startActivity(intent2);
                 }
                 return true;
