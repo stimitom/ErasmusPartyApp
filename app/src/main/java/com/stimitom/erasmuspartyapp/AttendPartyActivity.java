@@ -16,6 +16,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -47,7 +48,6 @@ public class AttendPartyActivity extends AppCompatActivity {
     private final String TAG = "AttendPartyActivity";
     Context context = this;
 
-    private TextView venueRating_TextView;
     private ImageView venuePicture_ImageView;
     private TextView venueNumberOfAttendees_TextView;
     private TextView currentVenueState_TextView;
@@ -55,6 +55,7 @@ public class AttendPartyActivity extends AppCompatActivity {
     private ShareButton facebookShareButton;
     private Toolbar myToolbar;
     private TextView myToolbarTitle;
+    private RatingBar ratingBar;
 
     private Button attendButton;
     private Boolean ButtonIsRed;
@@ -100,12 +101,12 @@ public class AttendPartyActivity extends AppCompatActivity {
         myToolbarTitle = (TextView) myToolbar.findViewById(R.id.toolbar_text_centered);
         setSupportActionBar(myToolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
-        venueRating_TextView = (TextView) findViewById(R.id.venue_rating_tv);
         venuePicture_ImageView = (ImageView) findViewById(R.id.venue_picture_iv);
         attendButton = (Button) findViewById(R.id.attend_button);
         venueNumberOfAttendees_TextView = (TextView) findViewById(R.id.number_of_attendees1);
         currentVenueState_TextView = (TextView) findViewById(R.id.text_view_meet_people_from);
         venueOpeningHours_TextView = (TextView) findViewById(R.id.opening_hours);
+        ratingBar = (RatingBar) findViewById(R.id.rating_bar);
 
         ShareLinkContent content = new ShareLinkContent.Builder()
                 .setContentUrl(Uri.parse("https://developers.facebook.com"))
@@ -167,7 +168,6 @@ public class AttendPartyActivity extends AppCompatActivity {
     public void setButtonColorAndText() {
 
         if (venueGuestList != null) {
-            Log.e(TAG, "onCreate: venueGuestList not null");
             if (venueGuestList.contains(currentUserId)) {
                 ButtonIsRed = true;
                 makeButtonRed();
@@ -222,7 +222,7 @@ public class AttendPartyActivity extends AppCompatActivity {
 
             myToolbarTitle.setText(venueName);
             venuePicture_ImageView.setImageResource(venueImageId);
-            venueRating_TextView.setText(getString(R.string.google_rating) + venueRating);
+            ratingBar.setRating(Float.parseFloat(venueRating.replace(",", ".l") + "f"));
             venueNumberOfAttendees_TextView.setText(Integer.toString(venueNumberOfAttendees));
             venueOpeningHours_TextView.setText(getFormattedOpeningHours(venueOpeningHoursList));
 
@@ -387,7 +387,6 @@ public class AttendPartyActivity extends AppCompatActivity {
                         User user = documentSnapshot.toObject(User.class);
                         usersHashMap = new HashMap<>();
                         int listSize = user.getListnames().size();
-                        Log.e(TAG, "onSuccess: List size : " + listSize);
 
                         //Check if user already has list for givenDate and adjust user accordingly
                         if (documentSnapshot.contains(dateGivenString)) {
@@ -479,20 +478,17 @@ public class AttendPartyActivity extends AppCompatActivity {
             if (oldestDate == null) {
                 try {
                     oldestDate = formatter.parse(dateStringKey);
-                    Log.e(TAG, "cleanUser: oldestDate start:" + oldestDate);
                 } catch (ParseException e) {
                     Log.e(TAG, "onCreate: date could not be parsed" + e.toString());
                 }
             } else {
                 try {
                     checkDate = formatter.parse(dateStringKey);
-                    Log.e(TAG, "cleanUser: checkDAte" + checkDate);
                 } catch (ParseException e) {
                     Log.e(TAG, "onCreate: date could not be parsed" + e.toString());
                 }
                 if (checkDate.before(oldestDate)) {
                     oldestDate = checkDate;
-                    Log.e(TAG, "cleanUser: if checkdate round1 before oldest , oldest: " + oldestDate);
                 }
             }
         }
@@ -538,7 +534,6 @@ public class AttendPartyActivity extends AppCompatActivity {
         usersVenueCountNumber++;
         //Update Db variables
         userRef.update(dateGivenString, FieldValue.arrayUnion(venueName));
-        Log.e(TAG, "addToUserListOfAttendedVenues: usersVenueCountName" + usersVenueCountName);
         userRef.update(usersVenueCountName, usersVenueCountNumber);
         userRef.update("listnames", FieldValue.arrayUnion(dateGivenString));
         if (usersCounterMappingChanged) userRef.update("countermapping", usersHashMap);
