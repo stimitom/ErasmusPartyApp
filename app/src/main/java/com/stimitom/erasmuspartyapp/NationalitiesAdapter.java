@@ -52,11 +52,11 @@ public class NationalitiesAdapter extends FirestoreRecyclerAdapter<User, Nationa
 
     @Override
     protected void onBindViewHolder(@NonNull NationalitiesViewHolder holder, int position, @NonNull User user) {
-        if (!alreadyMentioned.contains(user.getNationality())) {
+//        if (!alreadyMentioned.contains(user.getNationality())) {
             holder.nationality.setText(user.getNationality());
             alreadyMentioned.add(user.getNationality());
             Log.e(TAG, "onBindViewHolder: " + user.getNationality() +   " added to already mentioned list" );
-        }
+//        }
     }
 
     class NationalitiesViewHolder extends RecyclerView.ViewHolder{

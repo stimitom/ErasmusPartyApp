@@ -222,7 +222,7 @@ public class AttendPartyActivity extends AppCompatActivity {
 
             myToolbarTitle.setText(venueName);
             venuePicture_ImageView.setImageResource(venueImageId);
-            ratingBar.setRating(Float.parseFloat(venueRating.replace(",", ".l") + "f"));
+            ratingBar.setRating(Float.parseFloat(venueRating.replace(",", ".") + "f"));
             venueNumberOfAttendees_TextView.setText(Integer.toString(venueNumberOfAttendees));
             venueOpeningHours_TextView.setText(getFormattedOpeningHours(venueOpeningHoursList));
 

@@ -166,5 +166,4 @@ public class AddGooglePlaceActivity extends AppCompatActivity {
                 });
     }
 
-    //TODO ADJUST ATTEND PARTY XML, ADJUST RATING
 }
