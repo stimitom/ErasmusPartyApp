@@ -154,6 +154,7 @@ public class AddGooglePlaceActivity extends AppCompatActivity {
                     public void onSuccess(Void aVoid) {
                         Log.d(TAG, "Venue upload database succesful");
                         Toast.makeText(getApplicationContext(),"Your request will be checked and added to the list. Thank You!", Toast.LENGTH_SHORT).show();
+                        addPlaceButton.setVisibility(View.INVISIBLE);
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {

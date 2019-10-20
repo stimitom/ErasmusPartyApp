@@ -65,12 +65,12 @@
         android:id="@+id/number_of_attendees1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="8dp"
         android:gravity="center"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
         app:layout_constraintEnd_toEndOf="@+id/text_view_meet_people_from"
         app:layout_constraintStart_toStartOf="@+id/text_view_meet_people_from"
-        app:layout_constraintTop_toBottomOf="@+id/venue_rating_tv" />
+        app:layout_constraintTop_toBottomOf="@+id/rating_bar" />
 
 
     <androidx.recyclerview.widget.RecyclerView
@@ -105,15 +105,16 @@
         app:layout_constraintStart_toEndOf="@+id/venue_picture_iv"
         app:layout_constraintTop_toTopOf="@+id/venue_picture_iv" />
 
-    <TextView
-        android:id="@+id/venue_rating_tv"
+    <RatingBar
+        android:id="@+id/rating_bar"
+        style="@style/Widget.AppCompat.RatingBar.Small"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="16sp"
         android:layout_marginTop="8dp"
-        android:gravity="center_vertical"
-        android:textSize="@dimen/textSizeAttendPartyNormal"
+        android:isIndicator="true"
+        android:numStars="5"
+        app:layout_constraintEnd_toEndOf="@+id/venue_picture_iv"
         app:layout_constraintStart_toStartOf="@+id/venue_picture_iv"
         app:layout_constraintTop_toBottomOf="@+id/opening_hours" />
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>
