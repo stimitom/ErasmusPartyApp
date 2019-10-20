@@ -10,15 +10,19 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.widget.Toolbar;
+
 import com.facebook.share.model.ShareLinkContent;
 import com.facebook.share.widget.ShareButton;
-import com.facebook.share.widget.ShareDialog;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -43,36 +47,40 @@ public class AttendPartyActivity extends AppCompatActivity {
     private final String TAG = "AttendPartyActivity";
     Context context = this;
 
-    private TextView venueName_TextView;
     private TextView venueRating_TextView;
     private ImageView venuePicture_ImageView;
     private TextView venueNumberOfAttendees_TextView;
     private TextView currentVenueState_TextView;
+    private TextView venueOpeningHours_TextView;
     private ShareButton facebookShareButton;
+    private Toolbar myToolbar;
+    private TextView myToolbarTitle;
 
     private Button attendButton;
     private Boolean ButtonIsRed;
 
-    private Query query;
-    private RecyclerView recyclerView;
-    private NationalitiesAdapter adapter;
-    private FirestoreRecyclerOptions<User> options;
 
     private FirebaseFirestore db;
     private FirebaseUser firebaseUser;
     DocumentReference userRef;
     DocumentReference dayVenueRef;
 
+    private Query query;
+    private RecyclerView recyclerView;
+    private NationalitiesAdapter adapter;
+    private FirestoreRecyclerOptions<User> options;
+
     private String venueName;
     private String venueRating;
     private int venueImageId;
     private int venueNumberOfAttendees;
+    private String venueLocation;
     private List<String> venueGuestList;
     private List<String> venueNationsList;
+    private List<String> venueOpeningHoursList;
     private ArrayList<String> cleanedNationalities;
 
     private String dateGivenString;
-    private Date dateGivenDate;
     private String city;
 
     private String currentUserId;
@@ -88,12 +96,16 @@ public class AttendPartyActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_attend_party);
-        venueName_TextView = (TextView) findViewById(R.id.venue_name_tv);
+        myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
+        myToolbarTitle = (TextView) myToolbar.findViewById(R.id.toolbar_text_centered);
+        setSupportActionBar(myToolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
         venueRating_TextView = (TextView) findViewById(R.id.venue_rating_tv);
         venuePicture_ImageView = (ImageView) findViewById(R.id.venue_picture_iv);
         attendButton = (Button) findViewById(R.id.attend_button);
         venueNumberOfAttendees_TextView = (TextView) findViewById(R.id.number_of_attendees1);
         currentVenueState_TextView = (TextView) findViewById(R.id.text_view_meet_people_from);
+        venueOpeningHours_TextView = (TextView) findViewById(R.id.opening_hours);
 
         ShareLinkContent content = new ShareLinkContent.Builder()
                 .setContentUrl(Uri.parse("https://developers.facebook.com"))
@@ -138,9 +150,59 @@ public class AttendPartyActivity extends AppCompatActivity {
         setUpRecyclerView(venue_name);
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        adapter.startListening();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        adapter.stopListening();
+    }
+
+    /**** UserInterface ****/
+
+    public void setButtonColorAndText() {
+
+        if (venueGuestList != null) {
+            Log.e(TAG, "onCreate: venueGuestList not null");
+            if (venueGuestList.contains(currentUserId)) {
+                ButtonIsRed = true;
+                makeButtonRed();
+            } else {
+                ButtonIsRed = false;
+                makeButtonGreen();
+            }
+        } else {
+            ButtonIsRed = false;
+            makeButtonGreen();
+        }
+
+    }
+
+    public void makeButtonGreen() {
+        attendButton.setText(R.string.attend);
+        attendButton.setBackgroundResource(R.drawable.button_green_round);
+    }
+
+    public void makeButtonRed() {
+        attendButton.setBackgroundResource(R.drawable.button_red_round);
+        attendButton.setText(R.string.dontgo);
+    }
+
+    public void setDescriptiveText() {
+        if (venueNumberOfAttendees == 0) {
+            currentVenueState_TextView.setText(R.string.nobody_attends_yet);
+        } else currentVenueState_TextView.setText(R.string.nationalities_tonight);
+    }
+
+
     /**
      * Listener
-     ***/
+     **/
+
     GetDataListener venueDataListener = new GetDataListener() {
         @Override
         public void onSuccess(DocumentSnapshot snapshot) {
@@ -155,19 +217,60 @@ public class AttendPartyActivity extends AppCompatActivity {
             venueRating = venue.getRating();
             venueImageId = venue.getImageId();
             venueNumberOfAttendees = venue.getNumberOfAttendees();
+            venueLocation = venue.getLocation();
+            venueOpeningHoursList = venue.getOpeningHours();
 
-            venueName_TextView.setText(venueName);
+            myToolbarTitle.setText(venueName);
             venuePicture_ImageView.setImageResource(venueImageId);
-            venueRating_TextView.setText(venueRating);
+            venueRating_TextView.setText(getString(R.string.google_rating) + venueRating);
             venueNumberOfAttendees_TextView.setText(Integer.toString(venueNumberOfAttendees));
+            venueOpeningHours_TextView.setText(getFormattedOpeningHours(venueOpeningHoursList));
+
 
             //Called here to ensure sequential execution
-
             getUserData();
             setButtonColorAndText();
             setDescriptiveText();
         }
     };
+
+    public String getFormattedOpeningHours(List<String> venueOpeningHours) {
+        String helpArray[] = new String[7];
+        //To bring the days in the correct order
+        for (String day : venueOpeningHours) {
+            switch (day.substring(0, 2)) {
+                case "Mo":
+                    helpArray[0] = day;
+                    break;
+                case "Tu":
+                    helpArray[1] = day;
+                    break;
+                case "We":
+                    helpArray[2] = day;
+                    break;
+                case "Th":
+                    helpArray[3] = day;
+                    break;
+                case "Fr":
+                    helpArray[4] = day;
+                    break;
+                case "Sa":
+                    helpArray[5] = day;
+                    break;
+                case "Su":
+                    helpArray[6] = day;
+                    break;
+                default:
+                    Log.e(TAG, "onSuccess: Something went wrong with the opening Hours");
+                    break;
+            }
+        }
+        StringBuilder builder = new StringBuilder();
+        for (String day : helpArray) {
+            builder.append(day + "\n");
+        }
+        return builder.toString();
+    }
 
 
     View.OnClickListener attendButtonListener = new View.OnClickListener() {
@@ -215,21 +318,49 @@ public class AttendPartyActivity extends AppCompatActivity {
         }
     };
 
+
+    /**
+     * RecyclerView
+     **/
+
+    private void setUpRecyclerView(String venueName) {
+        query = db.collection("users").whereArrayContains(dateGivenString, venueName);
+        options = new FirestoreRecyclerOptions.Builder<User>()
+                .setQuery(query, User.class)
+                .build();
+
+        adapter = new NationalitiesAdapter(options, dayVenueRef);
+        recyclerView = (RecyclerView) findViewById(R.id.recycler_view_attend_party);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
+        recyclerView.setAdapter(adapter);
+        adapter.startListening();
+    }
+
+    /**
+     * Toolbar
+     */
     @Override
-    protected void onStart() {
-        super.onStart();
-           adapter.startListening();
-//        updateRecyclerView();
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_attend_party_activity, menu);
+        return true;
     }
 
     @Override
-    protected void onStop() {
-        super.onStop();
-       adapter.stopListening();
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_show_venue_on_map:
+                Intent intent = new Intent(getApplicationContext(), MapsActivity.class);
+                intent.putExtra("location", venueLocation);
+                intent.putExtra("city", city);
+                startActivity(intent);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
-    /***************************/
-    /**GET DATA FROM DATABASE**/
+    /**** GET DATA FROM DATABASE ****/
 
     /**
      * UserInfo
@@ -371,43 +502,6 @@ public class AttendPartyActivity extends AppCompatActivity {
         return oldestDateString;
     }
 
-    /**
-     * UserInterface Code
-     **/
-
-    public void setButtonColorAndText() {
-
-        if (venueGuestList != null) {
-            Log.e(TAG, "onCreate: venueGuestList not null");
-            if (venueGuestList.contains(currentUserId)) {
-                ButtonIsRed = true;
-                makeButtonRed();
-            } else {
-                ButtonIsRed = false;
-                makeButtonGreen();
-            }
-        } else {
-            ButtonIsRed = false;
-            makeButtonGreen();
-        }
-
-    }
-
-    public void makeButtonGreen() {
-        attendButton.setText(R.string.attend);
-        attendButton.setBackgroundResource(R.drawable.button_green_round);
-    }
-
-    public void makeButtonRed() {
-        attendButton.setBackgroundResource(R.drawable.button_red_round);
-        attendButton.setText(R.string.dontgo);
-    }
-
-    public void setDescriptiveText() {
-        if (venueNumberOfAttendees == 0) {
-            currentVenueState_TextView.setText(R.string.nobody_attends_yet);
-        } else currentVenueState_TextView.setText(R.string.nationalities_tonight);
-    }
 
     /**
      * Venue Info
@@ -432,8 +526,8 @@ public class AttendPartyActivity extends AppCompatActivity {
                 });
     }
 
-    /***************************/
-    /** UPDATE DATABASE **/
+
+    /**** UPDATE DATABASE ****/
 
     /**
      * User Side
@@ -482,22 +576,6 @@ public class AttendPartyActivity extends AppCompatActivity {
 
     }
 
-    /**
-     * Set Up RecyclerView
-     **/
-
-    private void setUpRecyclerView(String venueName) {
-        query = db.collection("users").whereArrayContains(dateGivenString, venueName);
-        options = new FirestoreRecyclerOptions.Builder<User>()
-                .setQuery(query, User.class)
-                .build();
-
-        adapter = new NationalitiesAdapter(options,dayVenueRef);
-        recyclerView = (RecyclerView) findViewById(R.id.recycler_view_attend_party);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-        recyclerView.setAdapter(adapter);
-        adapter.startListening();
-    }
 
 //    private void setUpNationsRecyclerView(ArrayList<String> cleanedList) {
 //

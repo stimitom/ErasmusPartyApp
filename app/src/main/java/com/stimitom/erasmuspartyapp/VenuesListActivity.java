@@ -39,7 +39,6 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
-import java.util.Map;
 
 public class VenuesListActivity extends AppCompatActivity {
     private final String TAG = "VenuesListActivity";
@@ -110,13 +109,11 @@ public class VenuesListActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        Log.e(TAG, "onResume: called");
         shimmerViewContainer.startShimmerAnimation();
     }
 
     @Override
     protected void onStart() {
-        Log.e(TAG, "onStart: called");
         super.onStart();
         if (popularSortActive) popularAdapter.startListening();
         else alphabeticAdapter.startListening();

@@ -25,7 +25,6 @@
         android:id="@+id/facebook_share_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
         android:layout_marginEnd="32dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
@@ -43,34 +42,6 @@
         app:layout_constraintTop_toBottomOf="@+id/my_toolbar"
         android:contentDescription="@string/venue_picture"/>
 
-    <TextView
-        android:id="@+id/venue_name_tv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginRight="16dp"
-        android:gravity="center_vertical"
-        android:textSize="16sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/venue_picture_iv"
-        app:layout_constraintTop_toBottomOf="@+id/my_toolbar" />
-
-    <TextView
-        android:id="@+id/venue_rating_tv"
-        android:layout_width="wrap_content"
-        android:layout_height="19dp"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="12dp"
-        android:layout_marginEnd="16dp"
-        android:gravity="center_vertical"
-        android:textSize="16sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/venue_picture_iv"
-        app:layout_constraintTop_toBottomOf="@+id/venue_name_tv" />
-
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/my_toolbar"
         android:layout_width="match_parent"
@@ -79,17 +50,26 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:theme="@style/ActionBarTheme"/>
+        android:theme="@style/ActionBarTheme" >
+        <TextView
+            android:id="@+id/toolbar_text_centered"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            style="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
+            />
+    </androidx.appcompat.widget.Toolbar>
+
 
     <TextView
         android:id="@+id/number_of_attendees1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
         android:gravity="center"
-        android:layout_marginTop="50dp"
-        android:layout_marginEnd="32dp"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/text_view_meet_people_from"
+        app:layout_constraintStart_toStartOf="@+id/text_view_meet_people_from"
         app:layout_constraintTop_toBottomOf="@+id/venue_rating_tv" />
 
 
@@ -97,20 +77,43 @@
         android:id="@+id/recycler_view_attend_party"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="@+id/text_view_meet_people_from"
-        app:layout_constraintTop_toTopOf="@id/attend_button"
-        />
+        android:layout_marginTop="24dp"
+        app:layout_constraintTop_toBottomOf="@+id/text_view_meet_people_from"
+        tools:layout_editor_absoluteX="16dp" />
 
     <TextView
         android:id="@+id/text_view_meet_people_from"
-        android:padding="8dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:padding="8dp"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/venue_picture_iv"
         app:layout_constraintTop_toBottomOf="@+id/number_of_attendees1" />
+
+
+    <TextView
+        android:id="@+id/opening_hours"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="16dp"
+        android:textSize="@dimen/textMedium"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/venue_picture_iv"
+        app:layout_constraintTop_toTopOf="@+id/venue_picture_iv" />
+
+    <TextView
+        android:id="@+id/venue_rating_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:gravity="center_vertical"
+        android:textSize="@dimen/textSizeAttendPartyNormal"
+        app:layout_constraintStart_toStartOf="@+id/venue_picture_iv"
+        app:layout_constraintTop_toBottomOf="@+id/opening_hours" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
