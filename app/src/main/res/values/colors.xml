@@ -5,10 +5,12 @@
     <color name="colorPrimaryLight">#8e99f3</color>
     <color name="colorAccent">#8e99f3</color>
     <color name="colorTextOnPrimary">#ffffff</color>
-    <color name="colorGreenButton">#2fbf71</color>
+    <color name="colorGreenButton">#0DFF0D</color>
+    <color name="colorTextOnGreen">#241C17</color>
     <color name="colorRedButton">#ff5851</color>
     <color name="colorRedButtonLogin">#f23557</color>
     <color name="colorLightRedButtonLoginClicked">#f16a82</color>
     <color name="colorShimmerBackground">#dddddd</color>
     <color name="colorGreyBackgroundDrawing">#D8D7D7</color>
+
 </resources>

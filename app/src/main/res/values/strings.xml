@@ -11,8 +11,8 @@
     <string name="venue_rating">Rating: X/5</string>
     <string name="facebook_application_id">2401198669957036</string>
     <string name="fb_login_protocol_scheme">fb2401198669957036</string>
-    <string name="attend">Attend Tonight</string>
-    <string name="dontgo">I don\'t go Tonight</string>
+    <string name="attend">I\'m Going</string>
+    <string name="dontgo">I\'m Not Going</string>
     <string name="sort">Sort</string>
     <string name="search">Search</string>
     <string name="maps">Maps</string>
@@ -25,9 +25,9 @@
     <string name="not_registered_yet"> <u>Not registered yet? Sign Up here.</u> </string>
     <string name="already_registered"> <u>Already registered? Login here.</u> </string>
     <string name="sign_up">Sign Up</string>
-    <string name="guests_tonight">Guests Tonight</string>
-    <string name="nationalities_tonight">Tonight you can meet people from these countries:</string>
-    <string name="nobody_attends_yet">Nobody attends this venue tonight yet. Be the first one!</string>
+    <string name="guests_tonight">Guests</string>
+    <string name="nationalities_tonight">Guests are from:</string>
+    <string name="nobody_attends_yet">Be the first one to attend!</string>
     <string name="venues_title">Bars &amp; Clubs</string>
     <string name="popular">Popular</string>
     <string name="alphabetic">Alphabetic</string>
@@ -46,6 +46,7 @@
     <string name="map_iv_description">Click here for seeing the venue on the map.</string>
     <string name="google_rating">Google Rating:\u0020</string>
     <string name="title_activity_maps">Map</string>
+    <string name="share_button">Share Button</string>
     <string-array name="countries">
         <item>Afghanistan</item>
         <item>Aland Islands</item>

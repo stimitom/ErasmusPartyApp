@@ -53,6 +53,7 @@ public class AttendPartyActivity extends AppCompatActivity {
     private TextView currentVenueState_TextView;
     private TextView venueOpeningHours_TextView;
     private ShareButton facebookShareButton;
+    private ImageView shareButton_ImageView;
     private Toolbar myToolbar;
     private TextView myToolbarTitle;
     private RatingBar ratingBar;
@@ -107,12 +108,13 @@ public class AttendPartyActivity extends AppCompatActivity {
         currentVenueState_TextView = (TextView) findViewById(R.id.text_view_meet_people_from);
         venueOpeningHours_TextView = (TextView) findViewById(R.id.opening_hours);
         ratingBar = (RatingBar) findViewById(R.id.rating_bar);
+        shareButton_ImageView = (ImageView)findViewById(R.id.share_button);
 
-        ShareLinkContent content = new ShareLinkContent.Builder()
-                .setContentUrl(Uri.parse("https://developers.facebook.com"))
-                .build();
-        facebookShareButton = (ShareButton) findViewById(R.id.facebook_share_button);
-        facebookShareButton.setShareContent(content);
+//        ShareLinkContent content = new ShareLinkContent.Builder()
+//                .setContentUrl(Uri.parse("https://developers.facebook.com"))
+//                .build();
+//        facebookShareButton = (ShareButton) findViewById(R.id.facebook_share_button);
+//        facebookShareButton.setShareContent(content);
 
         Intent intent = getIntent();
         String venue_name = intent.getStringExtra("venueName");
@@ -225,7 +227,7 @@ public class AttendPartyActivity extends AppCompatActivity {
             ratingBar.setRating(Float.parseFloat(venueRating.replace(",", ".") + "f"));
             venueNumberOfAttendees_TextView.setText(Integer.toString(venueNumberOfAttendees));
             venueOpeningHours_TextView.setText(getFormattedOpeningHours(venueOpeningHoursList));
-
+            shareButton_ImageView.setOnClickListener(shareButtonListener);
 
             //Called here to ensure sequential execution
             getUserData();
@@ -287,6 +289,7 @@ public class AttendPartyActivity extends AppCompatActivity {
                         //Update db user side
                         addToUserListOfAttendedVenues();
                         makeButtonRed();
+                        setDescriptiveText();
                         venueNumberOfAttendees_TextView.setText(Integer.toString(venueNumberOfAttendees));
                         ButtonIsRed = true;
                     } else {
@@ -297,6 +300,7 @@ public class AttendPartyActivity extends AppCompatActivity {
                         // Update db user side
                         deleteFromUserListOfAttendedVenues();
                         makeButtonGreen();
+                        setDescriptiveText();
                         venueNumberOfAttendees_TextView.setText(Integer.toString(venueNumberOfAttendees));
                         ButtonIsRed = false;
                     }
@@ -312,9 +316,22 @@ public class AttendPartyActivity extends AppCompatActivity {
                 //Update db user side
                 addToUserListOfAttendedVenues();
                 makeButtonRed();
+                setDescriptiveText();
                 venueNumberOfAttendees_TextView.setText(Integer.toString(venueNumberOfAttendees));
                 ButtonIsRed = true;
             }
+        }
+    };
+
+    View.OnClickListener shareButtonListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            Intent sendIntent = new Intent();
+            sendIntent.setAction(Intent.ACTION_SEND);
+            sendIntent.putExtra(Intent.EXTRA_TEXT, "Hey! Come join me at " + venueName + " tonight!");
+            sendIntent.putExtra(Intent.EXTRA_SUBJECT, "com.stimitom.erasmuspartyapp");
+            sendIntent.setType("text/plain");
+            startActivity(Intent.createChooser(sendIntent,null));
         }
     };
 
