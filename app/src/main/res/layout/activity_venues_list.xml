@@ -6,8 +6,7 @@
     android:layout_height="match_parent"
     xmlns:shimmer="http://schemas.android.com/apk/res-auto"
     tools:context=".VenuesListActivity"
-    android:orientation="vertical"
-    android:padding="6dp">
+    android:orientation="vertical">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/my_toolbar"
@@ -22,7 +21,7 @@
         android:id="@+id/button_date"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColor="@color/colorTextOnPrimary"
+        android:textColor="@color/colorWhite"
         android:background="@color/colorPrimaryLight"
         android:textAlignment="center"
         />
@@ -39,14 +38,14 @@
             android:layout_height="wrap_content"
             android:text="@string/popular"
             android:layout_weight="1"
-            android:textColor="@color/colorTextOnPrimary"/>
+            android:textColor="@color/colorWhite"/>
         <Button
             android:id="@+id/button_alphabetic"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="@string/alphabetic"
             android:layout_weight="1"
-            android:textColor="@color/colorTextOnPrimary"/>
+            android:textColor="@color/colorWhite"/>
     </LinearLayout>
 
     <com.facebook.shimmer.ShimmerFrameLayout

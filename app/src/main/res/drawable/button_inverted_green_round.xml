@@ -3,7 +3,9 @@
     <item>
         <shape android:shape="rectangle">
             <corners android:radius="10dp" />
-            <solid android:color="@color/colorRedButton"/>
+            <padding android:left="8dp" android:right="8dp" android:top="4dp" android:bottom="4dp"/>
+            <solid android:color="@color/colorWhite"/>
+            <stroke android:color="@color/colorGreenButton" android:width="3dp"/>
         </shape>
     </item>
 </selector>

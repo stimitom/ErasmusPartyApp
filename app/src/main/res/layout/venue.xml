@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/card_view_venue"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -35,68 +36,65 @@
             android:id="@+id/going_banner"
             android:layout_width="60dp"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="12dp"
             android:src="@drawable/going_button"
             android:visibility="invisible"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/guests_text_view" />
-
-        <TextView
-            android:id="@+id/venue_rating"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:padding="8dp"
-            android:text="rating"
-            android:textAlignment="viewStart"
-            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/venue_picture_round"
-            app:layout_constraintStart_toStartOf="@+id/venue_name" />
+            app:layout_constraintBottom_toBottomOf="@+id/guests_text_view"
+            app:layout_constraintEnd_toStartOf="@+id/guests_text_view"
+            app:layout_constraintStart_toEndOf="@+id/venue_rating_bar" />
 
         <TextView
             android:id="@+id/venue_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
+            android:layout_marginStart="16dp"
             android:layout_toStartOf="@+id/number_of_attendees"
             android:layout_toEndOf="@+id/venue_picture_round"
-            android:padding="8dp"
             android:text="venueName"
             android:textAlignment="viewStart"
-            android:textColor="@android:color/black"
             android:textAppearance="@style/TextAppearance.AppCompat.Title"
+            android:textColor="@android:color/black"
             android:textStyle="bold"
             app:layout_constraintStart_toEndOf="@+id/venue_picture_round"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="@+id/venue_picture_round" />
 
         <TextView
             android:id="@+id/guests_text_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
+            android:layout_marginTop="16dp"
             android:layout_marginBottom="2dp"
             android:text="@string/guests_tonight"
             android:textAlignment="center"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/number_of_attendees"
-            app:layout_constraintVertical_bias="1.0" />
+            app:layout_constraintEnd_toEndOf="@+id/number_of_attendees"
+            app:layout_constraintStart_toStartOf="@+id/number_of_attendees"
+            app:layout_constraintTop_toBottomOf="@+id/number_of_attendees" />
 
         <TextView
             android:id="@+id/number_of_attendees"
             android:layout_width="85dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="16dp"
+            android:layout_marginEnd="8dp"
             android:text="20"
             android:textAlignment="center"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="@+id/venue_name" />
+
+        <RatingBar
+            android:id="@+id/venue_rating_bar"
+            style="@style/Widget.AppCompat.RatingBar.Small"
+            android:layout_width="wrap_content"
+            android:layout_height="16sp"
+            android:layout_marginTop="8dp"
+            android:isIndicator="true"
+            android:numStars="5"
+            android:theme="@style/RatingBar"
+            app:layout_constraintStart_toStartOf="@+id/venue_name"
+            app:layout_constraintTop_toBottomOf="@+id/venue_name" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

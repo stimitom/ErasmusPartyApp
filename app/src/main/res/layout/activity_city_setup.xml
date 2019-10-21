@@ -20,7 +20,7 @@
             android:layout_marginBottom="30dp"
             android:fontFamily="@font/baumans"
             android:text="@string/erasmus_party_app"
-            android:textColor="@color/colorTextOnPrimary"
+            android:textColor="@color/colorWhite"
             android:textSize="37sp" />
 
         <TextView

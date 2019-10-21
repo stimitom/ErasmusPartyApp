@@ -70,7 +70,7 @@ public class IndicatingView extends View {
 
             case DRAWLOGO:
                 paint = new Paint();
-                paint.setColor(getResources().getColor(R.color.colorTextOnPrimary));
+                paint.setColor(getResources().getColor(R.color.colorWhite));
                 paint.setStrokeWidth(40f);
 
                 //E

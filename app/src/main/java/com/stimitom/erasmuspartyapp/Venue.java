@@ -31,9 +31,9 @@ public class Venue {
         this.nationalitiesList = new ArrayList<String>();
         this.type = type;
 
-        if (type.equals("BAR"))imageId = R.drawable.ic_local_bar_24dp;
-        else if (type.equals("NIGHT_CLUB"))imageId = R.drawable.ic_local_nightclub_24dp;
-        else imageId = R.drawable.bk_logo;
+        if (type.equals("BAR"))imageId = R.drawable.icons8_beer_glass_48_orange;
+        else if (type.equals("NIGHT_CLUB"))imageId = R.drawable.icons8_party_96_blue_orange;
+        else imageId = R.drawable.icons8_disco_ball_100;
     }
 
     public String getVenueName() {
