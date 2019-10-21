@@ -20,4 +20,9 @@
         <item name="android:textSize">16sp</item>
         <item name="android:textStyle">bold</item>
     </style>
+
+    <style name="RatingBar" parent="Theme.AppCompat">
+    <item name="colorControlNormal">@color/colorStarsEmpty</item>
+        <item name="colorControlActivated">@color/colorStars</item>
+</style>
 </resources>

@@ -7,7 +7,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -22,7 +21,6 @@ import android.widget.Toast;
 
 import androidx.appcompat.widget.Toolbar;
 
-import com.facebook.share.model.ShareLinkContent;
 import com.facebook.share.widget.ShareButton;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -59,7 +57,7 @@ public class AttendPartyActivity extends AppCompatActivity {
     private RatingBar ratingBar;
 
     private Button attendButton;
-    private Boolean ButtonIsRed;
+    private Boolean buttonIsClicked;
 
 
     private FirebaseFirestore db;
@@ -171,27 +169,29 @@ public class AttendPartyActivity extends AppCompatActivity {
 
         if (venueGuestList != null) {
             if (venueGuestList.contains(currentUserId)) {
-                ButtonIsRed = true;
-                makeButtonRed();
+                buttonIsClicked = true;
+                makeButtonClicked();
             } else {
-                ButtonIsRed = false;
-                makeButtonGreen();
+                buttonIsClicked = false;
+                makeButtonUnclicked();
             }
         } else {
-            ButtonIsRed = false;
-            makeButtonGreen();
+            buttonIsClicked = false;
+            makeButtonUnclicked();
         }
 
     }
 
-    public void makeButtonGreen() {
+    public void makeButtonUnclicked() {
         attendButton.setText(R.string.attend);
-        attendButton.setBackgroundResource(R.drawable.button_green_round);
+        attendButton.setTextColor(getResources().getColor(R.color.colorGreenButton));
+        attendButton.setBackgroundResource(R.drawable.button_inverted_green_round);
     }
 
-    public void makeButtonRed() {
-        attendButton.setBackgroundResource(R.drawable.button_red_round);
+    public void makeButtonClicked() {
         attendButton.setText(R.string.dontgo);
+        attendButton.setTextColor(getResources().getColor(R.color.colorWhite));
+        attendButton.setBackgroundResource(R.drawable.button_green_round);
     }
 
     public void setDescriptiveText() {
@@ -278,20 +278,20 @@ public class AttendPartyActivity extends AppCompatActivity {
     View.OnClickListener attendButtonListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            if (containsList || ButtonIsRed) {
+            if (containsList || buttonIsClicked) {
                 Log.e(TAG, "onClick: Contains List");
-                if (usersVenueCountNumber < 3 || ButtonIsRed) {
-                    if (!ButtonIsRed) {
+                if (usersVenueCountNumber < 3 || buttonIsClicked) {
+                    if (!buttonIsClicked) {
                         //Update db day_venue Side
                         dayVenueRef.update("numberOfAttendees", ++venueNumberOfAttendees);
                         addUserToVenueGuestList();
 
                         //Update db user side
                         addToUserListOfAttendedVenues();
-                        makeButtonRed();
+                        makeButtonClicked();
                         setDescriptiveText();
                         venueNumberOfAttendees_TextView.setText(Integer.toString(venueNumberOfAttendees));
-                        ButtonIsRed = true;
+                        buttonIsClicked = true;
                     } else {
                         //Update db day_venue side
                         deleteUserFromVenueGuestList();
@@ -299,10 +299,10 @@ public class AttendPartyActivity extends AppCompatActivity {
 
                         // Update db user side
                         deleteFromUserListOfAttendedVenues();
-                        makeButtonGreen();
+                        makeButtonUnclicked();
                         setDescriptiveText();
                         venueNumberOfAttendees_TextView.setText(Integer.toString(venueNumberOfAttendees));
-                        ButtonIsRed = false;
+                        buttonIsClicked = false;
                     }
                 } else {
                     Toast.makeText(context, "Sorry, you can only attend 3 venues per night!", Toast.LENGTH_SHORT).show();
@@ -315,10 +315,10 @@ public class AttendPartyActivity extends AppCompatActivity {
 
                 //Update db user side
                 addToUserListOfAttendedVenues();
-                makeButtonRed();
+                makeButtonClicked();
                 setDescriptiveText();
                 venueNumberOfAttendees_TextView.setText(Integer.toString(venueNumberOfAttendees));
-                ButtonIsRed = true;
+                buttonIsClicked = true;
             }
         }
     };

@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
 import com.facebook.shimmer.ShimmerFrameLayout;
@@ -52,7 +53,7 @@ public class VenuesAdapter extends FirestoreRecyclerAdapter<Venue, VenuesAdapter
         venuesViewHolder.goingBanner.setVisibility(View.INVISIBLE);
         venuesViewHolder.venueName.setText(venue.getVenueName());
         venuesViewHolder.venuePicture.setImageResource(venue.getImageId());
-        venuesViewHolder.venueRating.setText(venue.getRating());
+        venuesViewHolder.venueRating.setRating(Float.parseFloat(venue.getRating().replace(",", ".") + "f"));
         venuesViewHolder.numberOfAttendees.setText(""+venue.getNumberOfAttendees());
 
         //Make going button visible on attended Venues
@@ -112,7 +113,7 @@ public class VenuesAdapter extends FirestoreRecyclerAdapter<Venue, VenuesAdapter
 
         public TextView venueName;
         public CircularImageView venuePicture;
-        public TextView venueRating;
+        public RatingBar venueRating;
         public TextView numberOfAttendees;
         public CardView cardView;
         public ImageView goingBanner;
@@ -121,7 +122,7 @@ public class VenuesAdapter extends FirestoreRecyclerAdapter<Venue, VenuesAdapter
             super(itemView);
             this.venueName = (TextView) itemView.findViewById(R.id.venue_name);
             this.venuePicture = (CircularImageView) itemView.findViewById(R.id.venue_picture_round);
-            this.venueRating = (TextView) itemView.findViewById(R.id.venue_rating);
+            this.venueRating = (RatingBar) itemView.findViewById(R.id.venue_rating_bar);
             this.numberOfAttendees = (TextView) itemView.findViewById(R.id.number_of_attendees);
             this.goingBanner = (ImageView) itemView.findViewById(R.id.going_banner);
             cardView = (CardView) itemView.findViewById(R.id.card_view_venue);
