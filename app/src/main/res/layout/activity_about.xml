@@ -16,16 +16,4 @@
         android:text="@string/donation_gag"
         android:textAlignment="center"/>
 
-
-
-    <com.stimitom.erasmuspartyapp.IndicatingView
-        android:id="@+id/generated_graphic_about"
-        android:layout_width="200dp"
-        android:layout_height="200dp"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="@dimen/activityPadding"
-        android:background="@color/colorPrimaryLight"
-        />
-
-
 </LinearLayout>
