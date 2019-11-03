@@ -5,83 +5,39 @@ import android.content.Intent;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.res.Configuration;
 import android.os.Bundle;
-import androidx.appcompat.widget.Toolbar;
 
-import android.util.Log;
-import android.view.View;
-import android.widget.Button;
+import android.os.Handler;
+
 import com.google.firebase.auth.FirebaseAuth;
 
-import java.util.Locale;
 
 public class LauncherActivity extends AppCompatActivity {
     String TAG = "LauncherActivity";
-
-    private Button  lab1Button;
-    private Button lab2Button;
-    private Button coreAppButton;
-
-    private Context context = this;
+    private Context context = LauncherActivity.this;
+    private static final int SPLASH_TIME_OUT = 2500;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_launcher);
-
-        Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
-        setSupportActionBar(myToolbar);
-
-        lab1Button = (Button) findViewById(R.id.button_lab_1);
-        lab2Button = (Button) findViewById(R.id.button_lab_2);
-        coreAppButton = (Button) findViewById(R.id.button_core_app);
-
-
-        lab1Button.setOnClickListener(startLab1ExtrasActivity);
-        lab2Button.setOnClickListener(startLab2ExtrasActivity);
-        coreAppButton.setOnClickListener(startNextActivity);
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                if (isLoggedIn())runVenuesListActivity();
+                else runLoginActivity();
+                finish();
+            }
+        },SPLASH_TIME_OUT);
     }
 
-    //If logged in : Starts VenuesActivity
-    //else starts SignInActivity
-    View.OnClickListener startNextActivity = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-             if (isLoggedIn()) runVenuesListActivity();
-             else runLoginActivity();
-        }
-    };
-
-    View.OnClickListener startLab1ExtrasActivity = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            runLab1ExtrasActivity();
-        }
-    };
-    View.OnClickListener startLab2ExtrasActivity = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            runLab2ExtrasActivity();
-        }
-    };
-
-    public void runVenuesListActivity(){
-        Intent intent = new Intent(context,VenuesListActivity.class);
-        context.startActivity(intent);
-    }
-    public void runLab1ExtrasActivity(){
-        Intent intent = new Intent(context,Lab1ExtrasActivity.class);
-        context.startActivity(intent);
-    }
-
-    public void runLab2ExtrasActivity(){
-        Intent intent = new Intent(context,Lab2ExtrasActivity.class);
-        context.startActivity(intent);
-    }
 
     public void runLoginActivity(){
         Intent intent = new Intent(context, LoginActivity.class);
+        context.startActivity(intent);
+    }
+    public  void runVenuesListActivity(){
+        Intent intent = new Intent(context,VenuesListActivity.class);
         context.startActivity(intent);
     }
 
@@ -89,7 +45,10 @@ public class LauncherActivity extends AppCompatActivity {
         //Returns true if a user is Logged in , false otherwise
         return FirebaseAuth.getInstance().getCurrentUser() != null;
     }
+
+
 }
+
 
 
 /*

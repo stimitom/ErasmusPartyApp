@@ -18,25 +18,25 @@
         android:padding="8dp">
 
         <com.pkmmte.view.CircularImageView
-            android:layout_width="70dp"
-            android:layout_height="70dp"
-            android:id= "@+id/venue_picture_round"
-            app:border="true"
-            app:border_color="#EEEEEE"
-            app:border_width="4dp"
-            app:shadow="true"
+            android:id="@+id/venue_picture_round"
+            android:layout_width="80dp"
+            android:layout_height="75dp"
             android:layout_marginTop="4dp"
             android:layout_marginBottom="4dp"
             android:contentDescription="@string/venue_picture"
+            app:border="true"
+            app:border_color="#EEEEEE"
+            app:border_width="3dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
+            app:layout_constraintTop_toTopOf="parent"
+            app:shadow="true" />
 
         <ImageView
             android:id="@+id/going_banner"
             android:layout_width="60dp"
             android:layout_height="wrap_content"
-            android:src="@drawable/going_button"
+            android:src="@drawable/button_going"
             android:visibility="invisible"
             app:layout_constraintBottom_toBottomOf="@+id/guests_text_view"
             app:layout_constraintEnd_toStartOf="@+id/guests_text_view"
@@ -47,6 +47,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
+            android:layout_marginEnd="2dp"
             android:layout_toStartOf="@+id/number_of_attendees"
             android:layout_toEndOf="@+id/venue_picture_round"
             android:text="venueName"
@@ -54,6 +55,9 @@
             android:textAppearance="@style/TextAppearance.AppCompat.Title"
             android:textColor="@android:color/black"
             android:textStyle="bold"
+            app:layout_constrainedWidth="true"
+            app:layout_constraintEnd_toStartOf="@+id/number_of_attendees"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toEndOf="@+id/venue_picture_round"
             app:layout_constraintTop_toTopOf="@+id/venue_picture_round" />
 
