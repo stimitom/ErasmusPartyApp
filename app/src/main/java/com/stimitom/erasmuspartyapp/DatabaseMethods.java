@@ -12,6 +12,8 @@ import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import androidx.annotation.NonNull;
 
@@ -21,23 +23,6 @@ public class DatabaseMethods {
     private static CollectionReference datesRef = db.collection("dates");
     private static CollectionReference citiesRef = db.collection("cities");
 
-    public static void addVenueToCityDB(String city, Venue venue) {
-        citiesRef.document(city).collection("venues")
-                .document(venue.getVenueName())
-                .set(venue)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        Log.d(TAG, "Venue upload database succesful");
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.e(TAG, "Day_venue upload to database FAILED" + e.toString());
-                    }
-                });
-    }
 
     public static void addVenueToDate(Venue venue, String date, String city){
         db.collection(city+"_dates").document(date)
@@ -47,7 +32,7 @@ public class DatabaseMethods {
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-                        Log.d(TAG, "Day_venue upload database succesful");
+                        Log.d(TAG, "Day_venue upload database successful");
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -59,27 +44,29 @@ public class DatabaseMethods {
     }
 
     public static void addCityToDB(String city) {
-        citiesRef.document("city");
+        Map<String, Object> cityDummy = new HashMap<>();
+        cityDummy.put("exists", true);
+        citiesRef.document(city).set(cityDummy);
     }
 
-//
-//    public static void addVenueToDate(String date, Venue venue) {
-//        datesRef.document(date).collection("day_venues")
-//                .document(venue.getVenueName())
-//                .set(venue)
-//                .addOnSuccessListener(new OnSuccessListener<Void>() {
-//                    @Override
-//                    public void onSuccess(Void aVoid) {
-//                        Log.i(TAG, "Day_venue upload database succesful");
-//                    }
-//                })
-//                .addOnFailureListener(new OnFailureListener() {
-//                    @Override
-//                    public void onFailure(@NonNull Exception e) {
-//                        Log.e(TAG, "Day_venue upload to database FAILED" + e.toString());
-//                    }
-//                });
-//    }
+    public static void addExistenceDummyToDate(String city, String date){
+        Map<String, Object> dateDummy = new HashMap<>();
+        dateDummy.put("exists", true);
+        db.collection(city+"_dates").document(date)
+                .set(dateDummy)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d(TAG, "Dummy added to date");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.d(TAG, "Dummy could NOT be added to date.");
+                    }
+                });
+    }
 
 
     public static String getDateToday() {

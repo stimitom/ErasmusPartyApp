@@ -88,8 +88,9 @@ public class VenuesListActivity extends AppCompatActivity {
         alphabeticButton.setOnClickListener(alphabeticSortListener);
 
         city = "Kaunas,LT";
+        DatabaseMethods.addCityToDB(city);
         setUpDateButton();
-        setUpThreeDays();
+        setUpTwoDays();
         addNewDayToDateDB();
 
         reloader = this;
@@ -443,11 +444,15 @@ public class VenuesListActivity extends AppCompatActivity {
 
 
     public void addNewDayToDateDB() {
-        db.collection(city + "_dates").document(theDayAfterTomorrow).collection("day_venues").document("B2O bar")
+
+        db.collection(city + "_dates").document(theDayAfterTomorrow)
                 .get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
                 if (!documentSnapshot.exists()) {
+
+                    DatabaseMethods.addExistenceDummyToDate(city, theDayAfterTomorrow);
+
                     db.collection("cities").document(city)
                             .collection("venues").get()
                             .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
@@ -472,11 +477,15 @@ public class VenuesListActivity extends AppCompatActivity {
     }
 
     public void setUpTodayInDB() {
-        db.collection(city + "_dates").document(today).collection("day_venues").document("B2O bar")
+
+        db.collection(city + "_dates").document(today)
                 .get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
                 if (!documentSnapshot.exists()) {
+
+                    DatabaseMethods.addExistenceDummyToDate(city, today);
+
                     db.collection("cities").document(city)
                             .collection("venues").get()
                             .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
@@ -498,15 +507,19 @@ public class VenuesListActivity extends AppCompatActivity {
                 }
             }
         });
-
     }
 
+
     public void setUpTomorrowInDB() {
-        db.collection(city + "_dates").document(tomorrow).collection("day_venues").document("B2O bar")
+
+        db.collection(city + "_dates").document(tomorrow)
                 .get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
                 if (!documentSnapshot.exists()) {
+
+                    DatabaseMethods.addExistenceDummyToDate(city, tomorrow);
+
                     db.collection("cities").document(city)
                             .collection("venues").get()
                             .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
@@ -530,7 +543,8 @@ public class VenuesListActivity extends AppCompatActivity {
         });
     }
 
-    public void setUpThreeDays(){
+
+    public void setUpTwoDays() {
         setUpTodayInDB();
         setUpTomorrowInDB();
     }
@@ -539,3 +553,5 @@ public class VenuesListActivity extends AppCompatActivity {
         return dayVenuesRef;
     }
 }
+
+
