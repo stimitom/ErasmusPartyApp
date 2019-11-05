@@ -3,6 +3,7 @@ package com.stimitom.erasmuspartyapp;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -48,24 +49,22 @@ public class CitySetupActivity extends AppCompatActivity implements AdapterView.
                     @Override
                     public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                         for (QueryDocumentSnapshot queryDocumentSnapshot: queryDocumentSnapshots){
-                            cityList.add(queryDocumentSnapshot.toString());
+                            cityList.add(queryDocumentSnapshot.getId());
                         }
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Log.e(TAG, "onFailure:could not fetch city data" +e.toString() );
+                        Log.e(TAG, "onFailure: could not fetch cities names" + e.toString() );
                     }
                 });
 
 
-        ArrayAdapter<String> cityAdapter =  new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item,cityList);
-        cityAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        citySpinner.setAdapter(cityAdapter);
-        citySpinner.setOnItemSelectedListener(this);
-
-
+//        ArrayAdapter<String> cityAdapter =  new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item,cityList);
+//        cityAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+//        citySpinner.setAdapter(cityAdapter);
+//        citySpinner.setOnItemSelectedListener(this);
 
         ArrayAdapter<CharSequence> nationalityAdapter = ArrayAdapter.createFromResource(this, R.array.countries, android.R.layout.simple_spinner_item);
         nationalityAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -75,14 +74,15 @@ public class CitySetupActivity extends AppCompatActivity implements AdapterView.
 
         letsGoButton.setOnClickListener(letsGoListener);
     }
-    //TODO A LOOOOOOOT
     View.OnClickListener letsGoListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-
+            String city ="Kaunas,LT";
             String nationality = nationalitySpinner.getSelectedItem().toString();
-
-            db.collection("cities").document();
+            String username = getIntent().getStringExtra("username");
+            Log.e(TAG, "onClick: city " + city + " nationality " + nationality + " username " + username );
+            DatabaseMethods.addUserToDatabase(username, nationality, city);
+            runVenuesListActivtiy();
         }
     };
 
@@ -96,29 +96,8 @@ public class CitySetupActivity extends AppCompatActivity implements AdapterView.
 
     }
 
-    private CollectionReference usersRef =  db.collection("users");
-
-    public void saveUserToDatabase(String inputCity, String inputNationality) {
-        DocumentReference usersRef = db.collection("cities").document(inputCity);
-
-        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        String userEmail = FirebaseAuth.getInstance().getCurrentUser().getEmail();
-
-//        User user = new User(userId,inputNationality,userEmail);
-//        usersRef.document(userId)
-//                .set(user)
-//                .addOnSuccessListener(new OnSuccessListener<Void>() {
-//                    @Override
-//                    public void onSuccess(Void aVoid) {
-//                        Log.i(TAG, "user upload to database succesful");
-//                        Toast.makeText(getApplicationContext(), "Have Fun tonight!", Toast.LENGTH_SHORT).show();
-//                    }
-//                })
-//                .addOnFailureListener(new OnFailureListener() {
-//                    @Override
-//                    public void onFailure(@NonNull Exception e) {
-//                        Log.e(TAG, "user upload to database FAILED" + e.toString());
-//                    }
-//                });
+    private void runVenuesListActivtiy(){
+        Intent intent = new Intent(getApplicationContext(), VenuesListActivity.class);
+        startActivity(intent);
     }
 }

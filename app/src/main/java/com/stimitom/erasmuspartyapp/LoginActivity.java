@@ -19,15 +19,22 @@ import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
+import com.facebook.Profile;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.api.LogDescriptor;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.Arrays;
 
@@ -70,7 +77,12 @@ public class LoginActivity extends AppCompatActivity {
             public void onSuccess(LoginResult loginResult) {
                 progressBar.setVisibility(View.VISIBLE);
                 Log.d(TAG, "facebook:onSuccess:" + loginResult);
-                handleFacebookAccessToken(loginResult.getAccessToken());
+                Profile profile = Profile.getCurrentProfile();
+                String name = "";
+                if (profile!= null) {
+                     name = profile.getName();
+                }
+                handleFacebookAccessToken(loginResult.getAccessToken(),name);
             }
 
             @Override
@@ -91,7 +103,7 @@ public class LoginActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-    private void handleFacebookAccessToken(AccessToken token) {
+    private void handleFacebookAccessToken(AccessToken token, final String username) {
         Log.d(TAG, "handleFacebookAccessToken:" + token);
 
         AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());
@@ -101,10 +113,8 @@ public class LoginActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         progressBar.setVisibility(View.GONE);
                         if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "signInWithCredential:success");
-                            FirebaseUser user = mAuth.getCurrentUser();
-                            runVenuesListActivity();
+                            runCitySetupActivity(username);
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "signInWithCredential:failure", task.getException());
@@ -155,7 +165,7 @@ public class LoginActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             runVenuesListActivity();
                         } else {
-                            Toast.makeText(context, "No user registered with this email/password. Please Sign Up.",Toast.LENGTH_LONG).show();
+                            Toast.makeText(context, "No user registered with this email/password. Try again or Sign Up.",Toast.LENGTH_LONG).show();
                             Log.e(TAG, "onComplete: user signIn not successful" + task.getException().getMessage());
                         }
                     }
@@ -164,6 +174,12 @@ public class LoginActivity extends AppCompatActivity {
 
     private void runVenuesListActivity() {
         Intent intent = new Intent(context, VenuesListActivity.class);
+        context.startActivity(intent);
+    }
+
+    private void runCitySetupActivity(String username) {
+        Intent intent = new Intent(context, CitySetupActivity.class);
+        intent.putExtra("username", username);
         context.startActivity(intent);
     }
 

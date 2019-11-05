@@ -52,7 +52,7 @@
         android:layout_marginTop="250dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/button_style_selector_request_venues"
+        android:background="@drawable/button_style_request_venues_selector"
         android:text="@string/add_place_to_list"
         android:layout_gravity="center"
         android:padding="10dp"

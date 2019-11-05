@@ -5,6 +5,8 @@ import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -22,6 +24,7 @@ public class DatabaseMethods {
     private static FirebaseFirestore db = FirebaseFirestore.getInstance();
     private static CollectionReference datesRef = db.collection("dates");
     private static CollectionReference citiesRef = db.collection("cities");
+    private static CollectionReference usersRef = db.collection("users");
 
 
     public static void addVenueToDate(Venue venue, String date, String city){
@@ -106,6 +109,29 @@ public class DatabaseMethods {
         calendar.add(Calendar.DATE, 3);
         date = calendar.getTime();
         return formatter.format(date);
+    }
+
+
+    public static void addUserToDatabase(String userName, String nationality, String city) {
+        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        String userId = firebaseUser.getUid();
+        String email = firebaseUser.getEmail();
+
+        User user = new User(userId,userName,nationality,email,city);
+        usersRef.document(userId)
+                .set(user)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d(TAG, "user upload to database successful");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.e(TAG, "user upload to database FAILED" + e.toString());
+                    }
+                });
     }
 
 }
