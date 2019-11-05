@@ -11,6 +11,7 @@ public class User {
     private String username;
     private String nationality;
     private String email;
+    private String city;
 
     private List<String> listnames = new ArrayList<>();
     private long counterpos0;
@@ -21,14 +22,21 @@ public class User {
     public User() {
     }
 
-    public User(String userID, String userName, String nationality, String email) {
+    public User(String userID, String userName, String nationality, String email, String city) {
         this.userid = userID;
         this.username = userName;
         this.nationality = nationality;
         this.email = email;
+        this.city = city;
     }
 
     public User(String username, String email) {
+        this.username = username;
+        this.email = email;
+    }
+
+    public User(String userid,String username, String email) {
+        this.userid = userid;
         this.username = username;
         this.email = email;
     }
@@ -47,6 +55,10 @@ public class User {
 
     public String getEmail() {
         return email;
+    }
+
+    public String getCity() {
+        return city;
     }
 
     public List<String> getListnames() {
@@ -68,4 +80,5 @@ public class User {
     public Map<String, String> getCountermapping() {
         return countermapping;
     }
+
 }

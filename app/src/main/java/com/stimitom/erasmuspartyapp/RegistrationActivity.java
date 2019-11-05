@@ -128,24 +128,24 @@ public class RegistrationActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         progressBar.setVisibility(View.GONE);
                         if (task.isSuccessful()) {
-                            User user = new User(name, email);
-                            FirebaseFirestore db = FirebaseFirestore.getInstance();
-                            db.collection("users").
-                                    document(FirebaseAuth.getInstance().getCurrentUser().getUid())
-                                    .set(user)
-                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                        @Override
-                                        public void onSuccess(Void aVoid) {
-                                            Log.d(TAG, "onSuccess: User sucessfully upoladed to db");
-                                        }
-                                    })
-                                    .addOnFailureListener(new OnFailureListener() {
-                                        @Override
-                                        public void onFailure(@NonNull Exception e) {
-                                            Log.d(TAG, "onFailure: User could not be uploaded to db" + e.toString());
-                                        }
-                                    });
-                            runVenuesListActivity();
+//                            User user = new User(name, email);
+//                            FirebaseFirestore db = FirebaseFirestore.getInstance();
+//                            db.collection("users").
+//                                    document(FirebaseAuth.getInstance().getCurrentUser().getUid())
+//                                    .set(user)
+//                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+//                                        @Override
+//                                        public void onSuccess(Void aVoid) {
+//                                            Log.d(TAG, "onSuccess: User sucessfully upoladed to db");
+//                                        }
+//                                    })
+//                                    .addOnFailureListener(new OnFailureListener() {
+//                                        @Override
+//                                        public void onFailure(@NonNull Exception e) {
+//                                            Log.d(TAG, "onFailure: User could not be uploaded to db" + e.toString());
+//                                        }
+//                                    });
+                            runCitySetupActivity(name);
                         } else {
                             Log.e(TAG, "onComplete: user upload to db was not succesful" + task.getException().getMessage());
                             // If email address is already registered
@@ -168,6 +168,13 @@ public class RegistrationActivity extends AppCompatActivity {
 
     private void runVenuesListActivity() {
         Intent intent = new Intent(context, VenuesListActivity.class);
+        context.startActivity(intent);
+    }
+
+
+    private void runCitySetupActivity(String username) {
+        Intent intent = new Intent(context, CitySetupActivity.class);
+        intent.putExtra("username",username);
         context.startActivity(intent);
     }
 

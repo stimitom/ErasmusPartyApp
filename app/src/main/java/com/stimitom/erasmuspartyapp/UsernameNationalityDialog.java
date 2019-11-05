@@ -88,23 +88,23 @@ public class UsernameNationalityDialog extends AppCompatDialogFragment implement
     public void saveUserToDatabase(String inputUsername, String inputNationality) {
         String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         String userEmail = FirebaseAuth.getInstance().getCurrentUser().getEmail();
-
-        User user = new User(userId,inputUsername,inputNationality,userEmail);
-        usersRef.document(userId)
-                .set(user)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        Log.i(TAG, "user upload to database succesful");
-                        Toast.makeText(context, "Have Fun tonight!", Toast.LENGTH_SHORT).show();
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.e(TAG, "user upload to database FAILED" + e.toString());
-                    }
-                });
+//
+//        User user = new User(userId,inputUsername,inputNationality,userEmail);
+//        usersRef.document(userId)
+//                .set(user)
+//                .addOnSuccessListener(new OnSuccessListener<Void>() {
+//                    @Override
+//                    public void onSuccess(Void aVoid) {
+//                        Log.i(TAG, "user upload to database succesful");
+//                        Toast.makeText(context, "Have Fun tonight!", Toast.LENGTH_SHORT).show();
+//                    }
+//                })
+//                .addOnFailureListener(new OnFailureListener() {
+//                    @Override
+//                    public void onFailure(@NonNull Exception e) {
+//                        Log.e(TAG, "user upload to database FAILED" + e.toString());
+//                    }
+//                });
     }
 }
 
