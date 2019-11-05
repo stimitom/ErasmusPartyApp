@@ -98,7 +98,6 @@ public class VenuesListActivity extends AppCompatActivity {
         user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null) {
             setDayVenuesRef();
-            checkIfDialogNeeded();
         } else {
             Intent intent = new Intent(context, LoginActivity.class);
             context.startActivity(intent);
@@ -362,16 +361,6 @@ public class VenuesListActivity extends AppCompatActivity {
         return false;
     }
 
-
-    /**
-     * DIALOG
-     **/
-    public void openDialog() {
-        UsernameNationalityDialog dialog = new UsernameNationalityDialog();
-        dialog.show(getSupportFragmentManager(), "UsernameNationalityDialog");
-    }
-
-
     /**
      * UserInfo
      **/
@@ -388,22 +377,7 @@ public class VenuesListActivity extends AppCompatActivity {
         }
     }
 
-    public void checkIfDialogNeeded() {
-        userRef = db.collection("users").document(getUserId());
-        userRef.get()
-                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                    @Override
-                    public void onSuccess(DocumentSnapshot documentSnapshot) {
-                        if (!documentSnapshot.contains("nationality")) openDialog();
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.e(TAG, "onFailure: Could not fetch UserData" + e.toString());
-                    }
-                });
-    }
+
 
     /**
      * Date Button
