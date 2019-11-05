@@ -59,6 +59,8 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        if(getIntent().getBooleanExtra("comesFromLauncher",true))LauncherActivity.launcherActivity.finish();
+
         mAuth = FirebaseAuth.getInstance();
 
         editTextEmail = (EditText) findViewById(R.id.email_edit_text_registration);
@@ -185,7 +187,7 @@ public class LoginActivity extends AppCompatActivity {
                 .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                     @Override
                     public void onSuccess(DocumentSnapshot documentSnapshot) {
-                        if (documentSnapshot.contains("nationality")) {
+                        if (documentSnapshot.contains("nationality") && documentSnapshot.get("nationality")!= null) {
                             runVenuesListActivity();
                             finish();
                         }else {
