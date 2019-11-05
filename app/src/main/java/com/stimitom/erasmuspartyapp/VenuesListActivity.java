@@ -10,6 +10,7 @@ import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -414,7 +415,6 @@ public class VenuesListActivity extends AppCompatActivity {
         theDayAfterTomorrow = DatabaseMethods.getDateTheDayAfterTomorrow();
 
         dateButton.setText(today);
-
         todayBool = true;
         tomorrowBool = false;
         dateButton.setOnClickListener(new View.OnClickListener() {
@@ -427,9 +427,11 @@ public class VenuesListActivity extends AppCompatActivity {
 
                 } else if (tomorrowBool) {
                     dateButton.setText(theDayAfterTomorrow);
+                    dateButton.setCompoundDrawablesRelativeWithIntrinsicBounds(getApplicationContext().getResources().getDrawable(R.drawable.ic_arrow_left_24dp),null,getResources().getDrawable(R.drawable.ic_arrow_right_primary_light_24dp),null);
                     tomorrowBool = false;
                 } else {
                     dateButton.setText(today);
+                    dateButton.setCompoundDrawablesRelativeWithIntrinsicBounds(getApplicationContext().getResources().getDrawable(R.drawable.ic_arrow_left_primary_light_24dp),null,getResources().getDrawable(R.drawable.ic_arrow_right_24dp),null);
                     todayBool = true;
                 }
                 if (popularSortActive) setUpPopularRecyclerView(false, true);
