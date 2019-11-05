@@ -3,10 +3,12 @@ package com.stimitom.erasmuspartyapp;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -25,6 +27,8 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 public class CitySetupActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
     private static final String TAG = "CitySetupActivity";
@@ -47,7 +51,7 @@ public class CitySetupActivity extends AppCompatActivity implements AdapterView.
 
 
         cityList = new ArrayList<>();
-        final ArrayAdapter<String> cityAdapter = new ArrayAdapter<String>(getBaseContext(), R.layout.spinner_item, cityList);
+        final ArrayAdapter<String> cityAdapter = new ArrayAdapter<String>(getBaseContext(),R.layout.spinner_item,cityList);
         db.collection("cities")
                 .get()
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
@@ -55,8 +59,11 @@ public class CitySetupActivity extends AppCompatActivity implements AdapterView.
                     public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                         for (QueryDocumentSnapshot queryDocumentSnapshot : queryDocumentSnapshots) {
                             cityList.add(queryDocumentSnapshot.getId());
-                            cityAdapter.notifyDataSetChanged();
                         }
+                        cityList.add("Select City");
+                        cityAdapter.notifyDataSetChanged();
+                        citySpinner.setSelection(cityList.size()-1);
+
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -100,10 +107,14 @@ public class CitySetupActivity extends AppCompatActivity implements AdapterView.
     View.OnClickListener letsGoListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            String username = getIntent().getStringExtra("username");
-            Log.e(TAG, "onClick: city " + city + " nationality " + nationality + " username " + username);
-            DatabaseMethods.addUserToDatabase(username, nationality, city);
-            runVenuesListActivity();
+            if (!city.equals("Select City") && !nationality.equals("Select Nationality")) {
+                String username = getIntent().getStringExtra("username");
+                Log.e(TAG, "onClick: city " + city + " nationality " + nationality + " username " + username);
+                DatabaseMethods.addUserToDatabase(username, nationality, city);
+                runVenuesListActivity();
+            }else {
+                Toast.makeText(getApplicationContext(),"Please Select a city and a Nationality.",Toast.LENGTH_SHORT).show();
+            }
         }
     };
 

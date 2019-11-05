@@ -48,6 +48,7 @@
     <string name="title_activity_maps">Map</string>
     <string name="share_button">Share Button</string>
     <string-array name="countries">
+        <item>Select Nationality</item>
         <item>Afghanistan</item>
         <item>Aland Islands</item>
         <item>Albania</item>
