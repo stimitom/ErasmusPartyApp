@@ -25,6 +25,8 @@ import com.facebook.Profile;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.api.LogDescriptor;
 import com.google.firebase.auth.AuthCredential;
@@ -32,6 +34,8 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -63,7 +67,7 @@ public class LoginActivity extends AppCompatActivity {
         progressBar.setVisibility(View.INVISIBLE);
 
         facebookLoginButton = (LoginButton) findViewById(R.id.facebook_login_button);
-        String [] permissions = {"email", "public_profile"};
+        String[] permissions = {"email", "public_profile"};
         facebookLoginButton.setPermissions(Arrays.asList(permissions));
         genericLoginButton = (Button) findViewById(R.id.generic_login_button);
         genericLoginButton.setOnClickListener(loginListener);
@@ -79,10 +83,10 @@ public class LoginActivity extends AppCompatActivity {
                 Log.d(TAG, "facebook:onSuccess:" + loginResult);
                 Profile profile = Profile.getCurrentProfile();
                 String name = "";
-                if (profile!= null) {
-                     name = profile.getName();
+                if (profile != null) {
+                    name = profile.getName();
                 }
-                handleFacebookAccessToken(loginResult.getAccessToken(),name);
+                handleFacebookAccessToken(loginResult.getAccessToken(), name);
             }
 
             @Override
@@ -114,7 +118,7 @@ public class LoginActivity extends AppCompatActivity {
                         progressBar.setVisibility(View.GONE);
                         if (task.isSuccessful()) {
                             Log.d(TAG, "signInWithCredential:success");
-                            runCitySetupActivity(username);
+                            runNextActivity(username);
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "signInWithCredential:failure", task.getException());
@@ -165,9 +169,35 @@ public class LoginActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             runVenuesListActivity();
                         } else {
-                            Toast.makeText(context, "No user registered with this email/password. Try again or Sign Up.",Toast.LENGTH_LONG).show();
+                            Toast.makeText(context, "No user registered with this email/password. Try again or Sign Up.", Toast.LENGTH_LONG).show();
                             Log.e(TAG, "onComplete: user signIn not successful" + task.getException().getMessage());
                         }
+                    }
+                });
+    }
+
+    //runs VenuesList if User is Registered else CitySetup
+    private void runNextActivity(final String username) {
+        //Checks if user is already registered
+        String userid = FirebaseAuth.getInstance().getUid();
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("users").document(userid).get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        if (documentSnapshot.contains("nationality")) {
+                            runVenuesListActivity();
+                            finish();
+                        }else {
+                            runCitySetupActivity(username);
+                            finish();
+                        }
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.e(TAG, "onFailure: Could not fetch UserData" + e.toString());
                     }
                 });
     }
@@ -186,7 +216,7 @@ public class LoginActivity extends AppCompatActivity {
     View.OnClickListener goToSignUpListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            Intent intent = new Intent(context,RegistrationActivity.class);
+            Intent intent = new Intent(context, RegistrationActivity.class);
             context.startActivity(intent);
         }
     };
