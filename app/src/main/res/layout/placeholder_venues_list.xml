@@ -57,12 +57,12 @@
 
         <View
             android:id="@+id/placeholder_number_of_attendees"
-            android:layout_width="65dp"
+            android:layout_width="35dp"
             android:layout_height="@dimen/placeholderTextHeight"
             android:layout_marginTop="16dp"
-            android:layout_marginEnd="16dp"
             android:background="@color/colorShimmerBackground"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/placeholder_guests_text_view"
+            app:layout_constraintStart_toStartOf="@+id/placeholder_guests_text_view"
             app:layout_constraintTop_toTopOf="parent" />
 
         <View

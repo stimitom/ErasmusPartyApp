@@ -6,7 +6,6 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
@@ -26,31 +25,25 @@ import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
+
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
+
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
+
 
 
 public class VenuesListActivity extends AppCompatActivity {
     private final String TAG = "VenuesListActivity";
     private Context context = this;
-    public static Activity reloader;
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private static CollectionReference dayVenuesRef;
     private RecyclerView recyclerView;
     private FirebaseUser user;
-    DocumentReference userRef;
-    private String city;
-
     private Button popularButton;
     private Button alphabeticButton;
     private Boolean popularSortActive;
@@ -59,6 +52,7 @@ public class VenuesListActivity extends AppCompatActivity {
     private String today;
     private String tomorrow;
     private String theDayAfterTomorrow;
+    private String city;
 
     private Boolean todayBool;
     private Boolean tomorrowBool;
@@ -79,23 +73,16 @@ public class VenuesListActivity extends AppCompatActivity {
         popularButton = (Button) findViewById(R.id.button_popular);
         alphabeticButton = (Button) findViewById(R.id.button_alphabetic);
         dateButton = (Button) findViewById(R.id.button_date);
-
         shimmerViewContainer = (ShimmerFrameLayout) findViewById(R.id.shimmer_view_container);
-
         popularButton.setBackgroundResource(R.drawable.button_venues_list_selected);
         alphabeticButton.setBackgroundResource(R.drawable.button_venues_list_not_selected);
         popularButton.setOnClickListener(popularSortListener);
         alphabeticButton.setOnClickListener(alphabeticSortListener);
 
-       if(getIntent().getBooleanExtra("comesFromLauncher",true))LauncherActivity.launcherActivity.finish();
-//
         city = "Kaunas,LT";
-        DatabaseMethods.addCityToDB(city);
         setUpDateButton();
-        setUpTwoDays();
-        addNewDayToDateDB();
 
-        reloader = this;
+       if(getIntent().getBooleanExtra("comesFromLauncher",true))LauncherActivity.launcherActivity.finish();
         user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null) {
             setDayVenuesRef();
@@ -104,19 +91,20 @@ public class VenuesListActivity extends AppCompatActivity {
             context.startActivity(intent);
         }
 
-
         setUpPopularRecyclerView(true, false);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+        Log.e(TAG, "onResume: called- should shimmer" );
         shimmerViewContainer.startShimmerAnimation();
     }
 
     @Override
     protected void onStart() {
         super.onStart();
+        Log.e(TAG, "onStart: called" );
         if (popularSortActive) popularAdapter.startListening();
         else alphabeticAdapter.startListening();
     }
@@ -409,122 +397,15 @@ public class VenuesListActivity extends AppCompatActivity {
                     dateButton.setCompoundDrawablesRelativeWithIntrinsicBounds(getApplicationContext().getResources().getDrawable(R.drawable.ic_arrow_left_primary_light_24dp),null,getResources().getDrawable(R.drawable.ic_arrow_right_24dp),null);
                     todayBool = true;
                 }
+                shimmerViewContainer.setVisibility(View.VISIBLE);
+                shimmerViewContainer.startShimmerAnimation();
+                Log.e(TAG, "onClick: ShimmerVisible and Shimmering" );
                 if (popularSortActive) setUpPopularRecyclerView(false, true);
                 else setUpAlphabeticRecyclerView(true);
             }
         });
     }
 
-    /**
-     * DB Methods
-     **/
-
-
-    public void addNewDayToDateDB() {
-
-        db.collection(city + "_dates").document(theDayAfterTomorrow)
-                .get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-            @Override
-            public void onSuccess(DocumentSnapshot documentSnapshot) {
-                if (!documentSnapshot.exists()) {
-
-                    DatabaseMethods.addExistenceDummyToDate(city, theDayAfterTomorrow);
-
-                    db.collection("cities").document(city)
-                            .collection("venues").get()
-                            .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-                                @Override
-                                public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                                    for (QueryDocumentSnapshot snapshot : queryDocumentSnapshots) {
-                                        Venue venue = snapshot.toObject(Venue.class);
-                                        DatabaseMethods.addVenueToDate(venue, theDayAfterTomorrow, city);
-                                    }
-                                }
-                            })
-                            .addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception e) {
-                                    Log.e(TAG, "onFailure: venues could not be added to date" + e.toString());
-                                }
-                            });
-
-                }
-            }
-        });
-    }
-
-    public void setUpTodayInDB() {
-
-        db.collection(city + "_dates").document(today)
-                .get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-            @Override
-            public void onSuccess(DocumentSnapshot documentSnapshot) {
-                if (!documentSnapshot.exists()) {
-
-                    DatabaseMethods.addExistenceDummyToDate(city, today);
-
-                    db.collection("cities").document(city)
-                            .collection("venues").get()
-                            .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-                                @Override
-                                public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                                    for (QueryDocumentSnapshot snapshot : queryDocumentSnapshots) {
-                                        Venue venue = snapshot.toObject(Venue.class);
-                                        DatabaseMethods.addVenueToDate(venue, today, city);
-                                    }
-                                }
-                            })
-                            .addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception e) {
-                                    Log.e(TAG, "onFailure: venues could not be added to date" + e.toString());
-                                }
-                            });
-
-                }
-            }
-        });
-    }
-
-
-    public void setUpTomorrowInDB() {
-
-        db.collection(city + "_dates").document(tomorrow)
-                .get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-            @Override
-            public void onSuccess(DocumentSnapshot documentSnapshot) {
-                if (!documentSnapshot.exists()) {
-
-                    DatabaseMethods.addExistenceDummyToDate(city, tomorrow);
-
-                    db.collection("cities").document(city)
-                            .collection("venues").get()
-                            .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-                                @Override
-                                public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                                    for (QueryDocumentSnapshot snapshot : queryDocumentSnapshots) {
-                                        Venue venue = snapshot.toObject(Venue.class);
-                                        DatabaseMethods.addVenueToDate(venue, tomorrow, city);
-                                    }
-                                }
-                            })
-                            .addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception e) {
-                                    Log.e(TAG, "onFailure: venues could not be added to date" + e.toString());
-                                }
-                            });
-
-                }
-            }
-        });
-    }
-
-
-    public void setUpTwoDays() {
-        setUpTodayInDB();
-        setUpTomorrowInDB();
-    }
 
     public static CollectionReference getDayVenuesRef() {
         return dayVenuesRef;

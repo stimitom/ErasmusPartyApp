@@ -22,7 +22,9 @@
     <string name="login">Login</string>
     <string name="nationality">Nationality</string>
     <string name="email">Email</string>
-    <string name="not_registered_yet"> <u>Not registered yet? Sign Up here.</u> </string>
+    <string name="reset_password">Type in your account\'s email address and hit OK to receive an email to reset your password.</string>
+    <string name="not_registered_yet"><u>Not registered yet? Sign Up here.</u></string>
+    <string name="forgot_password"><u>Forgot Password? Reset Here.</u></string>
     <string name="already_registered"> <u>Already registered? Login here.</u> </string>
     <string name="sign_up">Sign Up</string>
     <string name="guests_tonight">Guests</string>
@@ -47,9 +49,13 @@
     <string name="bar">BAR</string>
     <string name="night_club">NIGHT CLUB</string>
     <string name="bar_night_club">BAR/NIGHT CLUB</string>
-    <string name="buy_me_a_coffee">Buy me a Coffee Here</string>
-    <string name="icons8">All icons are provided by icons8.</string>
-    <string name="icons8_link">icons8.com</string>
+    <string name="buy_me_a_coffee">Buy Me a Coffee</string>
+    <string name="send_feedback">Send Feedback</string>
+    <string name="icons8_link"> All icons are provided by icons8.com</string>
+    <string name="mail_feedback_email">t.stimakovits@outlook.com</string>
+    <string name="mail_feedback_subject">Feedback on Erasmus Party App</string>
+    <string name="mail_feedback_message">My Feedback: </string>
+    <string name="title_send_feedback">Send feedback</string>
     <string-array name="countries">
         <item>Select Nationality</item>
         <item>Afghanistan</item>

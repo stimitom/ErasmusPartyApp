@@ -54,6 +54,7 @@ public class LoginActivity extends AppCompatActivity {
     private ProgressBar progressBar;
     private Button genericLoginButton;
     private Button goToSignUpButton;
+    private Button resetPasswordButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,6 +76,8 @@ public class LoginActivity extends AppCompatActivity {
         genericLoginButton.setOnClickListener(loginListener);
         goToSignUpButton = (Button) findViewById(R.id.not_registered_yet_button);
         goToSignUpButton.setOnClickListener(goToSignUpListener);
+        resetPasswordButton = (Button) findViewById(R.id.forgot_password);
+        resetPasswordButton.setOnClickListener(resetPasswordListener);
 
         callbackManager = CallbackManager.Factory.create();
 
@@ -223,4 +226,15 @@ public class LoginActivity extends AppCompatActivity {
         }
     };
 
+    View.OnClickListener resetPasswordListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            ResetPasswordDialog dialog = new ResetPasswordDialog();
+            dialog.show(getSupportFragmentManager(),"ResetPasswordDialog");
+        }
+    };
+
+    public Context getContext() {
+        return context;
+    }
 }
