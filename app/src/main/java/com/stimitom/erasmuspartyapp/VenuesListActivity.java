@@ -88,7 +88,7 @@ public class VenuesListActivity extends AppCompatActivity {
         alphabeticButton.setOnClickListener(alphabeticSortListener);
 
        if(getIntent().getBooleanExtra("comesFromLauncher",true))LauncherActivity.launcherActivity.finish();
-
+//
         city = "Kaunas,LT";
         DatabaseMethods.addCityToDB(city);
         setUpDateButton();
