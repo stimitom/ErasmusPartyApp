@@ -147,7 +147,6 @@ public class AttendPartyActivity extends AppCompatActivity {
 
         readVenueData(venueDataListener);
         attendButton.setOnClickListener(attendButtonListener);
-        //facebookShareButton.setOnClickListener(facebookShareListener);
         setUpRecyclerView(venue_name);
     }
 

@@ -3,9 +3,6 @@ package com.stimitom.erasmuspartyapp;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.Context;
-import android.content.Intent;
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -13,7 +10,6 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.google.android.gms.common.api.Status;
-import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.libraries.places.api.Places;
@@ -60,9 +56,7 @@ public class AddGooglePlaceActivity extends AppCompatActivity {
         addPlaceButton.setVisibility(View.INVISIBLE);
 
         //City
-        Intent intent = getIntent();
-        city = intent.getStringExtra("city");
-
+        city = getIntent().getStringExtra("city");
     }
 
     PlaceSelectionListener placeSelectionListener = new PlaceSelectionListener() {
@@ -143,7 +137,6 @@ public class AddGooglePlaceActivity extends AppCompatActivity {
 
     public void startAddVenuesProcedure(final Venue venue) {
         addPlaceButton.setVisibility(View.VISIBLE);
-
         addPlaceButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

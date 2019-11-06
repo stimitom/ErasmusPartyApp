@@ -9,6 +9,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.SetOptions;
 
 import java.text.Format;
 import java.text.SimpleDateFormat;
@@ -119,7 +120,7 @@ public class DatabaseMethods {
 
         User user = new User(userId,userName,nationality,email,city);
         usersRef.document(userId)
-                .set(user)
+                .set(user, SetOptions.merge())
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {

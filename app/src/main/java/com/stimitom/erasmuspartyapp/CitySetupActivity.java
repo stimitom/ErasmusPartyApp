@@ -40,6 +40,7 @@ public class CitySetupActivity extends AppCompatActivity implements AdapterView.
     private String city;
     private String nationality;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,7 +49,6 @@ public class CitySetupActivity extends AppCompatActivity implements AdapterView.
         citySpinner = (Spinner) findViewById(R.id.spinner_cities);
         nationalitySpinner = (Spinner) findViewById(R.id.spinner_nationality);
         letsGoButton = (Button) findViewById(R.id.lets_go_button);
-
 
         cityList = new ArrayList<>();
         final ArrayAdapter<String> cityAdapter = new ArrayAdapter<String>(getBaseContext(),R.layout.spinner_item,cityList);
@@ -130,6 +130,7 @@ public class CitySetupActivity extends AppCompatActivity implements AdapterView.
 
     private void runVenuesListActivity() {
         Intent intent = new Intent(getApplicationContext(), VenuesListActivity.class);
+        intent.putExtra("city",city);
         startActivity(intent);
     }
 }
