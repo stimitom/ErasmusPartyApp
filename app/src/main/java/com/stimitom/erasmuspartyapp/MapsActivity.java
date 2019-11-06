@@ -29,7 +29,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private static final int MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 0;
     private GoogleMap mMap;
     private String city;
-    private LocationManager locationManager;
     private   FirebaseFirestore db;
 
     @Override

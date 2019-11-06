@@ -26,6 +26,7 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.tasks.OnCompleteListener;
 
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -34,7 +35,6 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
-
 
 
 public class VenuesListActivity extends AppCompatActivity {
@@ -68,8 +68,17 @@ public class VenuesListActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_venues_list);
+        Log.e(TAG, "onCreate: iscalled" );
+
         Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
         setSupportActionBar(myToolbar);
+
+        isLoggedInAndUserIsSet();
+        Intent intentComing = getIntent();
+        if (intentComing.getBooleanExtra("comesFromLauncher", true))
+            LauncherActivity.launcherActivity.finish();
+        city =  intentComing.getStringExtra("city");
+
         popularButton = (Button) findViewById(R.id.button_popular);
         alphabeticButton = (Button) findViewById(R.id.button_alphabetic);
         dateButton = (Button) findViewById(R.id.button_date);
@@ -79,32 +88,23 @@ public class VenuesListActivity extends AppCompatActivity {
         popularButton.setOnClickListener(popularSortListener);
         alphabeticButton.setOnClickListener(alphabeticSortListener);
 
-        city = "Kaunas,LT";
+
         setUpDateButton();
-
-       if(getIntent().getBooleanExtra("comesFromLauncher",true))LauncherActivity.launcherActivity.finish();
-        user = FirebaseAuth.getInstance().getCurrentUser();
-        if (user != null) {
-            setDayVenuesRef();
-        } else {
-            Intent intent = new Intent(context, LoginActivity.class);
-            context.startActivity(intent);
-        }
-
+        setDayVenuesRef();
         setUpPopularRecyclerView(true, false);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        Log.e(TAG, "onResume: called- should shimmer" );
+        Log.e(TAG, "onResume: called- should shimmer");
         shimmerViewContainer.startShimmerAnimation();
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        Log.e(TAG, "onStart: called" );
+        Log.e(TAG, "onStart: called");
         if (popularSortActive) popularAdapter.startListening();
         else alphabeticAdapter.startListening();
     }
@@ -320,9 +320,13 @@ public class VenuesListActivity extends AppCompatActivity {
             case R.id.action_maps:
                 if (isServicesOk()) {
                     Intent intent2 = new Intent(this, MapsActivity.class);
-                    intent2.putExtra("city", "Kaunas,LT");
+                    intent2.putExtra("city", city);
                     startActivity(intent2);
                 }
+                return true;
+            case R.id.action_profile:
+                Intent intent2 = new Intent(this,ProfileActivity.class);
+                startActivity(intent2);
                 return true;
             default:
                 // If we got here, the user's action was not recognized.
@@ -350,27 +354,35 @@ public class VenuesListActivity extends AppCompatActivity {
         return false;
     }
 
-    /**
-     * UserInfo
-     **/
-    //Returns String of ID if user is logged in
-    //null otherwise
-    public String getUserId() {
+    /**** UserInfo ****/
+
+    public void isLoggedInAndUserIsSet() {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null) {
-            //User is logged in
-            Log.d(TAG, "getUserId: " + user.getUid());
-            return user.getUid();
-        } else {
-            //User not logged in
-            return null;
-        }
+            FirebaseFirestore.getInstance().collection("users").document(user.getUid())
+                    .get()
+                    .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                        @Override
+                        public void onSuccess(DocumentSnapshot documentSnapshot) {
+                            if (documentSnapshot.get("nationality") == null) runCitySetupActivity();
+                        }
+                    });
+
+        } else runLoginActivity();
+    }
+
+    public void runLoginActivity() {
+        Intent intent = new Intent(this, LoginActivity.class);
+        startActivity(intent);
+    }
+
+    public void runCitySetupActivity() {
+        Intent intent = new Intent(this, CitySetupActivity.class);
+        startActivity(intent);
     }
 
 
-
-    /**
-     * Date Button
-     **/
+    /**** Date Button ****/
 
     public void setUpDateButton() {
         today = DatabaseMethods.getDateToday();
@@ -390,16 +402,15 @@ public class VenuesListActivity extends AppCompatActivity {
 
                 } else if (tomorrowBool) {
                     dateButton.setText(theDayAfterTomorrow);
-                    dateButton.setCompoundDrawablesRelativeWithIntrinsicBounds(getApplicationContext().getResources().getDrawable(R.drawable.ic_arrow_left_24dp),null,getResources().getDrawable(R.drawable.ic_arrow_right_primary_light_24dp),null);
+                    dateButton.setCompoundDrawablesRelativeWithIntrinsicBounds(getApplicationContext().getResources().getDrawable(R.drawable.ic_arrow_left_24dp), null, getResources().getDrawable(R.drawable.ic_arrow_right_primary_light_24dp), null);
                     tomorrowBool = false;
                 } else {
                     dateButton.setText(today);
-                    dateButton.setCompoundDrawablesRelativeWithIntrinsicBounds(getApplicationContext().getResources().getDrawable(R.drawable.ic_arrow_left_primary_light_24dp),null,getResources().getDrawable(R.drawable.ic_arrow_right_24dp),null);
+                    dateButton.setCompoundDrawablesRelativeWithIntrinsicBounds(getApplicationContext().getResources().getDrawable(R.drawable.ic_arrow_left_primary_light_24dp), null, getResources().getDrawable(R.drawable.ic_arrow_right_24dp), null);
                     todayBool = true;
                 }
                 shimmerViewContainer.setVisibility(View.VISIBLE);
                 shimmerViewContainer.startShimmerAnimation();
-                Log.e(TAG, "onClick: ShimmerVisible and Shimmering" );
                 if (popularSortActive) setUpPopularRecyclerView(false, true);
                 else setUpAlphabeticRecyclerView(true);
             }

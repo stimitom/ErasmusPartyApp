@@ -43,9 +43,10 @@ public class LauncherActivity extends AppCompatActivity {
         context.startActivity(intent);
     }
 
-    public void runVenuesListActivity() {
+    public void runVenuesListActivity(String city) {
         Intent intent = new Intent(context, VenuesListActivity.class);
         intent.putExtra("comesFromLauncher", true);
+        intent.putExtra("city",city);
         context.startActivity(intent);
     }
 
@@ -58,7 +59,7 @@ public class LauncherActivity extends AppCompatActivity {
                         @Override
                         public void onSuccess(DocumentSnapshot documentSnapshot) {
                             if (documentSnapshot.get("nationality") != null) {
-                                runVenuesListActivity();
+                                runVenuesListActivity(documentSnapshot.get("city").toString());
                             } else runLoginActivity();
                         }
                     });

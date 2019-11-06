@@ -172,7 +172,7 @@ public class LoginActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         progressBar.setVisibility(View.GONE);
                         if (task.isSuccessful()) {
-                            runVenuesListActivity();
+                            runNextActivity(null);
                         } else {
                             Toast.makeText(context, "No user registered with this email/password. Try again or Sign Up.", Toast.LENGTH_LONG).show();
                             Log.e(TAG, "onComplete: user signIn not successful" + task.getException().getMessage());
@@ -181,7 +181,7 @@ public class LoginActivity extends AppCompatActivity {
                 });
     }
 
-    //runs VenuesList if User is Registered else CitySetup
+    //runs VenuesList if User is properly registered else CitySetup
     private void runNextActivity(final String username) {
         //Checks if user is already registered
         String userid = FirebaseAuth.getInstance().getUid();
@@ -191,7 +191,7 @@ public class LoginActivity extends AppCompatActivity {
                     @Override
                     public void onSuccess(DocumentSnapshot documentSnapshot) {
                         if (documentSnapshot.contains("nationality") && documentSnapshot.get("nationality")!= null) {
-                            runVenuesListActivity();
+                            runVenuesListActivity(documentSnapshot.get("city").toString());
                             finish();
                         }else {
                             runCitySetupActivity(username);
@@ -207,8 +207,9 @@ public class LoginActivity extends AppCompatActivity {
                 });
     }
 
-    private void runVenuesListActivity() {
+    private void runVenuesListActivity(String city) {
         Intent intent = new Intent(context, VenuesListActivity.class);
+        intent.putExtra("city",city);
         context.startActivity(intent);
     }
 
