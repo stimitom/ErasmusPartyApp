@@ -37,9 +37,6 @@
     <string name="tell_nationality">Tell us your nationality please: </string>
     <string name="lets_go_party">Let\'s go!</string>
     <string name="about">About</string>
-    <string name="donation_gag">Hey, if you think this App is worth something, you can donate some coins to \n\n<b>AT03 5100 0916 2661 3600</b>
-        \n\nSince it\'s Ad-free I\'m actually losing money with that shit. LOL
-    Anyways, thank you very much for using my app.\n\nAll Icons by icons8.</string>
     <string name="needs_location">We need your location to show bars and clubs near you.</string>
     <string name="add_google_place">Find a bar or nightclub that Erasmus people love and click to add it to your city\'s list.</string>
     <string name="add_place_to_list">ADD PLACE</string>
@@ -47,6 +44,12 @@
     <string name="google_rating">Google Rating:\u0020</string>
     <string name="title_activity_maps">Map</string>
     <string name="share_button">Share Button</string>
+    <string name="bar">BAR</string>
+    <string name="night_club">NIGHT CLUB</string>
+    <string name="bar_night_club">BAR/NIGHT CLUB</string>
+    <string name="buy_me_a_coffee">Buy me a Coffee Here</string>
+    <string name="icons8">All icons are provided by icons8.</string>
+    <string name="icons8_link">icons8.com</string>
     <string-array name="countries">
         <item>Select Nationality</item>
         <item>Afghanistan</item>

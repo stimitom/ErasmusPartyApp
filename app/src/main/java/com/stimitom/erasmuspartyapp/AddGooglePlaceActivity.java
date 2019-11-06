@@ -43,7 +43,7 @@ public class AddGooglePlaceActivity extends AppCompatActivity {
         setContentView(R.layout.activity_add_google_place);
 
         // Initialize the SDK
-        Places.initialize(getApplicationContext(), "AIzaSyBfPPMyE2lIlREv58jF9G6wvXf9L_z2DQ8",new Locale("en"));
+        Places.initialize(getApplicationContext(), "AIzaSyBfPPMyE2lIlREv58jF9G6wvXf9L_z2DQ8", new Locale("en"));
         // Create a new Places client instance
         PlacesClient placesClient = Places.createClient(this);
         // Initialize the AutocompleteSupportFragment.
@@ -71,55 +71,67 @@ public class AddGooglePlaceActivity extends AppCompatActivity {
 
             //Name
             String name = place.getName();
-            Log.d(TAG, "onPlaceSelected: Name " + name );
+            Log.d(TAG, "onPlaceSelected: Name " + name);
 
             //Types
-            List<Place.Type> types = place.getTypes();
             List<String> typesList = new ArrayList<String>();
-            for (Place.Type type : types) {
-                typesList.add(type.toString());
-                Log.d(TAG, "onPlaceSelected: Type: " + type.toString());
-            }
-
-            if (typesList.contains("BAR") || typesList.contains("NIGHT_CLUB")) {
-                String type;
-                if (typesList.contains("BAR") && !typesList.contains("NIGHT_CLUB")) type = "BAR";
-                else if (typesList.contains("NIGHT_CLUB") && !typesList.contains("BAR"))type ="NIGHT_CLUB";
-                else type = "BAR|NIGHT_CLUB";
-
-                //Opening hours
-                OpeningHours openingHours = place.getOpeningHours();
-                ArrayList<String> openingHoursList = new ArrayList<String>();
-                for (String element : openingHours.getWeekdayText()) {
-                    openingHoursList.add(element);
-                    Log.d(TAG, "onPlaceSelected: Opening Hours Week " + element );
+            String type = "";
+            if (place.getTypes() != null) {
+                List<Place.Type> types = place.getTypes();
+                for (Place.Type t : types) {
+                    typesList.add(t.toString());
+                    Log.d(TAG, "onPlaceSelected: Type: " + t.toString());
                 }
-
-                //Rating
-                Double ratingDouble = place.getRating();
-                DecimalFormat df = new DecimalFormat("#.##");
-                df.setRoundingMode(RoundingMode.CEILING);
-                String rating = df.format(ratingDouble).toString();
-                Log.d(TAG, "onPlaceSelected: Rating " + rating);
-
-                //Address
-                String address = place.getAddress();
-                Log.d(TAG, "onPlaceSelected: Address " + address);
-
-                //Location LATLNG
-                String location = place.getLatLng().toString();
-                String cleanedLocation = location.substring(10,location.length()-1);
-                Log.d(TAG, "onPlaceSelected: LATLNG: " + location);
-                Log.d(TAG, "onPlaceSelected: Cleaned LATLNG " + cleanedLocation);
-
-
-                //PROCEED ADDING TO VENUES LIST
-                Venue venue = new Venue(name,rating,address,cleanedLocation,openingHoursList,type);
-                startAddVenuesProcedure(venue);
-
+                if (typesList.contains("BAR") || typesList.contains("NIGHT_CLUB")) {
+                    if (typesList.contains("BAR") && !typesList.contains("NIGHT_CLUB"))
+                        type = "BAR";
+                    else if (typesList.contains("NIGHT_CLUB") && !typesList.contains("BAR"))
+                        type = "NIGHT_CLUB";
+                    else type = "BAR|NIGHT_CLUB";
+                } else {
+                    Toast.makeText(getApplicationContext(), "Sorry, " + name + " is not a bar or a nightclub, please find another place.", Toast.LENGTH_LONG).show();
+                }
             } else {
                 Toast.makeText(getApplicationContext(), "Sorry, " + name + " is not a bar or a nightclub, please find another place.", Toast.LENGTH_LONG).show();
             }
+
+            //Opening hours
+            ArrayList<String> openingHoursList = new ArrayList<String>();
+            if (place.getOpeningHours() != null) {
+                OpeningHours openingHours = place.getOpeningHours();
+                for (String element : openingHours.getWeekdayText()) {
+                    openingHoursList.add(element);
+                    Log.d(TAG, "onPlaceSelected: Opening Hours Week " + element);
+                }
+            }
+
+            //Rating
+            Double ratingDouble = 0.0;
+            if (place.getRating() != null) ratingDouble = place.getRating();
+            DecimalFormat df = new DecimalFormat("#.##");
+            df.setRoundingMode(RoundingMode.CEILING);
+            String rating = df.format(ratingDouble);
+            Log.d(TAG, "onPlaceSelected: Rating " + rating);
+
+            //Address
+            String address = "";
+            if (place.getAddress() != null) address = place.getAddress();
+            Log.d(TAG, "onPlaceSelected: Address " + address);
+
+            //Location LATLNG
+            String location = "";
+            String cleanedLocation = "";
+            if (place.getLatLng() != null) {
+                location = place.getLatLng().toString();
+                cleanedLocation = location.substring(10, location.length() - 1);
+            }
+            Log.d(TAG, "onPlaceSelected: LATLNG: " + location);
+            Log.d(TAG, "onPlaceSelected: Cleaned LATLNG " + cleanedLocation);
+
+
+            //PROCEED ADDING TO VENUES LIST
+            Venue venue = new Venue(name, rating, address, cleanedLocation, openingHoursList, type);
+            startAddVenuesProcedure(venue);
         }
 
         @Override
@@ -129,23 +141,25 @@ public class AddGooglePlaceActivity extends AppCompatActivity {
         }
     };
 
-    public void startAddVenuesProcedure(final Venue venue){
+    public void startAddVenuesProcedure(final Venue venue) {
         addPlaceButton.setVisibility(View.VISIBLE);
 
         addPlaceButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                addVenueToCityDB(city,venue);
+                addVenueToCityDB(city, venue);
             }
         });
     }
 
-    /** Database Method **/
+    /**
+     * Database Method
+     **/
 
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private CollectionReference citiesRef = db.collection("cities");
 
-    public  void addVenueToCityDB(String city, Venue venue) {
+    public void addVenueToCityDB(String city, Venue venue) {
         citiesRef.document(city).collection("venues")
                 .document(venue.getVenueName())
                 .set(venue)
@@ -153,7 +167,7 @@ public class AddGooglePlaceActivity extends AppCompatActivity {
                     @Override
                     public void onSuccess(Void aVoid) {
                         Log.d(TAG, "Venue upload database succesful");
-                        Toast.makeText(getApplicationContext(),"Your request will be checked and added to the list. Thank You!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), "Your request will be checked and added to the list. Thank You!", Toast.LENGTH_SHORT).show();
                         addPlaceButton.setVisibility(View.INVISIBLE);
                     }
                 })
@@ -161,7 +175,7 @@ public class AddGooglePlaceActivity extends AppCompatActivity {
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         Log.e(TAG, "Day_venue upload to database FAILED" + e.toString());
-                        Toast.makeText(getApplicationContext(),"Sorry something went wrong Try again later.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), "Sorry something went wrong Try again later.", Toast.LENGTH_SHORT).show();
                     }
                 });
     }
