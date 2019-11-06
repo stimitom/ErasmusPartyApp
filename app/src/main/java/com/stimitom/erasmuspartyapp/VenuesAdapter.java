@@ -18,9 +18,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
 import com.pkmmte.view.CircularImageView;
-
 
 import java.util.List;
 
@@ -36,9 +34,9 @@ public class VenuesAdapter extends FirestoreRecyclerAdapter<Venue, VenuesAdapter
     private String currentUserId = getUserId();
     private ShimmerFrameLayout shimmerFrameLayout;
 
-    public VenuesAdapter(@NonNull FirestoreRecyclerOptions<Venue> options, ShimmerFrameLayout shimmercontainer) {
+    public VenuesAdapter(@NonNull FirestoreRecyclerOptions<Venue> options, ShimmerFrameLayout shimmerContainer) {
         super(options);
-        this.shimmerFrameLayout = shimmercontainer;
+        this.shimmerFrameLayout = shimmerContainer;
     }
 
     @Override
@@ -83,26 +81,20 @@ public class VenuesAdapter extends FirestoreRecyclerAdapter<Venue, VenuesAdapter
 
     }
 
-    //Returns String of ID if user is logged in
-    //null otherwise
     public String getUserId() {
-        if (user != null) {
-            //User is logged in
-            Log.e(TAG, "getUserId: " + user.getUid());
-            return user.getUid();
-        } else {
-            //User not logged in
-            return null;
-        }
+        if (user != null) return user.getUid();
+        else return null;
     }
 
     @Override
     public void onDataChanged() {
         if (shimmerFrameLayout != null) {
+            Log.e(TAG, "onDataChanged: Stop Shimmer, Shimmer Invisible" );
             shimmerFrameLayout.stopShimmerAnimation();
             shimmerFrameLayout.setVisibility(View.GONE);
             }
     }
+
 
     /*************************/
     /**
