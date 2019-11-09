@@ -21,8 +21,6 @@ import android.widget.Toast;
 
 import androidx.appcompat.widget.Toolbar;
 
-import com.facebook.share.widget.ShareButton;
-import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -31,7 +29,6 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.Query;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -50,7 +47,6 @@ public class AttendPartyActivity extends AppCompatActivity {
     private TextView venueNumberOfAttendees_TextView;
     private TextView currentVenueState_TextView;
     private TextView venueOpeningHours_TextView;
-    private ShareButton facebookShareButton;
     private ImageView shareButton_ImageView;
     private Toolbar myToolbar;
     private TextView myToolbarTitle;
@@ -65,10 +61,8 @@ public class AttendPartyActivity extends AppCompatActivity {
     DocumentReference userRef;
     DocumentReference dayVenueRef;
 
-    private Query query;
     private RecyclerView recyclerView;
-    private NationalitiesAdapter adapter;
-    private FirestoreRecyclerOptions<User> options;
+      private CountriesAdapter adapter;
 
     private String venueName;
     private String venueRating;
@@ -77,10 +71,9 @@ public class AttendPartyActivity extends AppCompatActivity {
     private String venueLocation;
     private List<String> venueGuestList;
     private List<String> venueOpeningHoursList;
-    private List<String> venueNationalitiesList;
+    private ArrayList<String> venueNationalitiesList;
     private Map<String,Long> venueNationalitiesCounterMap;
-    private Long venueNumberOfGuestsFromUsersCountry = 0l;
-    private Boolean alreadyGuestsFromUsersCountry = false;
+    private Long venueNumberOfGuestsFromUsersCountry = 0L;
 
 
     private String dateGivenString;
@@ -115,6 +108,7 @@ public class AttendPartyActivity extends AppCompatActivity {
         String venue_name = intent.getStringExtra("venueName");
         dateGivenString = intent.getStringExtra("dateGiven");
         city = intent.getStringExtra("city");
+        venueNationalitiesList = new ArrayList<String>();
 
         db = FirebaseFirestore.getInstance();
         dayVenueRef = db.collection(city + "_dates").document(dateGivenString)
@@ -146,13 +140,11 @@ public class AttendPartyActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        adapter.startListening();
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        adapter.stopListening();
     }
 
     /**** UserInterface ****/
@@ -203,17 +195,16 @@ public class AttendPartyActivity extends AppCompatActivity {
             Venue venue = snapshot.toObject(Venue.class);
 
             venueGuestList = new ArrayList<String>();
-            venueNationalitiesList = new ArrayList<String>();
             venueNationalitiesCounterMap = new HashMap<String,Long>();
             venueNationalitiesCounterMap.putAll(venue.getNationalitiesCounterMap());
 
             if (venue.getGuestList() != null) {
                 venueGuestList.addAll(venue.getGuestList());
                 venueNationalitiesList.addAll(venue.getNationalitiesList());
+                adapter.notifyDataSetChanged();
 
                 if (venueNationalitiesList.contains(currentUserNationality)) {
                     venueNumberOfGuestsFromUsersCountry = venueNationalitiesCounterMap.get(currentUserNationality);
-                    if (venueNumberOfGuestsFromUsersCountry > 0) alreadyGuestsFromUsersCountry = true;
                 }
             }
 
@@ -343,16 +334,10 @@ public class AttendPartyActivity extends AppCompatActivity {
      **/
 
     private void setUpRecyclerView(String venueName) {
-        query = db.collection("users").whereArrayContains(dateGivenString, venueName);
-        options = new FirestoreRecyclerOptions.Builder<User>()
-                .setQuery(query, User.class)
-                .build();
-
-        adapter = new NationalitiesAdapter(options, dayVenueRef);
-        recyclerView = (RecyclerView) findViewById(R.id.recycler_view_attend_party);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-        recyclerView.setAdapter(adapter);
-        adapter.startListening();
+      adapter = new CountriesAdapter(venueNationalitiesList);
+      recyclerView = (RecyclerView) findViewById(R.id.recycler_view_attend_party);
+      recyclerView.setLayoutManager(new LinearLayoutManager(this));
+      recyclerView.setAdapter(adapter);
     }
 
     /**
@@ -563,14 +548,16 @@ public class AttendPartyActivity extends AppCompatActivity {
 
     public void addUserToVenueGuestList() {
         venueGuestList.add(currentUserId);
-        if (!alreadyGuestsFromUsersCountry) venueNationalitiesList.add(currentUserNationality);
+        if (venueNumberOfGuestsFromUsersCountry == 0) {
+            venueNationalitiesList.add(currentUserNationality);
+            adapter.notifyDataSetChanged();
+        }
 
         venueNationalitiesCounterMap.put(currentUserNationality,++venueNumberOfGuestsFromUsersCountry);
         dayVenueRef.update("nationalitiesCounterMap",venueNationalitiesCounterMap);
 
         dayVenueRef.update("guestList", FieldValue.arrayUnion(currentUserId));
         dayVenueRef.update("nationalitiesList", FieldValue.arrayUnion(currentUserNationality));
-
     }
 
     public void deleteUserFromVenueGuestList() {
@@ -578,13 +565,12 @@ public class AttendPartyActivity extends AppCompatActivity {
         venueNationalitiesCounterMap.put(currentUserNationality,--venueNumberOfGuestsFromUsersCountry);
         if (venueNumberOfGuestsFromUsersCountry == 0){
             venueNationalitiesList.remove(currentUserNationality);
+            adapter.notifyDataSetChanged();
+            dayVenueRef.update("nationalitiesList", FieldValue.arrayRemove(currentUserNationality));
         }
 
         dayVenueRef.update("nationalitiesCounterMap",venueNationalitiesCounterMap);
-
         dayVenueRef.update("guestList", FieldValue.arrayRemove(currentUserId));
-        dayVenueRef.update("nationalitiesList", FieldValue.arrayRemove(currentUserNationality));
-
     }
 
 }
