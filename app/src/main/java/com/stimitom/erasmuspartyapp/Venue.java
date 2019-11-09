@@ -1,6 +1,8 @@
 package com.stimitom.erasmuspartyapp;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Venue {
     private String venueName;
@@ -15,6 +17,7 @@ public class Venue {
     private ArrayList<String> openingHours;
     private ArrayList<String> guestList;
     private ArrayList<String> nationalitiesList;
+    private Map<String,Long> nationalitiesCounterMap = new HashMap<>();
 
 
     //Default constructor needed for database upload
@@ -72,5 +75,9 @@ public class Venue {
 
     public List<String> getNationalitiesList() {
         return nationalitiesList;
+    }
+
+    public Map<String, Long> getNationalitiesCounterMap() {
+        return nationalitiesCounterMap;
     }
 }
