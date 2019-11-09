@@ -120,7 +120,7 @@ public class DatabaseMethods {
 
         User user = new User(userId,userName,nationality,email,city);
         usersRef.document(userId)
-                .set(user, SetOptions.merge())
+                .set(user)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
@@ -133,6 +133,13 @@ public class DatabaseMethods {
                         Log.e(TAG, "user upload to database FAILED" + e.toString());
                     }
                 });
+    }
+
+    public static void updateUserInDatabase(String nationality, String city){
+        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        String userId = firebaseUser.getUid();
+        usersRef.document(userId).update("nationality",nationality);
+        usersRef.document(userId).update("city",city);
     }
 
 }
