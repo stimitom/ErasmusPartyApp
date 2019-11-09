@@ -6,6 +6,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
@@ -40,6 +41,7 @@ import com.google.firebase.firestore.Query;
 public class VenuesListActivity extends AppCompatActivity {
     private final String TAG = "VenuesListActivity";
     private Context context = this;
+    public static Activity downShutter;
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private static CollectionReference dayVenuesRef;
     private RecyclerView recyclerView;
@@ -69,7 +71,7 @@ public class VenuesListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_venues_list);
         Log.e(TAG, "onCreate: iscalled" );
-
+        downShutter = this;
         Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
         setSupportActionBar(myToolbar);
 

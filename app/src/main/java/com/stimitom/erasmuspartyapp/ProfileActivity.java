@@ -28,7 +28,6 @@ public class ProfileActivity extends AppCompatActivity {
     private Button editButton;
     private Button resetPasswordButton;
     private String emailAddress;
-    private String username;
 
 
     @Override
@@ -51,11 +50,10 @@ public class ProfileActivity extends AppCompatActivity {
                         @Override
                         public void onSuccess(DocumentSnapshot documentSnapshot) {
                             User user = documentSnapshot.toObject(User.class);
-                            username = user.getUsername();
-                            String usernameForTextView = getResources().getString(R.string.profile_username) + " " + username;
+                            String username = getResources().getString(R.string.profile_username) + " " + user.getUsername();
                             String nationality = getResources().getString(R.string.profile_nationality) + " " + user.getNationality();
                             String city = getResources().getString(R.string.profile_city) + " " + user.getCity();
-                            userNameTextView.setText(usernameForTextView);
+                            userNameTextView.setText(username);
                             nationalityTextView.setText(nationality);
                             cityTextView.setText(city);
                             emailAddress = user.getEmail();
@@ -71,7 +69,7 @@ public class ProfileActivity extends AppCompatActivity {
         editButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                runCitySetupActivity(username);
+                runCitySetupActivity();
             }
         });
 
@@ -98,12 +96,14 @@ public class ProfileActivity extends AppCompatActivity {
         Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);
         finish();
+        VenuesListActivity.downShutter.finish();
     }
 
-    public void runCitySetupActivity(String username) {
+    public void runCitySetupActivity() {
         Intent intent = new Intent(this, CitySetupActivity.class);
-        intent.putExtra("username",username);
+        intent.putExtra("comesFromProfileEdit",true);
         startActivity(intent);
         finish();
+        VenuesListActivity.downShutter.finish();
     }
 }
