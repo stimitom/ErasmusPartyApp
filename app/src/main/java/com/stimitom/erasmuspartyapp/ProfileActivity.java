@@ -28,6 +28,8 @@ public class ProfileActivity extends AppCompatActivity {
     private Button editButton;
     private Button resetPasswordButton;
     private String emailAddress;
+    private String city;
+    private String nationality;
 
 
     @Override
@@ -51,11 +53,14 @@ public class ProfileActivity extends AppCompatActivity {
                         public void onSuccess(DocumentSnapshot documentSnapshot) {
                             User user = documentSnapshot.toObject(User.class);
                             String username = getResources().getString(R.string.profile_username) + " " + user.getUsername();
-                            String nationality = getResources().getString(R.string.profile_nationality) + " " + user.getNationality();
-                            String city = getResources().getString(R.string.profile_city) + " " + user.getCity();
+
+                            nationality = user.getNationality();
+                            String nationalityForTV = getResources().getString(R.string.profile_nationality) + " " + nationality;
+                            city = user.getCity();
+                            String cityForTV =  getResources().getString(R.string.profile_city) + " " + city;
                             userNameTextView.setText(username);
-                            nationalityTextView.setText(nationality);
-                            cityTextView.setText(city);
+                            nationalityTextView.setText(nationalityForTV);
+                            cityTextView.setText(cityForTV);
                             emailAddress = user.getEmail();
                             resetPasswordButton.setVisibility(View.VISIBLE);
                             editButton.setVisibility(View.VISIBLE);
@@ -102,6 +107,8 @@ public class ProfileActivity extends AppCompatActivity {
     public void runCitySetupActivity() {
         Intent intent = new Intent(this, CitySetupActivity.class);
         intent.putExtra("comesFromProfileEdit",true);
+        intent.putExtra("oldCity",city);
+        intent.putExtra("oldNationality", nationality);
         startActivity(intent);
         finish();
         VenuesListActivity.downShutter.finish();
