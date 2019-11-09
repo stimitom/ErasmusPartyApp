@@ -76,9 +76,12 @@ public class AttendPartyActivity extends AppCompatActivity {
     private int venueNumberOfAttendees;
     private String venueLocation;
     private List<String> venueGuestList;
-    private List<String> venueNationsList;
     private List<String> venueOpeningHoursList;
-    private ArrayList<String> cleanedNationalities;
+    private List<String> venueNationalitiesList;
+    private Map<String,Long> venueNationalitiesCounterMap;
+    private Long venueNumberOfGuestsFromUsersCountry = 0l;
+    private Boolean alreadyGuestsFromUsersCountry = false;
+
 
     private String dateGivenString;
     private String city;
@@ -108,17 +111,10 @@ public class AttendPartyActivity extends AppCompatActivity {
         ratingBar = (RatingBar) findViewById(R.id.rating_bar);
         shareButton_ImageView = (ImageView)findViewById(R.id.share_button);
 
-//        ShareLinkContent content = new ShareLinkContent.Builder()
-//                .setContentUrl(Uri.parse("https://developers.facebook.com"))
-//                .build();
-//        facebookShareButton = (ShareButton) findViewById(R.id.facebook_share_button);
-//        facebookShareButton.setShareContent(content);
-
         Intent intent = getIntent();
         String venue_name = intent.getStringExtra("venueName");
         dateGivenString = intent.getStringExtra("dateGiven");
         city = intent.getStringExtra("city");
-
 
         db = FirebaseFirestore.getInstance();
         dayVenueRef = db.collection(city + "_dates").document(dateGivenString)
@@ -129,17 +125,14 @@ public class AttendPartyActivity extends AppCompatActivity {
 
         // Check current firebaseUser
         if (firebaseUser != null) {
-            currentUserId = getUserId();
-            userRef = db.collection("users")
-                    .document(currentUserId);
-
+            currentUserId = firebaseUser.getUid();
+            userRef = db.collection("users").document(currentUserId);
             userRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                 @Override
                 public void onSuccess(DocumentSnapshot documentSnapshot) {
                     currentUserNationality = documentSnapshot.get("nationality").toString();
                 }
             });
-
         } else {
             Intent intent1 = new Intent(context, LoginActivity.class);
             context.startActivity(intent1);
@@ -208,12 +201,22 @@ public class AttendPartyActivity extends AppCompatActivity {
         @Override
         public void onSuccess(DocumentSnapshot snapshot) {
             Venue venue = snapshot.toObject(Venue.class);
+
             venueGuestList = new ArrayList<String>();
-            venueNationsList = new ArrayList<String>();
+            venueNationalitiesList = new ArrayList<String>();
+            venueNationalitiesCounterMap = new HashMap<String,Long>();
+            venueNationalitiesCounterMap.putAll(venue.getNationalitiesCounterMap());
+
             if (venue.getGuestList() != null) {
                 venueGuestList.addAll(venue.getGuestList());
-                venueNationsList.addAll(venue.getNationalitiesList());
+                venueNationalitiesList.addAll(venue.getNationalitiesList());
+
+                if (venueNationalitiesList.contains(currentUserNationality)) {
+                    venueNumberOfGuestsFromUsersCountry = venueNationalitiesCounterMap.get(currentUserNationality);
+                    if (venueNumberOfGuestsFromUsersCountry > 0) alreadyGuestsFromUsersCountry = true;
+                }
             }
+
             venueName = venue.getVenueName();
             venueRating = venue.getRating();
             venueImageId = venue.getImageId();
@@ -381,18 +384,6 @@ public class AttendPartyActivity extends AppCompatActivity {
     /**
      * UserInfo
      **/
-    //Returns String of ID if firebaseUser is logged in
-    //null otherwise
-    public String getUserId() {
-        if (firebaseUser != null) {
-            //User is logged in
-            Log.d(TAG, "getUserId: " + firebaseUser.getUid());
-            return firebaseUser.getUid();
-        } else {
-            //User not logged in
-            return null;
-        }
-    }
 
     //sets containsList, usersVenueCountName and usersVenueCountNumber depending on state of user
     public void getUserData() {
@@ -401,6 +392,7 @@ public class AttendPartyActivity extends AppCompatActivity {
                     @Override
                     public void onSuccess(DocumentSnapshot documentSnapshot) {
                         User user = documentSnapshot.toObject(User.class);
+
                         usersHashMap = new HashMap<>();
                         int listSize = user.getListnames().size();
 
@@ -571,8 +563,11 @@ public class AttendPartyActivity extends AppCompatActivity {
 
     public void addUserToVenueGuestList() {
         venueGuestList.add(currentUserId);
-        venueNationsList.add(currentUserNationality);
-//        updateRecyclerView();
+        if (!alreadyGuestsFromUsersCountry) venueNationalitiesList.add(currentUserNationality);
+
+        venueNationalitiesCounterMap.put(currentUserNationality,++venueNumberOfGuestsFromUsersCountry);
+        dayVenueRef.update("nationalitiesCounterMap",venueNationalitiesCounterMap);
+
         dayVenueRef.update("guestList", FieldValue.arrayUnion(currentUserId));
         dayVenueRef.update("nationalitiesList", FieldValue.arrayUnion(currentUserNationality));
 
@@ -580,33 +575,16 @@ public class AttendPartyActivity extends AppCompatActivity {
 
     public void deleteUserFromVenueGuestList() {
         venueGuestList.remove(currentUserId);
-        venueNationsList.remove(currentUserNationality);
-//        updateRecyclerView();
+        venueNationalitiesCounterMap.put(currentUserNationality,--venueNumberOfGuestsFromUsersCountry);
+        if (venueNumberOfGuestsFromUsersCountry == 0){
+            venueNationalitiesList.remove(currentUserNationality);
+        }
+
+        dayVenueRef.update("nationalitiesCounterMap",venueNationalitiesCounterMap);
+
         dayVenueRef.update("guestList", FieldValue.arrayRemove(currentUserId));
         dayVenueRef.update("nationalitiesList", FieldValue.arrayRemove(currentUserNationality));
 
     }
 
-
-//    private void setUpNationsRecyclerView(ArrayList<String> cleanedList) {
-//
-//        cleanedNationalities = new ArrayList<String>();
-//        for (String nation: venueNationsList) {
-//            if (!cleanedNationalities.contains(nation)) cleanedNationalities.add(nation);
-//        }
-//
-//        adapter = new NationsAdapter(cleanedList);
-//        recyclerView = (RecyclerView) findViewById(R.id.recycler_view_attend_party);
-//        recyclerView.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
-//        recyclerView.setAdapter(adapter);
-//    }
-//
-//    private void updateRecyclerView(){
-//        if (cleanedNationalities == null) cleanedNationalities = new ArrayList<String>();
-//        else cleanedNationalities.clear();
-//        for (String nation: venueNationsList) {
-//            if (!cleanedNationalities.contains(nation)) cleanedNationalities.add(nation);
-//        }
-//        adapter.notifyDataSetChanged();
-//    }
 }
