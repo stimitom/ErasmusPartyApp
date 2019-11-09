@@ -40,6 +40,8 @@ public class CitySetupActivity extends AppCompatActivity implements AdapterView.
     private String city;
     private String nationality;
     private Boolean comesFromProfileEdit;
+    private String oldNationality;
+    private String oldCity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,7 +51,10 @@ public class CitySetupActivity extends AppCompatActivity implements AdapterView.
         citySpinner = (Spinner) findViewById(R.id.spinner_cities);
         nationalitySpinner = (Spinner) findViewById(R.id.spinner_nationality);
         letsGoButton = (Button) findViewById(R.id.lets_go_button);
-        comesFromProfileEdit = getIntent().getBooleanExtra("comesFromProfileEdit",false);
+        Intent intent = getIntent();
+        comesFromProfileEdit = intent.getBooleanExtra("comesFromProfileEdit",false);
+        oldCity = intent.getStringExtra("oldCity");
+        oldNationality = intent.getStringExtra("oldNationality");
 
 
         cityList = new ArrayList<>();
@@ -113,7 +118,10 @@ public class CitySetupActivity extends AppCompatActivity implements AdapterView.
                 String username = getIntent().getStringExtra("username");
                 Log.e(TAG, "onClick: city " + city + " nationality " + nationality + " username " + username);
                 if (!comesFromProfileEdit)DatabaseMethods.addUserToDatabase(username, nationality, city);
-                else DatabaseMethods.updateUserInDatabase(nationality,city);
+                else{
+                    DatabaseMethods.updateUserInDatabase(nationality,city);
+                    if (oldNationality != null && oldNationality != nationality) DatabaseMethods.updateVenuesInDatabase(oldNationality,oldCity,nationality);
+                }
                 runVenuesListActivity();
             }else {
                 Toast.makeText(getApplicationContext(),"Please Select a city and a Nationality.",Toast.LENGTH_SHORT).show();

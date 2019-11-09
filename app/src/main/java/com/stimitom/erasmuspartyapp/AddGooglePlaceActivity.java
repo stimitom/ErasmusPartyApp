@@ -167,7 +167,7 @@ public class AddGooglePlaceActivity extends AppCompatActivity {
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Log.e(TAG, "Day_venue upload to database FAILED" + e.toString());
+                        Log.e(TAG, "venue upload to database FAILED " + e.toString());
                         Toast.makeText(getApplicationContext(), "Sorry something went wrong Try again later.", Toast.LENGTH_SHORT).show();
                     }
                 });

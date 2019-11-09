@@ -77,7 +77,7 @@ public class VenuesListActivity extends AppCompatActivity {
 
         isLoggedInAndUserIsSet();
         Intent intentComing = getIntent();
-        if (intentComing.getBooleanExtra("comesFromLauncher", true))
+        if (intentComing.getBooleanExtra("comesFromLauncher", false))
             LauncherActivity.launcherActivity.finish();
         city =  intentComing.getStringExtra("city");
 
