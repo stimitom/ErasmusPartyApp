@@ -38,6 +38,9 @@
     <string name="cannot_find_city">Can\'t find your city? Become your cities host!</string>
     <string name="tell_nationality">Tell us your nationality please: </string>
     <string name="lets_go_party">Let\'s go!</string>
+    <string name="today_text">Today: </string>
+    <string name="tomorrow_text">Tomorrow: </string>
+    <string name="thedayaftertomorrow_text">The Day After Tomorrow: </string>
     <string name="about">About</string>
     <string name="needs_location">We need your location to show bars and clubs near you.</string>
     <string name="add_google_place">Find a bar or nightclub that Erasmus people love and click to add it to your city\'s list.</string>
