@@ -1,5 +1,6 @@
 package com.stimitom.erasmuspartyapp;
 
+import android.content.Context;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -14,13 +15,12 @@ import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.google.firebase.firestore.SetOptions;
+import com.google.firebase.firestore.WriteBatch;
 
 import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -29,54 +29,7 @@ import androidx.annotation.NonNull;
 public class DatabaseMethods {
     private static final String TAG = "DatabaseMethods";
     private static FirebaseFirestore db = FirebaseFirestore.getInstance();
-    private static CollectionReference citiesRef = db.collection("cities");
     private static CollectionReference usersRef = db.collection("users");
-
-
-    public static void addVenueToDate(Venue venue, String date, String city){
-        db.collection(city+"_dates").document(date)
-                .collection("day_venues")
-                .document(venue.getVenueName())
-                .set(venue)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        Log.d(TAG, "Day_venue upload database successful");
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.e(TAG, "Day_venue upload to database FAILED" + e.toString());
-                    }
-                });
-    }
-
-    public static void addCityToDB(String city) {
-        Map<String, Object> cityDummy = new HashMap<>();
-        cityDummy.put("exists", true);
-        citiesRef.document(city).set(cityDummy);
-    }
-
-    public static void addExistenceDummyToDate(String city, String date){
-        Map<String, Object> dateDummy = new HashMap<>();
-        dateDummy.put("exists", true);
-        db.collection(city+"_dates").document(date)
-                .set(dateDummy)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        Log.d(TAG, "Dummy added to date");
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.d(TAG, "Dummy could NOT be added to date.");
-                    }
-                });
-    }
-
 
     public static String getDateToday() {
         Date date;
@@ -103,16 +56,6 @@ public class DatabaseMethods {
         Calendar calendar = Calendar.getInstance();
 
         calendar.add(Calendar.DATE, 2);
-        date = calendar.getTime();
-        return formatter.format(date);
-    }
-
-    public static String getDateInThreeDays() {
-        Date date;
-        Format formatter = new SimpleDateFormat("dd-MM-yyyy");
-        Calendar calendar = Calendar.getInstance();
-
-        calendar.add(Calendar.DATE, 3);
         date = calendar.getTime();
         return formatter.format(date);
     }
@@ -147,7 +90,7 @@ public class DatabaseMethods {
         usersRef.document(userId).update("city",city);
     }
 
-    public static void updateVenuesInDatabase(final String oldNationality, final String oldCity, final String newNationality){
+    public static void updateVenuesInDatabase(final Context context, final String oldNationality, final String oldCity, final String newNationality){
         FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         final String userId = firebaseUser.getUid();
         usersRef.document(userId).get()
@@ -157,24 +100,27 @@ public class DatabaseMethods {
                         User user = documentSnapshot.toObject(User.class);
                         List<String> dates = user.getListnames();
                         for (String date: dates) {
-                            cleanUpVenueAfterChangedNationality(oldNationality, oldCity, newNationality, date,userId);
+                            cleanUpVenueAfterChangedNationality(oldNationality, oldCity, newNationality, date, userId,context);
                         }
                     }
                 });
-
     }
 
-    public static void cleanUpVenueAfterChangedNationality(final String oldNationality, final String oldCity, final String newNationality, final String date, String userId){
+
+    public static void cleanUpVenueAfterChangedNationality(final String oldNationality, final String oldCity, final String newNationality, final String date, String userId, final Context context){
         db.collection(oldCity +"_dates").document(date).collection("day_venues")
                 .whereArrayContains("guestList",userId).get()
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override
                     public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        WriteBatch batch = db.batch();
                         for (QueryDocumentSnapshot queriedVenue: queryDocumentSnapshots) {
                             Venue venue =  queriedVenue.toObject(Venue.class);
                             String venueName = venue.getVenueName();
                             Map<String, Long> nationalitiesCounterMap = venue.getNationalitiesCounterMap();
                             List<String> nationalitiesList = venue.getNationalitiesList();
+
+
                             DocumentReference docRef = db.collection(oldCity+"_dates").document(date).collection("day_venues").document(venueName);
 
 
@@ -183,7 +129,7 @@ public class DatabaseMethods {
                             if (nationalitiesList.contains(oldNationality))oldCountryCounter = nationalitiesCounterMap.get(oldNationality);
                             nationalitiesCounterMap.put(oldNationality,--oldCountryCounter);
                             if (oldCountryCounter == 0){
-                                docRef.update("nationalitiesList", FieldValue.arrayRemove(oldNationality));
+                                batch.update(docRef,"nationalitiesList", FieldValue.arrayRemove(oldNationality));
                             }
 
 
@@ -194,12 +140,18 @@ public class DatabaseMethods {
                                 ++newCountryCounter;
                             }
                             nationalitiesCounterMap.put(newNationality,newCountryCounter);
-                            docRef.update("nationalitiesList", FieldValue.arrayUnion(newNationality));
-                            docRef.update("nationalitiesCounterMap", nationalitiesCounterMap);
+                            batch.update(docRef,"nationalitiesList", FieldValue.arrayUnion(newNationality));
+                            batch.update(docRef,"nationalitiesCounterMap", nationalitiesCounterMap);
                         }
+                        batch.commit().addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Toast.makeText(context,"Something went wrong, please check your internet connection and try again.", Toast.LENGTH_SHORT).show();
+                                Log.e(TAG, "onFailure: " + e.toString() );
+                            }
+                        });
                     }
                 });
-
     }
 
 }
