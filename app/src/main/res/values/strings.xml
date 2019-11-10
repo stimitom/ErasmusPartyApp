@@ -75,6 +75,7 @@
     <string name="slide_2_desc">See how many people are attending each venue and where they are from!</string>
     <string name="slide_3_title">Global Player</string>
     <string name="slide_3_desc">Attend a Bar or Club with just one Click and have fun with people from all over the world!</string>
+    <string name="share">Share</string>
     <string-array name="countries">
         <item>Select Nationality</item>
         <item>Afghanistan</item>

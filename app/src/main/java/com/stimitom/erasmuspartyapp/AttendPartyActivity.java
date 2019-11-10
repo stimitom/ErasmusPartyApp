@@ -49,7 +49,6 @@ public class AttendPartyActivity extends AppCompatActivity {
     private TextView venueNumberOfAttendees_TextView;
     private TextView currentVenueState_TextView;
     private TextView venueOpeningHours_TextView;
-    private ImageView shareButton_ImageView;
     private Toolbar myToolbar;
     private TextView myToolbarTitle;
     private RatingBar ratingBar;
@@ -105,7 +104,6 @@ public class AttendPartyActivity extends AppCompatActivity {
         currentVenueState_TextView = (TextView) findViewById(R.id.text_view_meet_people_from);
         venueOpeningHours_TextView = (TextView) findViewById(R.id.opening_hours);
         ratingBar = (RatingBar) findViewById(R.id.rating_bar);
-        shareButton_ImageView = (ImageView)findViewById(R.id.share_button);
         progressBar = (ProgressBar) findViewById(R.id.progress_bar);
         progressBar.setVisibility(View.INVISIBLE);
         dateTextView = (TextView)findViewById(R.id.date_text_view);
@@ -217,7 +215,6 @@ public class AttendPartyActivity extends AppCompatActivity {
             ratingBar.setRating(Float.parseFloat(venueRating.replace(",", ".") + "f"));
             venueNumberOfAttendees_TextView.setText(Integer.toString(venueNumberOfAttendees));
             venueOpeningHours_TextView.setText(getFormattedOpeningHours(venueOpeningHoursList));
-            shareButton_ImageView.setOnClickListener(shareButtonListener);
 
             //Called here to ensure sequential execution
             getUserData();
@@ -348,19 +345,6 @@ public class AttendPartyActivity extends AppCompatActivity {
         }
     };
 
-    View.OnClickListener shareButtonListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            Intent sendIntent = new Intent();
-            sendIntent.setAction(Intent.ACTION_SEND);
-            sendIntent.putExtra(Intent.EXTRA_TEXT, "Hey! Come join me at " + venueName + " tonight!");
-            sendIntent.putExtra(Intent.EXTRA_SUBJECT, "com.stimitom.erasmuspartyapp");
-            sendIntent.setType("text/plain");
-            startActivity(Intent.createChooser(sendIntent,null));
-        }
-    };
-
-
     /**
      * RecyclerView
      **/
@@ -390,6 +374,14 @@ public class AttendPartyActivity extends AppCompatActivity {
                 intent.putExtra("location", venueLocation);
                 intent.putExtra("city", city);
                 startActivity(intent);
+                return true;
+            case R.id.action_share:
+                Intent sendIntent = new Intent();
+                sendIntent.setAction(Intent.ACTION_SEND);
+                sendIntent.putExtra(Intent.EXTRA_TEXT, "Hey! Come join me at " + venueName + " tonight!");
+                sendIntent.putExtra(Intent.EXTRA_SUBJECT, "com.stimitom.erasmuspartyapp");
+                sendIntent.setType("text/plain");
+                startActivity(Intent.createChooser(sendIntent,null));
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

@@ -26,28 +26,33 @@
         android:layout_marginStart="16dp"
         android:layout_marginLeft="16dp"
         android:layout_marginTop="16dp"
+        android:contentDescription="@string/venue_picture"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/my_toolbar"
-        android:contentDescription="@string/venue_picture"/>
+        app:layout_constraintTop_toBottomOf="@+id/my_toolbar" />
 
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/my_toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:elevation="4dp"
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:theme="@style/ActionBarTheme" >
-        <TextView
-            android:id="@+id/toolbar_text_centered"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            style="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
-            />
-    </androidx.appcompat.widget.Toolbar>
+        app:layout_constraintTop_toTopOf="parent" />
 
+
+    <RatingBar
+        android:id="@+id/rating_bar"
+        style="@style/Widget.AppCompat.RatingBar.Small"
+        android:layout_width="wrap_content"
+        android:layout_height="16sp"
+        android:layout_marginTop="8dp"
+        android:isIndicator="true"
+        android:numStars="5"
+        android:theme="@style/RatingBar"
+
+        app:layout_constraintEnd_toEndOf="@+id/venue_picture_iv"
+        app:layout_constraintStart_toStartOf="@+id/venue_picture_iv"
+        app:layout_constraintTop_toBottomOf="@+id/venue_picture_iv" />
 
     <TextView
         android:id="@+id/number_of_attendees1"
@@ -56,33 +61,25 @@
         android:layout_marginTop="16dp"
         android:gravity="center"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
-        app:layout_constraintEnd_toEndOf="@+id/date_text_view"
-        app:layout_constraintStart_toStartOf="@+id/date_text_view"
-        app:layout_constraintTop_toBottomOf="@+id/date_text_view" />
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recycler_view_attend_party"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginBottom="16dp"
-        app:layout_constraintBottom_toTopOf="@+id/attend_button"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toStartOf="@+id/text_view_meet_people_from"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/text_view_meet_people_from" />
+        app:layout_constraintTop_toBottomOf="@+id/date_text_view" />
 
     <TextView
         android:id="@+id/text_view_meet_people_from"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
         android:padding="8dp"
         android:textAlignment="center"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-        app:layout_constraintEnd_toEndOf="@+id/number_of_attendees1"
-        app:layout_constraintStart_toStartOf="@+id/number_of_attendees1"
-        app:layout_constraintTop_toBottomOf="@+id/number_of_attendees1" />
+        app:layout_constraintBottom_toBottomOf="@+id/number_of_attendees1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/number_of_attendees1"
+        app:layout_constraintTop_toTopOf="@+id/number_of_attendees1" />
 
     <TextView
         android:id="@+id/opening_hours"
@@ -95,51 +92,45 @@
         app:layout_constraintStart_toEndOf="@+id/venue_picture_iv"
         app:layout_constraintTop_toTopOf="@+id/venue_picture_iv" />
 
-    <RatingBar
-        android:id="@+id/rating_bar"
-        android:theme="@style/RatingBar"
-        style="@style/Widget.AppCompat.RatingBar.Small"
-        android:layout_width="wrap_content"
-        android:layout_height="16sp"
-        android:layout_marginTop="8dp"
-        android:isIndicator="true"
-        android:numStars="5"
-
-        app:layout_constraintEnd_toEndOf="@+id/venue_picture_iv"
-        app:layout_constraintStart_toStartOf="@+id/venue_picture_iv"
-        app:layout_constraintTop_toBottomOf="@+id/venue_picture_iv" />
-
-    <ImageView
-        android:id="@+id/share_button"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
-        android:contentDescription="@string/share_button"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/rating_bar"
-        app:srcCompat="@drawable/ic_share_primary_light_24dp" />
-
-    <ProgressBar
-        android:id="@+id/progress_bar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.57"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.676" />
-
     <TextView
         android:id="@+id/date_text_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="16dp"
         android:textSize="18sp"
-        app:layout_constraintEnd_toStartOf="@+id/share_button"
-        app:layout_constraintHorizontal_bias="0.381"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/text_view_meet_people_from"
+        app:layout_constraintHorizontal_bias="0.42"
+        app:layout_constraintStart_toStartOf="@+id/number_of_attendees1"
         app:layout_constraintTop_toBottomOf="@+id/rating_bar" />
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/my_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:elevation="4dp"
+        android:theme="@style/ActionBarTheme"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/toolbar_text_centered"
+            style="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center" />
+    </androidx.appcompat.widget.Toolbar>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_view_attend_party"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"
+        app:layout_constraintBottom_toTopOf="@+id/attend_button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/text_view_meet_people_from" />
 </androidx.constraintlayout.widget.ConstraintLayout>
 
