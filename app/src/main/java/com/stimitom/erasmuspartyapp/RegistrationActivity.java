@@ -142,6 +142,7 @@ public class RegistrationActivity extends AppCompatActivity {
     private void runCitySetupActivity(String username) {
         Intent intent = new Intent(context, CitySetupActivity.class);
         intent.putExtra("username",username);
+        intent.putExtra("comesFromProfileEdit", false);
         context.startActivity(intent);
         finish();
     }

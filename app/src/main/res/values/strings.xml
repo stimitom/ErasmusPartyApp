@@ -63,6 +63,15 @@
     <string name="profile_nationality">Nationality: </string>
     <string name="profile_city">City: </string>
     <string name="profile">Profile</string>
+    <string name="next">NEXT</string>
+    <string name="skip">SKIP</string>
+    <string name="start">GOT IT</string>
+    <string name="slide_1_title">Erasmus Party App</string>
+    <string name="slide_1_desc">Find the coolest Bars and Clubs for Erasmus Students and Internationals!</string>
+    <string name="slide_2_title">Who\'s where?</string>
+    <string name="slide_2_desc">See how many people are attending each venue and where they are from!</string>
+    <string name="slide_3_title">Global Player</string>
+    <string name="slide_3_desc">Attend a Bar or Club with just one Click and have fun with people from all over the world!</string>
     <string-array name="countries">
         <item>Select Nationality</item>
         <item>Afghanistan</item>

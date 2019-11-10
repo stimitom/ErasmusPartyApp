@@ -3,6 +3,7 @@ package com.stimitom.erasmuspartyapp;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -24,6 +25,7 @@ import java.util.ArrayList;
 
 public class CitySetupActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
     private static final String TAG = "CitySetupActivity";
+    public static Activity citySetupActivity;
     private Spinner citySpinner;
     private Spinner nationalitySpinner;
     private Button letsGoButton;
@@ -40,6 +42,7 @@ public class CitySetupActivity extends AppCompatActivity implements AdapterView.
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_city_setup);
+        citySetupActivity = this;
 
         progressBar = (ProgressBar)findViewById(R.id.progress_bar);
         progressBar.setVisibility(View.INVISIBLE);
@@ -112,13 +115,14 @@ public class CitySetupActivity extends AppCompatActivity implements AdapterView.
             if (!city.equals("Select City") && !nationality.equals("Select Nationality")) {
                 progressBar.setVisibility(View.VISIBLE);
                 String username = getIntent().getStringExtra("username");
-                if (!comesFromProfileEdit)DatabaseMethods.addUserToDatabase(username, nationality, city);
-                else{
-                    DatabaseMethods.updateUserInDatabase(nationality,city);
-                    if (oldNationality != null && oldNationality != nationality) DatabaseMethods.updateVenuesInDatabase(getApplicationContext(),oldCity,nationality);
+                //New Activitiy is started from DB method
+                if (!comesFromProfileEdit) {
+                    DatabaseMethods.addUserToDatabase(username, nationality, city, progressBar, getApplicationContext());
                 }
-                progressBar.setVisibility(View.INVISIBLE);
-                runVenuesListActivity();
+                else{
+                    if (oldNationality != null && oldNationality != nationality) DatabaseMethods.updateVenuesInDatabase(getApplicationContext(),oldCity,nationality,progressBar,city);
+                    DatabaseMethods.updateUserInDatabase(nationality,city,progressBar);
+                }
             }else {
                 Toast.makeText(getApplicationContext(),"Please Select a city and a Nationality.",Toast.LENGTH_SHORT).show();
             }
@@ -133,11 +137,5 @@ public class CitySetupActivity extends AppCompatActivity implements AdapterView.
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
 
-    }
-
-    private void runVenuesListActivity() {
-        Intent intent = new Intent(getApplicationContext(), VenuesListActivity.class);
-        intent.putExtra("city",city);
-        startActivity(intent);
     }
 }

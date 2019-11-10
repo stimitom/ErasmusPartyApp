@@ -36,6 +36,11 @@ public class LauncherActivity extends AppCompatActivity {
         }, SPLASH_TIME_OUT);
     }
 
+    public void runWelcomeActivity(){
+        Intent intent = new Intent(context, WelcomeActivity.class);
+        context.startActivity(intent);
+    }
+
 
     public void runLoginActivity() {
         Intent intent = new Intent(context, LoginActivity.class);
@@ -63,7 +68,7 @@ public class LauncherActivity extends AppCompatActivity {
                             } else runLoginActivity();
                         }
                     });
-        } else runLoginActivity();
+        } else runWelcomeActivity();
     }
 }
 
