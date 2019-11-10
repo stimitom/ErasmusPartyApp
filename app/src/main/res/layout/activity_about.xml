@@ -81,7 +81,7 @@
         android:layout_marginTop="32dp"
         android:text="@string/icons8_link"
         android:textColor="@color/colorWhite"
-        android:textSize="20sp"
+        android:textSize="14sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/bar_night_club_icon" />

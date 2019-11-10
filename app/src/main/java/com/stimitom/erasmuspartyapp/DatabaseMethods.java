@@ -90,7 +90,7 @@ public class DatabaseMethods {
         usersRef.document(userId).update("city",city);
     }
 
-    public static void updateVenuesInDatabase(final Context context, final String oldNationality, final String oldCity, final String newNationality){
+    public static void updateVenuesInDatabase(final Context context, final String oldCity, final String updatedNationality){
         FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         final String userId = firebaseUser.getUid();
         usersRef.document(userId).get()
@@ -100,14 +100,14 @@ public class DatabaseMethods {
                         User user = documentSnapshot.toObject(User.class);
                         List<String> dates = user.getListnames();
                         for (String date: dates) {
-                            cleanUpVenueAfterChangedNationality(oldNationality, oldCity, newNationality, date, userId,context);
+                            cleanUpVenueAfterChangedNationality( oldCity, updatedNationality, date, userId,context);
                         }
                     }
                 });
     }
 
 
-    public static void cleanUpVenueAfterChangedNationality(final String oldNationality, final String oldCity, final String newNationality, final String date, String userId, final Context context){
+    public static void cleanUpVenueAfterChangedNationality(final String oldCity, final String updatedNationality, final String date, final String userId, final Context context){
         db.collection(oldCity +"_dates").document(date).collection("day_venues")
                 .whereArrayContains("guestList",userId).get()
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
@@ -117,31 +117,11 @@ public class DatabaseMethods {
                         for (QueryDocumentSnapshot queriedVenue: queryDocumentSnapshots) {
                             Venue venue =  queriedVenue.toObject(Venue.class);
                             String venueName = venue.getVenueName();
-                            Map<String, Long> nationalitiesCounterMap = venue.getNationalitiesCounterMap();
-                            List<String> nationalitiesList = venue.getNationalitiesList();
+                            Map<String, String> usersNationatlitiesMap = venue.getUsersNationalitiesMap();
 
-
-                            DocumentReference docRef = db.collection(oldCity+"_dates").document(date).collection("day_venues").document(venueName);
-
-
-                            //Handle old nationality
-                            Long oldCountryCounter = 0L;
-                            if (nationalitiesList.contains(oldNationality))oldCountryCounter = nationalitiesCounterMap.get(oldNationality);
-                            nationalitiesCounterMap.put(oldNationality,--oldCountryCounter);
-                            if (oldCountryCounter == 0){
-                                batch.update(docRef,"nationalitiesList", FieldValue.arrayRemove(oldNationality));
-                            }
-
-
-                            //Handle new nationality
-                            Long newCountryCounter = 1L;
-                            if (nationalitiesList.contains(newNationality)){
-                                newCountryCounter = nationalitiesCounterMap.get(newNationality);
-                                ++newCountryCounter;
-                            }
-                            nationalitiesCounterMap.put(newNationality,newCountryCounter);
-                            batch.update(docRef,"nationalitiesList", FieldValue.arrayUnion(newNationality));
-                            batch.update(docRef,"nationalitiesCounterMap", nationalitiesCounterMap);
+                            DocumentReference dayVenueRef = db.collection(oldCity+"_dates").document(date).collection("day_venues").document(venueName);
+                            deleteUserFromVenue(userId,usersNationatlitiesMap,dayVenueRef,batch);
+                            addUserToVenue(userId,updatedNationality,usersNationatlitiesMap,dayVenueRef,batch);
                         }
                         batch.commit().addOnFailureListener(new OnFailureListener() {
                             @Override
@@ -152,6 +132,21 @@ public class DatabaseMethods {
                         });
                     }
                 });
+    }
+
+
+    public static void deleteUserFromVenue(String userId,Map<String,String> usersNationalitiesMap,DocumentReference dayVenueRef, WriteBatch batch){
+        usersNationalitiesMap.remove(userId);
+        batch.update(dayVenueRef,"usersNationalitiesMap",usersNationalitiesMap);
+        batch.update(dayVenueRef,"guestList", FieldValue.arrayRemove(userId));
+        batch.update(dayVenueRef,"numberOfAttendees", FieldValue.increment(-1L));
+    }
+
+    public static void addUserToVenue(String userId,String updatedNationality,Map<String,String> usersNationatlitiesMap, DocumentReference dayVenueRef, WriteBatch batch){
+        usersNationatlitiesMap.put(userId,updatedNationality);
+        batch.update(dayVenueRef,"numberOfAttendees", FieldValue.increment(1L));
+        batch.update(dayVenueRef,"usersNationalitiesMap",usersNationatlitiesMap);
+        batch.update(dayVenueRef,"guestList", FieldValue.arrayUnion(userId));
     }
 
 }
