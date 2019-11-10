@@ -15,6 +15,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -30,7 +31,6 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.WriteBatch;
-import com.google.firestore.v1.Write;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -53,6 +53,7 @@ public class AttendPartyActivity extends AppCompatActivity {
     private Toolbar myToolbar;
     private TextView myToolbarTitle;
     private RatingBar ratingBar;
+    private ProgressBar progressBar;
 
     private Button attendButton;
     private Boolean buttonIsClicked;
@@ -74,8 +75,7 @@ public class AttendPartyActivity extends AppCompatActivity {
     private List<String> venueGuestList;
     private List<String> venueOpeningHoursList;
     private ArrayList<String> venueNationalitiesList;
-    private Map<String,Long> venueNationalitiesCounterMap;
-    private Long venueNumberOfGuestsFromUsersCountry = 0L;
+    private Map<String,String> venueUsersNationalitiesMap;
 
 
     private String dateGivenString;
@@ -105,6 +105,8 @@ public class AttendPartyActivity extends AppCompatActivity {
         venueOpeningHours_TextView = (TextView) findViewById(R.id.opening_hours);
         ratingBar = (RatingBar) findViewById(R.id.rating_bar);
         shareButton_ImageView = (ImageView)findViewById(R.id.share_button);
+        progressBar = (ProgressBar) findViewById(R.id.progress_bar);
+        progressBar.setVisibility(View.INVISIBLE);
 
         Intent intent = getIntent();
         String venue_name = intent.getStringExtra("venueName");
@@ -138,15 +140,6 @@ public class AttendPartyActivity extends AppCompatActivity {
         setUpRecyclerView(venue_name);
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-    }
 
     /**** UserInterface ****/
 
@@ -196,17 +189,15 @@ public class AttendPartyActivity extends AppCompatActivity {
             Venue venue = snapshot.toObject(Venue.class);
 
             venueGuestList = new ArrayList<String>();
-            venueNationalitiesCounterMap = new HashMap<String,Long>();
-            venueNationalitiesCounterMap.putAll(venue.getNationalitiesCounterMap());
+            venueUsersNationalitiesMap = new HashMap<String,String>();
+            venueUsersNationalitiesMap.putAll(venue.getUsersNationalitiesMap());
 
-            if (venue.getGuestList() != null) {
+            if (venue.getGuestList().size() != 0) {
                 venueGuestList.addAll(venue.getGuestList());
-                venueNationalitiesList.addAll(venue.getNationalitiesList());
-                adapter.notifyDataSetChanged();
-
-                if (venueNationalitiesList.contains(currentUserNationality)) {
-                    venueNumberOfGuestsFromUsersCountry = venueNationalitiesCounterMap.get(currentUserNationality);
+                for (String nationality : venueUsersNationalitiesMap.values()) {
+                    if (!venueNationalitiesList.contains(nationality)) venueNationalitiesList.add(nationality);
                 }
+                adapter.notifyDataSetChanged();
             }
 
             venueName = venue.getVenueName();
@@ -272,6 +263,7 @@ public class AttendPartyActivity extends AppCompatActivity {
     View.OnClickListener attendButtonListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
+            progressBar.setVisibility(View.VISIBLE);
             if (containsList || buttonIsClicked) {
                 Log.e(TAG, "onClick: Contains List");
                 if (usersVenueCountNumber < 3 || buttonIsClicked) {
@@ -279,7 +271,6 @@ public class AttendPartyActivity extends AppCompatActivity {
                         //Update db day_venue Side
                         WriteBatch addBatch = db.batch();
                         ++venueNumberOfAttendees;
-                        addBatch.update(dayVenueRef,"numberOfAttendees", FieldValue.increment(1L));
                         addUserToVenueGuestList(addBatch);
 
                         //Update db user side
@@ -303,7 +294,6 @@ public class AttendPartyActivity extends AppCompatActivity {
                         //Update db day_venue side
                         deleteUserFromVenueGuestList(deleteBatch);
                         --venueNumberOfAttendees;
-                        deleteBatch.update(dayVenueRef,"numberOfAttendees", FieldValue.increment(-1L));
 
                         // Update db user side
                         deleteFromUserListOfAttendedVenues(deleteBatch);
@@ -330,7 +320,6 @@ public class AttendPartyActivity extends AppCompatActivity {
                 WriteBatch addBatch = db.batch();
                 //Update db day_venue Side
                 ++venueNumberOfAttendees;
-                addBatch.update(dayVenueRef,"numberOfAttendees", FieldValue.increment(1L));
                 addUserToVenueGuestList(addBatch);
 
                 //Update db user side
@@ -343,13 +332,14 @@ public class AttendPartyActivity extends AppCompatActivity {
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         Log.e(TAG, "onFailure: " + e.toString());
-                        Toast.makeText(context,"Sorry this operation did not work.Please try again later.", Toast.LENGTH_SHORT);
+                        Toast.makeText(context,"Sorry something went wrong.Please try again later.", Toast.LENGTH_SHORT);
                     }
                 });
 
                 venueNumberOfAttendees_TextView.setText(Integer.toString(venueNumberOfAttendees));
                 buttonIsClicked = true;
             }
+            progressBar.setVisibility(View.INVISIBLE);
         }
     };
 
@@ -569,7 +559,6 @@ public class AttendPartyActivity extends AppCompatActivity {
         batch.update(userRef,"listnames", FieldValue.arrayUnion(dateGivenString));
         if (usersCounterMappingChanged) batch.update(userRef,"countermapping", usersHashMap);
 
-        Log.d(TAG, "addToUserListOfAttendedVenues: Updated");
     }
 
     public void deleteFromUserListOfAttendedVenues(WriteBatch batch) {
@@ -586,32 +575,28 @@ public class AttendPartyActivity extends AppCompatActivity {
 
     public void addUserToVenueGuestList(WriteBatch batch) {
         venueGuestList.add(currentUserId);
-        if (venueNumberOfGuestsFromUsersCountry <= 0) {
+        venueUsersNationalitiesMap.put(currentUserId,currentUserNationality);
+        if (!venueNationalitiesList.contains(currentUserNationality)) {
             venueNationalitiesList.add(currentUserNationality);
             adapter.notifyDataSetChanged();
         }
-        venueNationalitiesCounterMap.put(currentUserNationality,++venueNumberOfGuestsFromUsersCountry);
 
-        batch.update(dayVenueRef,"nationalitiesCounterMap",venueNationalitiesCounterMap);
-
+        batch.update(dayVenueRef,"numberOfAttendees", FieldValue.increment(1L));
+        batch.update(dayVenueRef,"usersNationalitiesMap",venueUsersNationalitiesMap);
         batch.update(dayVenueRef,"guestList", FieldValue.arrayUnion(currentUserId));
-        batch.update(dayVenueRef,"nationalitiesList", FieldValue.arrayUnion(currentUserNationality));
 
     }
 
     public void deleteUserFromVenueGuestList(WriteBatch batch) {
         venueGuestList.remove(currentUserId);
-        venueNationalitiesCounterMap.put(currentUserNationality,--venueNumberOfGuestsFromUsersCountry);
+        venueUsersNationalitiesMap.remove(currentUserId);
+        venueNationalitiesList.clear();
+        venueNationalitiesList.addAll(venueUsersNationalitiesMap.values());
+        adapter.notifyDataSetChanged();
 
-        if (venueNumberOfGuestsFromUsersCountry <= 0){
-            venueNationalitiesList.remove(currentUserNationality);
-            adapter.notifyDataSetChanged();
-            batch.update(dayVenueRef,"nationalitiesList", FieldValue.arrayRemove(currentUserNationality));
-        }
-
-        batch.update(dayVenueRef,"nationalitiesCounterMap",venueNationalitiesCounterMap);
+        batch.update(dayVenueRef,"usersNationalitiesMap",venueUsersNationalitiesMap);
         batch.update(dayVenueRef,"guestList", FieldValue.arrayRemove(currentUserId));
-
+        batch.update(dayVenueRef,"numberOfAttendees", FieldValue.increment(-1L));
     }
 
 }

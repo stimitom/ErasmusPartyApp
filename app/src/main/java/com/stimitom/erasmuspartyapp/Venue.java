@@ -16,8 +16,7 @@ public class Venue {
 
     private ArrayList<String> openingHours;
     private ArrayList<String> guestList;
-    private ArrayList<String> nationalitiesList;
-    private Map<String,Long> nationalitiesCounterMap = new HashMap<>();
+    private Map<String,String> usersNationalitiesMap = new HashMap<>();
 
 
     //Default constructor needed for database upload
@@ -31,7 +30,6 @@ public class Venue {
         this.numberOfAttendees = 0;
         this.openingHours = openingHours;
         this.guestList = new ArrayList<String>();
-        this.nationalitiesList = new ArrayList<String>();
         this.type = type;
 
             if (type.equals("BAR"))imageId = R.drawable.icon_beer_96;
@@ -73,11 +71,7 @@ public class Venue {
         return type;
     }
 
-    public List<String> getNationalitiesList() {
-        return nationalitiesList;
-    }
-
-    public Map<String, Long> getNationalitiesCounterMap() {
-        return nationalitiesCounterMap;
+    public Map<String, String> getUsersNationalitiesMap() {
+        return usersNationalitiesMap;
     }
 }

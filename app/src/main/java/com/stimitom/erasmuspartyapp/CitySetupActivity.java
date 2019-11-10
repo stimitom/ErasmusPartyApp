@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -33,12 +34,15 @@ public class CitySetupActivity extends AppCompatActivity implements AdapterView.
     private Boolean comesFromProfileEdit;
     private String oldNationality;
     private String oldCity;
+    private ProgressBar progressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_city_setup);
 
+        progressBar = (ProgressBar)findViewById(R.id.progress_bar);
+        progressBar.setVisibility(View.INVISIBLE);
         citySpinner = (Spinner) findViewById(R.id.spinner_cities);
         nationalitySpinner = (Spinner) findViewById(R.id.spinner_nationality);
         letsGoButton = (Button) findViewById(R.id.lets_go_button);
@@ -106,13 +110,14 @@ public class CitySetupActivity extends AppCompatActivity implements AdapterView.
         @Override
         public void onClick(View v) {
             if (!city.equals("Select City") && !nationality.equals("Select Nationality")) {
+                progressBar.setVisibility(View.VISIBLE);
                 String username = getIntent().getStringExtra("username");
-                Log.e(TAG, "onClick: city " + city + " nationality " + nationality + " username " + username);
                 if (!comesFromProfileEdit)DatabaseMethods.addUserToDatabase(username, nationality, city);
                 else{
                     DatabaseMethods.updateUserInDatabase(nationality,city);
-                    if (oldNationality != null && oldNationality != nationality) DatabaseMethods.updateVenuesInDatabase(getApplicationContext(),oldNationality,oldCity,nationality);
+                    if (oldNationality != null && oldNationality != nationality) DatabaseMethods.updateVenuesInDatabase(getApplicationContext(),oldCity,nationality);
                 }
+                progressBar.setVisibility(View.INVISIBLE);
                 runVenuesListActivity();
             }else {
                 Toast.makeText(getApplicationContext(),"Please Select a city and a Nationality.",Toast.LENGTH_SHORT).show();

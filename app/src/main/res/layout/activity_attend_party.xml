@@ -67,7 +67,7 @@
         android:id="@+id/recycler_view_attend_party"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="32dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/text_view_meet_people_from" />
@@ -122,5 +122,14 @@
         app:layout_constraintTop_toBottomOf="@+id/number_of_attendees1"
         app:srcCompat="@drawable/ic_share_primary_light_24dp" />
 
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+         />
 </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -120,15 +120,13 @@ public class LoginActivity extends AppCompatActivity {
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
-                        progressBar.setVisibility(View.GONE);
                         if (task.isSuccessful()) {
-                            Log.d(TAG, "signInWithCredential:success");
                             runNextActivity(username);
                         } else {
-                            // If sign in fails, display a message to the user.
-                            Log.w(TAG, "signInWithCredential:failure", task.getException());
+                            // If sign in fails, display a message to the user
                             Toast.makeText(LoginActivity.this, "Authentication failed.", Toast.LENGTH_SHORT).show();
                         }
+                        progressBar.setVisibility(View.GONE);
                     }
                 });
     }
@@ -170,13 +168,12 @@ public class LoginActivity extends AppCompatActivity {
                 .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
-                        progressBar.setVisibility(View.GONE);
                         if (task.isSuccessful()) {
                             runNextActivity(null);
                         } else {
                             Toast.makeText(context, "No user registered with this email/password. Try again or Sign Up.", Toast.LENGTH_LONG).show();
-                            Log.e(TAG, "onComplete: user signIn not successful" + task.getException().getMessage());
                         }
+                        progressBar.setVisibility(View.GONE);
                     }
                 });
     }
