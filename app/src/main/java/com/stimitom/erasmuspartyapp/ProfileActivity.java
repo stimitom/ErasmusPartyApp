@@ -110,7 +110,5 @@ public class ProfileActivity extends AppCompatActivity {
         intent.putExtra("oldCity",city);
         intent.putExtra("oldNationality", nationality);
         startActivity(intent);
-        finish();
-        VenuesListActivity.downShutter.finish();
     }
 }

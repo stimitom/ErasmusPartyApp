@@ -1,7 +1,10 @@
 package com.stimitom.erasmuspartyapp;
 
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
+import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
@@ -61,7 +64,7 @@ public class DatabaseMethods {
     }
 
 
-    public static void addUserToDatabase(String userName, String nationality, String city) {
+    public static void addUserToDatabase(String userName, String nationality, final String city, final ProgressBar progressBar, final Context context) {
         FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         String userId = firebaseUser.getUid();
         String email = firebaseUser.getEmail();
@@ -72,25 +75,29 @@ public class DatabaseMethods {
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-                        Log.d(TAG, "user upload to database successful");
+                        progressBar.setVisibility(View.INVISIBLE);
+                        runVenuesListActivity(city);
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         Log.e(TAG, "user upload to database FAILED" + e.toString());
+                        Toast.makeText(context ,"Something went wrong. Please check your internet connection and try again.",Toast.LENGTH_SHORT).show();
                     }
                 });
     }
 
-    public static void updateUserInDatabase(String nationality, String city){
+    public static void updateUserInDatabase(String nationality, String city, ProgressBar progressBar){
         FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         String userId = firebaseUser.getUid();
         usersRef.document(userId).update("nationality",nationality);
         usersRef.document(userId).update("city",city);
+        progressBar.setVisibility(View.INVISIBLE);
+        runVenuesListActivity(city);
     }
 
-    public static void updateVenuesInDatabase(final Context context, final String oldCity, final String updatedNationality){
+    public static void updateVenuesInDatabase(final Context context, final String oldCity, final String updatedNationality, final ProgressBar progressBar, final String updatedCity){
         FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         final String userId = firebaseUser.getUid();
         usersRef.document(userId).get()
@@ -102,6 +109,8 @@ public class DatabaseMethods {
                         for (String date: dates) {
                             cleanUpVenueAfterChangedNationality( oldCity, updatedNationality, date, userId,context);
                         }
+                        progressBar.setVisibility(View.INVISIBLE);
+                        runVenuesListActivity(updatedCity);
                     }
                 });
     }
@@ -147,6 +156,14 @@ public class DatabaseMethods {
         batch.update(dayVenueRef,"numberOfAttendees", FieldValue.increment(1L));
         batch.update(dayVenueRef,"usersNationalitiesMap",usersNationatlitiesMap);
         batch.update(dayVenueRef,"guestList", FieldValue.arrayUnion(userId));
+    }
+
+
+    public static void runVenuesListActivity(String city) {
+        Intent intent = new Intent(CitySetupActivity.citySetupActivity, VenuesListActivity.class);
+        intent.putExtra("city",city);
+        CitySetupActivity.citySetupActivity.startActivity(intent);
+        CitySetupActivity.citySetupActivity.finish();
     }
 
 }

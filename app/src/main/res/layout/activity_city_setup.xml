@@ -75,11 +75,15 @@
             android:text="@string/lets_go_party" />
 
         <ProgressBar
+            android:layout_marginTop="30dp"
+            android:layout_gravity="center"
             android:id="@+id/progress_bar"
+            style="?android:attr/progressBarStyleLarge"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            />
+            android:indeterminate="true"
+            android:indeterminateTint="@color/colorWhite"
+            android:indeterminateTintMode="src_atop" />
 
     </LinearLayout>
 
