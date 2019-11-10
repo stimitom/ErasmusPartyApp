@@ -70,7 +70,7 @@ public class VenuesListActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_venues_list);
-        Log.e(TAG, "onCreate: iscalled" );
+        Log.e(TAG, "onCreate: iscalled");
         downShutter = this;
         Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
         setSupportActionBar(myToolbar);
@@ -79,7 +79,7 @@ public class VenuesListActivity extends AppCompatActivity {
         Intent intentComing = getIntent();
         if (intentComing.getBooleanExtra("comesFromLauncher", false))
             LauncherActivity.launcherActivity.finish();
-        city =  intentComing.getStringExtra("city");
+        city = intentComing.getStringExtra("city");
 
         popularButton = (Button) findViewById(R.id.button_popular);
         alphabeticButton = (Button) findViewById(R.id.button_alphabetic);
@@ -196,14 +196,17 @@ public class VenuesListActivity extends AppCompatActivity {
                 Intent intent = new Intent(context, AttendPartyActivity.class);
                 intent.putExtra("venueName", clickedVenue.getVenueName());
                 String day;
+                String dayText;
                 if (todayBool) {
                     day = today;
+
                 } else if (tomorrowBool) {
                     day = tomorrow;
                 } else {
                     day = theDayAfterTomorrow;
                 }
                 intent.putExtra("dateGiven", day);
+                intent.putExtra("dayText", beautifyDateString(day));
                 intent.putExtra("city", city);
                 startActivity(intent);
             }
@@ -327,7 +330,7 @@ public class VenuesListActivity extends AppCompatActivity {
                 }
                 return true;
             case R.id.action_profile:
-                Intent intent2 = new Intent(this,ProfileActivity.class);
+                Intent intent2 = new Intent(this, ProfileActivity.class);
                 startActivity(intent2);
                 return true;
             default:
@@ -391,23 +394,23 @@ public class VenuesListActivity extends AppCompatActivity {
         tomorrow = DatabaseMethods.getDateTomorrow();
         theDayAfterTomorrow = DatabaseMethods.getDateTheDayAfterTomorrow();
 
-        dateButton.setText(today);
+        dateButton.setText(beautifyDateString(today));
         todayBool = true;
         tomorrowBool = false;
         dateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (todayBool) {
-                    dateButton.setText(tomorrow);
+                    dateButton.setText(beautifyDateString(tomorrow));
                     todayBool = false;
                     tomorrowBool = true;
 
                 } else if (tomorrowBool) {
-                    dateButton.setText(theDayAfterTomorrow);
+                    dateButton.setText(beautifyDateString(theDayAfterTomorrow));
                     dateButton.setCompoundDrawablesRelativeWithIntrinsicBounds(getApplicationContext().getResources().getDrawable(R.drawable.ic_arrow_left_24dp), null, getResources().getDrawable(R.drawable.ic_arrow_right_primary_light_24dp), null);
                     tomorrowBool = false;
                 } else {
-                    dateButton.setText(today);
+                    dateButton.setText(beautifyDateString(today));
                     dateButton.setCompoundDrawablesRelativeWithIntrinsicBounds(getApplicationContext().getResources().getDrawable(R.drawable.ic_arrow_left_primary_light_24dp), null, getResources().getDrawable(R.drawable.ic_arrow_right_24dp), null);
                     todayBool = true;
                 }
@@ -417,6 +420,51 @@ public class VenuesListActivity extends AppCompatActivity {
                 else setUpAlphabeticRecyclerView(true);
             }
         });
+    }
+
+    public String beautifyDateString(String date) {
+        String day = date.substring(0,2);
+        String month = date.substring(3, 5);
+        String year = date.substring(6);
+        switch (month) {
+            case "01":
+                month = "Jan";
+                break;
+            case "02":
+                month = "Feb";
+                break;
+            case "03":
+                month = "Mar";
+                break;
+            case "04":
+                month = "Apr";
+                break;
+            case "05":
+                month = "May";
+                break;
+            case "06":
+                month = "Jun";
+                break;
+            case "07":
+                month = "Jul";
+                break;
+            case "08":
+                month = "Aug";
+                break;
+            case "09":
+                month = "Sep";
+                break;
+            case "10":
+                month = "Oct";
+                break;
+            case "11":
+                month = "Nov";
+                break;
+            case "12":
+                month = "Dec";
+                break;
+        }
+        return month + " " + day + " " + year;
     }
 
 

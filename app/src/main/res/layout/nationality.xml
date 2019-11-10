@@ -5,9 +5,9 @@
     android:id="@+id/card_view_nationality"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop="8dp"
-    android:layout_marginStart="8dp"
-    android:layout_marginEnd="8dp"
+    android:layout_marginTop="4dp"
+    android:layout_marginStart="16dp"
+    android:layout_marginEnd="16dp"
     app:cardBackgroundColor="@color/colorPrimaryLight">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -21,6 +21,7 @@
             android:layout_height="wrap_content"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
             android:textColor="@color/colorWhite"
+            android:paddingStart="8dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 

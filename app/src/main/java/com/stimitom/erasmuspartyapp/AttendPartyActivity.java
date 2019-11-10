@@ -54,6 +54,7 @@ public class AttendPartyActivity extends AppCompatActivity {
     private TextView myToolbarTitle;
     private RatingBar ratingBar;
     private ProgressBar progressBar;
+    private TextView dateTextView;
 
     private Button attendButton;
     private Boolean buttonIsClicked;
@@ -107,12 +108,15 @@ public class AttendPartyActivity extends AppCompatActivity {
         shareButton_ImageView = (ImageView)findViewById(R.id.share_button);
         progressBar = (ProgressBar) findViewById(R.id.progress_bar);
         progressBar.setVisibility(View.INVISIBLE);
+        dateTextView = (TextView)findViewById(R.id.date_text_view);
 
         Intent intent = getIntent();
         String venue_name = intent.getStringExtra("venueName");
         dateGivenString = intent.getStringExtra("dateGiven");
+        String dayText = intent.getStringExtra("dayText");
         city = intent.getStringExtra("city");
-        venueNationalitiesList = new ArrayList<String>();
+
+        dateTextView.setText(dayText);
 
         db = FirebaseFirestore.getInstance();
         dayVenueRef = db.collection(city + "_dates").document(dateGivenString)
@@ -135,6 +139,7 @@ public class AttendPartyActivity extends AppCompatActivity {
             context.startActivity(intent1);
         }
 
+        venueNationalitiesList = new ArrayList<String>();
         readVenueData(venueDataListener);
         attendButton.setOnClickListener(attendButtonListener);
         setUpRecyclerView(venue_name);
