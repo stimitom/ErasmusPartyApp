@@ -278,8 +278,8 @@ public class AttendPartyActivity extends AppCompatActivity {
                     if (!buttonIsClicked) {
                         //Update db day_venue Side
                         WriteBatch addBatch = db.batch();
-
-                        addBatch.update(dayVenueRef,"numberOfAttendees", ++venueNumberOfAttendees);
+                        ++venueNumberOfAttendees;
+                        addBatch.update(dayVenueRef,"numberOfAttendees", FieldValue.increment(1L));
                         addUserToVenueGuestList(addBatch);
 
                         //Update db user side
@@ -302,7 +302,8 @@ public class AttendPartyActivity extends AppCompatActivity {
                         WriteBatch deleteBatch = db.batch();
                         //Update db day_venue side
                         deleteUserFromVenueGuestList(deleteBatch);
-                        deleteBatch.update(dayVenueRef,"numberOfAttendees", --venueNumberOfAttendees);
+                        --venueNumberOfAttendees;
+                        deleteBatch.update(dayVenueRef,"numberOfAttendees", FieldValue.increment(-1L));
 
                         // Update db user side
                         deleteFromUserListOfAttendedVenues(deleteBatch);
@@ -328,7 +329,8 @@ public class AttendPartyActivity extends AppCompatActivity {
             } else {
                 WriteBatch addBatch = db.batch();
                 //Update db day_venue Side
-                addBatch.update(dayVenueRef,"numberOfAttendees", ++venueNumberOfAttendees);
+                ++venueNumberOfAttendees;
+                addBatch.update(dayVenueRef,"numberOfAttendees", FieldValue.increment(1L));
                 addUserToVenueGuestList(addBatch);
 
                 //Update db user side
@@ -584,7 +586,7 @@ public class AttendPartyActivity extends AppCompatActivity {
 
     public void addUserToVenueGuestList(WriteBatch batch) {
         venueGuestList.add(currentUserId);
-        if (venueNumberOfGuestsFromUsersCountry == 0) {
+        if (venueNumberOfGuestsFromUsersCountry <= 0) {
             venueNationalitiesList.add(currentUserNationality);
             adapter.notifyDataSetChanged();
         }
@@ -601,7 +603,7 @@ public class AttendPartyActivity extends AppCompatActivity {
         venueGuestList.remove(currentUserId);
         venueNationalitiesCounterMap.put(currentUserNationality,--venueNumberOfGuestsFromUsersCountry);
 
-        if (venueNumberOfGuestsFromUsersCountry == 0){
+        if (venueNumberOfGuestsFromUsersCountry <= 0){
             venueNationalitiesList.remove(currentUserNationality);
             adapter.notifyDataSetChanged();
             batch.update(dayVenueRef,"nationalitiesList", FieldValue.arrayRemove(currentUserNationality));
