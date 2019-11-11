@@ -19,23 +19,23 @@
         android:theme="@style/ActionBarTheme"/>
 
     <TextView
-        android:layout_marginTop="@dimen/activityPadding"
-        android:layout_marginHorizontal="@dimen/activityPadding"
+        android:layout_marginTop="@dimen/activity_padding_vertical"
+        android:layout_marginStart="@dimen/activity_padding_horizontal"
+        android:layout_marginEnd="@dimen/activity_padding_horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textAlignment="center"
         android:text="@string/add_google_place"
-        android:textSize="@dimen/textMedium"
+        android:textSize="@dimen/textSizeSmall"
         android:textColor="@color/colorPrimaryLight"
         />
 
-    <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
+    <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:layout_marginHorizontal="@dimen/activityPadding"
+        android:layout_marginStart="@dimen/activity_padding_horizontal"
+        android:layout_marginEnd="@dimen/activity_padding_horizontal"
         tools:context=".AddGooglePlaceActivity"
         android:background="@color/colorPrimaryLight">
 
@@ -56,7 +56,7 @@
         android:text="@string/add_place_to_list"
         android:layout_gravity="center"
         android:padding="10dp"
-        android:textSize="25sp"
+        android:textSize="@dimen/textSizeVeryLarge"
         android:textColor="@color/colorWhite"
         />
 

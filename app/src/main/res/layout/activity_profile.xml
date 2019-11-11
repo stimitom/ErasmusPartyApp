@@ -4,8 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorPrimaryLight"
-    android:paddingRight="16dp"
-    android:paddingLeft="16dp">
+    android:paddingRight="@dimen/activity_padding_horizontal"
+    android:paddingLeft="@dimen/activity_padding_horizontal">
 
     <LinearLayout
         android:id="@+id/linear_layout_city_setup"
@@ -28,7 +28,7 @@
             android:id="@+id/text_view_username"
             android:textColor="#fff"
             android:textColorHint="#fff"
-            android:textSize="20sp"
+            android:textSize="@dimen/textSizeLarge"
             android:layout_gravity="left"
             android:text="@string/placeholder"/>
 
@@ -39,7 +39,7 @@
             android:id="@+id/text_view_chosen_nationality"
             android:textColor="#fff"
             android:textColorHint="#fff"
-            android:textSize="20sp"
+            android:textSize="@dimen/textSizeLarge"
             android:layout_gravity="left"
             android:text="@string/placeholder"/>
 
@@ -50,7 +50,7 @@
             android:id="@+id/text_view_chosen_city"
             android:textColor="#fff"
             android:textColorHint="#fff"
-            android:textSize="20sp"
+            android:textSize="@dimen/textSizeLarge"
             android:layout_gravity="left"
             android:text="@string/placeholder"/>
 
@@ -67,7 +67,7 @@
             android:gravity="center"
             android:text="@string/edit"
             android:textColor="@color/colorWhite"
-            android:textSize="20sp"
+            android:textSize="@dimen/textSizeLarge"
             android:textAllCaps="false"
             android:layout_gravity="center"/>
 
@@ -84,7 +84,7 @@
             android:gravity="center"
             android:text="@string/reset_password_short"
             android:textColor="@color/colorWhite"
-            android:textSize="20sp"
+            android:textSize="@dimen/textSizeLarge"
             android:textAllCaps="false"
             android:layout_gravity="center"/>
 
