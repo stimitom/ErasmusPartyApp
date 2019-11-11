@@ -15,6 +15,7 @@ import java.net.URI;
 public class AboutActivity extends AppCompatActivity {
 
     private TextView icons8Link;
+    private TextView flaticonLink;
     private ImageButton buyMeACoffeeButton;
     private ImageButton feedbackButton;
     @Override
@@ -23,6 +24,7 @@ public class AboutActivity extends AppCompatActivity {
         setContentView(R.layout.activity_about);
 
         icons8Link = (TextView) findViewById(R.id.icons8_link_tv);
+        flaticonLink = (TextView) findViewById(R.id.flaticon_link_tv);
         feedbackButton = (ImageButton) findViewById(R.id.feedback_button);
         buyMeACoffeeButton = (ImageButton) findViewById(R.id.buy_me_a_coffee_button);
 
@@ -32,6 +34,15 @@ public class AboutActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Uri uri = Uri.parse("http://www.icons8.com");
+                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                startActivity(intent);
+            }
+        });
+
+        flaticonLink.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Uri uri = Uri.parse("https://www.flaticon.com/authors/freepik");
                 Intent intent = new Intent(Intent.ACTION_VIEW, uri);
                 startActivity(intent);
             }

@@ -74,33 +74,49 @@
         app:layout_constraintStart_toEndOf="@+id/bar_night_club_icon"
         app:layout_constraintTop_toTopOf="@+id/bar_night_club_icon" />
 
+
     <TextView
         android:id="@+id/icons8_link_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
         android:text="@string/icons8_link"
+        android:textAlignment="center"
         android:textColor="@color/colorWhite"
         android:textSize="@dimen/textSizeSmall"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/bar_night_club_icon" />
+        app:layout_constraintTop_toBottomOf="@+id/buy_me_a_coffee_button" />
+
+    <TextView
+        android:id="@+id/flaticon_link_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="@string/flat_icons_link"
+        android:textAlignment="center"
+        android:textColor="@color/colorWhite"
+        android:textSize="@dimen/textSizeSmall"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.487"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/icons8_link_tv" />
 
     <ImageButton
         android:id="@+id/feedback_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
-        android:layout_marginTop="60dp"
+        android:layout_marginTop="32dp"
         android:background="@drawable/button_green_round"
+        android:paddingStart="40dp"
+        android:paddingTop="20dp"
+        android:paddingEnd="40dp"
+        android:paddingBottom="20dp"
         android:src="@drawable/icon_feedback_80"
         android:textColor="@color/colorWhite"
-        android:paddingStart="40dp"
-        android:paddingEnd="40dp"
-        android:paddingTop="20dp"
-        android:paddingBottom="20dp"
         app:layout_constraintStart_toEndOf="@+id/feedback_tv"
-        app:layout_constraintTop_toBottomOf="@+id/icons8_link_tv" />
+        app:layout_constraintTop_toBottomOf="@+id/bar_night_club_icon" />
 
     <ImageButton
         android:id="@+id/buy_me_a_coffee_button"
