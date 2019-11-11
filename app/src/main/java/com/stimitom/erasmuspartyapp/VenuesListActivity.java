@@ -296,11 +296,6 @@ public class VenuesListActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.action_request_venue:
-                Intent intent = new Intent(this, AddGooglePlaceActivity.class);
-                intent.putExtra("city", city);
-                startActivity(intent);
-                return true;
             case R.id.action_logout:
                 AuthUI.getInstance()
                         .signOut(context)
