@@ -1,14 +1,11 @@
 <resources>
-
-    <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
-        <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:fontFamily">@font/ubuntu</item>
     </style>
-    
+
     <style name="ActionBarTheme" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
         <item name="android:textColorPrimary">#ffffff</item>
         <item name="colorPrimary">@color/colorPrimary</item>
@@ -17,13 +14,8 @@
         <item name="android:background">@color/colorPrimaryLight</item>
     </style>
 
-    <style name="TextAppearanceBold" parent = "TextAppearance.AppCompat">
-        <item name="android:textSize">16sp</item>
-        <item name="android:textStyle">bold</item>
-    </style>
-
     <style name="RatingBar" parent="Theme.AppCompat">
-    <item name="colorControlNormal">@color/colorStarsEmpty</item>
+        <item name="colorControlNormal">@color/colorStarsEmpty</item>
         <item name="colorControlActivated">@color/colorStars</item>
-</style>
+    </style>
 </resources>

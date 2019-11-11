@@ -168,7 +168,7 @@ public class AttendPartyActivity extends AppCompatActivity {
     }
 
     public void makeButtonClicked() {
-        attendButton.setText(R.string.dontgo);
+        attendButton.setText(R.string.dont_go);
         attendButton.setTextColor(getResources().getColor(R.color.colorWhite));
         attendButton.setBackgroundResource(R.drawable.button_green_round);
     }
