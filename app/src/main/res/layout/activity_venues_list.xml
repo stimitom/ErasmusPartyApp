@@ -44,6 +44,7 @@
             android:layout_height="wrap_content"
             android:text="@string/popular"
             android:layout_weight="1"
+            style="?android:attr/buttonBarButtonStyle"
             android:textColor="@color/colorWhite"/>
         <Button
             android:id="@+id/button_alphabetic"
@@ -51,6 +52,7 @@
             android:layout_height="wrap_content"
             android:text="@string/alphabetic"
             android:layout_weight="1"
+            style="?android:attr/buttonBarButtonStyle"
             android:textColor="@color/colorWhite"/>
     </LinearLayout>
 
