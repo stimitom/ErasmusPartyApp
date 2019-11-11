@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".AboutActivity"
-    android:padding="16dp"
+    android:padding="@dimen/activity_padding_horizontal"
     android:background="@color/colorPrimaryLight"
     >
 
@@ -45,7 +45,7 @@
         android:layout_marginStart="32dp"
         android:text="@string/bar"
         android:textColor="@color/colorWhite"
-        android:textSize="20sp"
+        android:textSize="@dimen/textSizeLarge"
         app:layout_constraintBottom_toBottomOf="@+id/bar_icon"
         app:layout_constraintStart_toEndOf="@+id/bar_icon"
         app:layout_constraintTop_toTopOf="@+id/bar_icon" />
@@ -57,7 +57,7 @@
         android:layout_marginStart="32dp"
         android:text="@string/night_club"
         android:textColor="@color/colorWhite"
-        android:textSize="20sp"
+        android:textSize="@dimen/textSizeLarge"
         app:layout_constraintBottom_toBottomOf="@+id/night_club_icon"
         app:layout_constraintStart_toEndOf="@+id/night_club_icon"
         app:layout_constraintTop_toTopOf="@+id/night_club_icon" />
@@ -69,7 +69,7 @@
         android:layout_marginStart="32dp"
         android:text="@string/bar_night_club"
         android:textColor="@color/colorWhite"
-        android:textSize="20sp"
+        android:textSize="@dimen/textSizeLarge"
         app:layout_constraintBottom_toBottomOf="@+id/bar_night_club_icon"
         app:layout_constraintStart_toEndOf="@+id/bar_night_club_icon"
         app:layout_constraintTop_toTopOf="@+id/bar_night_club_icon" />
@@ -81,7 +81,7 @@
         android:layout_marginTop="32dp"
         android:text="@string/icons8_link"
         android:textColor="@color/colorWhite"
-        android:textSize="14sp"
+        android:textSize="@dimen/textSizeSmall"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/bar_night_club_icon" />
@@ -123,7 +123,7 @@
         android:layout_height="wrap_content"
         android:text="@string/send_feedback"
         android:textColor="@color/colorWhite"
-        android:textSize="20sp"
+        android:textSize="@dimen/textSizeLarge"
         app:layout_constraintBottom_toBottomOf="@+id/feedback_button"
         app:layout_constraintStart_toStartOf="@+id/bar_night_club_icon"
         app:layout_constraintTop_toTopOf="@+id/feedback_button" />
@@ -134,7 +134,7 @@
         android:layout_height="wrap_content"
         android:text="@string/buy_me_a_coffee"
         android:textColor="@color/colorWhite"
-        android:textSize="20sp"
+        android:textSize="@dimen/textSizeLarge"
         app:layout_constraintBottom_toBottomOf="@+id/buy_me_a_coffee_button"
         app:layout_constraintStart_toStartOf="@+id/feedback_tv"
         app:layout_constraintTop_toTopOf="@+id/buy_me_a_coffee_button" />

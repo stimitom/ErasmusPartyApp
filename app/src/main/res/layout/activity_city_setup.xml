@@ -4,7 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorPrimaryLight"
-    android:paddingHorizontal="16dp">
+    android:paddingStart="@dimen/activity_padding_horizontal"
+    android:paddingEnd="@dimen/activity_padding_horizontal">
 
     <LinearLayout
         android:id="@+id/linear_layout_city_setup"
@@ -29,17 +30,17 @@
             android:id="@+id/text_view_username"
             android:textColor="#fff"
             android:textColorHint="#fff"
-            android:textSize="20sp"
+            android:textSize="@dimen/textSizeLarge"
             android:layout_gravity="left"
             android:text="@string/tell_city"/>
 
 
         <Spinner
-            android:layout_marginTop="10dp"
             android:id="@+id/spinner_cities"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="text"
+            android:layout_marginTop="10dp"
             android:layout_marginStart="10dp"
             android:layout_marginEnd="10dp"
             />
@@ -50,7 +51,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/text_view_tell_nationality"
             android:textColor="#fff"
-            android:textSize="20sp"
+            android:textSize="@dimen/textSizeLarge"
             android:layout_gravity="left"
             android:text="@string/tell_nationality"/>
 
@@ -58,7 +59,6 @@
             android:id="@+id/spinner_nationality"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/nationality"
             android:inputType ="text"
             android:layout_marginTop="10dp"
             android:layout_marginStart="10dp"

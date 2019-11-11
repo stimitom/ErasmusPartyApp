@@ -28,7 +28,7 @@
     <string name="already_registered"> <u>Already registered? Login here.</u> </string>
     <string name="sign_up">Sign Up</string>
     <string name="guests_tonight">Guests</string>
-    <string name="nationalities_tonight">Guests are from:</string>
+    <string name="nationalities_tonight">Guests from:</string>
     <string name="nobody_attends_yet">Be the first one to attend!</string>
     <string name="venues_title">Bars &amp; Clubs</string>
     <string name="popular">Popular</string>

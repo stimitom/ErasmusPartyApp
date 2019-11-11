@@ -26,7 +26,7 @@
         android:textAlignment="center"
         android:paddingEnd="25dp"
         android:paddingStart="25dp"
-        android:textSize="20sp"
+        android:textSize="@dimen/textSizeLarge"
         android:drawableStart="@drawable/ic_arrow_left_primary_light_24dp"
         android:drawableEnd="@drawable/ic_arrow_right_24dp"
         android:textAllCaps="false"
