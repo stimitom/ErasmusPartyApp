@@ -18,8 +18,6 @@ public class Venue {
     private ArrayList<String> guestList;
     private Map<String,String> usersNationalitiesMap = new HashMap<>();
 
-
-    //Default constructor needed for database upload
     public Venue(){}
 
     public Venue(String venueName, String rating, String address, String location,  ArrayList<String> openingHours, String type) {

@@ -18,7 +18,6 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 
 public class LauncherActivity extends AppCompatActivity {
-    String TAG = "LauncherActivity";
     private Context context = LauncherActivity.this;
     private static final int SPLASH_TIME_OUT = 2300;
     public static Activity launcherActivity;
@@ -36,7 +35,7 @@ public class LauncherActivity extends AppCompatActivity {
         }, SPLASH_TIME_OUT);
     }
 
-    public void runWelcomeActivity(){
+    public void runWelcomeActivity() {
         Intent intent = new Intent(context, WelcomeActivity.class);
         context.startActivity(intent);
     }
@@ -51,7 +50,7 @@ public class LauncherActivity extends AppCompatActivity {
     public void runVenuesListActivity(String city) {
         Intent intent = new Intent(context, VenuesListActivity.class);
         intent.putExtra("comesFromLauncher", true);
-        intent.putExtra("city",city);
+        intent.putExtra("city", city);
         context.startActivity(intent);
     }
 

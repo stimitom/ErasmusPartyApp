@@ -2,7 +2,6 @@ package com.stimitom.erasmuspartyapp;
 
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.Toast;
@@ -30,7 +29,6 @@ import java.util.Map;
 import androidx.annotation.NonNull;
 
 public class DatabaseMethods {
-    private static final String TAG = "DatabaseMethods";
     private static FirebaseFirestore db = FirebaseFirestore.getInstance();
     private static CollectionReference usersRef = db.collection("users");
 
@@ -82,7 +80,6 @@ public class DatabaseMethods {
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Log.e(TAG, "user upload to database FAILED" + e.toString());
                         Toast.makeText(context ,"Something went wrong. Please check your internet connection and try again.",Toast.LENGTH_SHORT).show();
                     }
                 });
@@ -136,7 +133,6 @@ public class DatabaseMethods {
                             @Override
                             public void onFailure(@NonNull Exception e) {
                                 Toast.makeText(context,"Something went wrong, please check your internet connection and try again.", Toast.LENGTH_SHORT).show();
-                                Log.e(TAG, "onFailure: " + e.toString() );
                             }
                         });
                     }

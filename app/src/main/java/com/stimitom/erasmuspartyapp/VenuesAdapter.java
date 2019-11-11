@@ -1,6 +1,5 @@
 package com.stimitom.erasmuspartyapp;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,7 +11,6 @@ import android.widget.TextView;
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -27,7 +25,6 @@ import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 public class VenuesAdapter extends FirestoreRecyclerAdapter<Venue, VenuesAdapter.VenuesViewHolder> {
-    private final String TAG = "VenuesAdapter";
     private OnItemClickListener listener;
     private FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
     private CollectionReference dayVenueRef;
@@ -60,23 +57,18 @@ public class VenuesAdapter extends FirestoreRecyclerAdapter<Venue, VenuesAdapter
             dayVenueRef.document(venue.getVenueName())
                     .get()
                     .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                @Override
-                public void onSuccess(DocumentSnapshot documentSnapshot) {
-                    if (documentSnapshot.contains("guestList")) {
-                        List<String> usersAttending = (List<String>) documentSnapshot.get("guestList");
-                        if (usersAttending!= null) {
-                            if (usersAttending.contains(currentUserId)) {
-                                venuesViewHolder.goingBanner.setVisibility(View.VISIBLE);
+                        @Override
+                        public void onSuccess(DocumentSnapshot documentSnapshot) {
+                            if (documentSnapshot.contains("guestList")) {
+                                List<String> usersAttending = (List<String>) documentSnapshot.get("guestList");
+                                if (usersAttending != null) {
+                                    if (usersAttending.contains(currentUserId)) {
+                                        venuesViewHolder.goingBanner.setVisibility(View.VISIBLE);
+                                    }
+                                }
                             }
                         }
-                    }
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    Log.e(TAG, "onFailure: retrieveing venue data failed" + e.toString());
-                }
-            });
+                    });
         }
 
     }
@@ -89,7 +81,6 @@ public class VenuesAdapter extends FirestoreRecyclerAdapter<Venue, VenuesAdapter
     @Override
     public void onDataChanged() {
         if (shimmerFrameLayout != null) {
-            Log.e(TAG, "onDataChanged: Stop Shimmer, Shimmer Invisible" );
             shimmerFrameLayout.stopShimmerAnimation();
             shimmerFrameLayout.setVisibility(View.GONE);
             }
@@ -103,14 +94,14 @@ public class VenuesAdapter extends FirestoreRecyclerAdapter<Venue, VenuesAdapter
 
     class VenuesViewHolder extends RecyclerView.ViewHolder {
 
-        public TextView venueName;
-        public CircularImageView venuePicture;
-        public RatingBar venueRating;
-        public TextView numberOfAttendees;
-        public CardView cardView;
-        public ImageView goingBanner;
+        private TextView venueName;
+        private CircularImageView venuePicture;
+        private RatingBar venueRating;
+        private TextView numberOfAttendees;
+        private CardView cardView;
+        private ImageView goingBanner;
 
-        public VenuesViewHolder(View itemView) {
+        private VenuesViewHolder(View itemView) {
             super(itemView);
             this.venueName = (TextView) itemView.findViewById(R.id.venue_name);
             this.venuePicture = (CircularImageView) itemView.findViewById(R.id.venue_picture_round);
