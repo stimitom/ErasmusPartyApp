@@ -36,6 +36,7 @@ dependencies {
     implementation 'com.pkmmte.view:circularimageview:1.1'
     implementation 'com.facebook.shimmer:shimmer:0.1.0@aar'
     implementation 'com.google.android.libraries.places:places:2.0.0'
+    implementation 'de.hdodenhof:circleimageview:1.2.1'
 
 }
 apply plugin: 'com.google.gms.google-services'

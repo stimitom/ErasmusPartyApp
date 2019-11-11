@@ -1,5 +1,8 @@
 package com.stimitom.erasmuspartyapp;
 
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,10 +33,12 @@ public class VenuesAdapter extends FirestoreRecyclerAdapter<Venue, VenuesAdapter
     private CollectionReference dayVenueRef;
     private String currentUserId = getUserId();
     private ShimmerFrameLayout shimmerFrameLayout;
+    private  Context context;
 
-    public VenuesAdapter(@NonNull FirestoreRecyclerOptions<Venue> options, ShimmerFrameLayout shimmerContainer) {
+    public VenuesAdapter(@NonNull FirestoreRecyclerOptions<Venue> options, ShimmerFrameLayout shimmerContainer , Context context) {
         super(options);
         this.shimmerFrameLayout = shimmerContainer;
+        this.context = context;
     }
 
     @Override
@@ -47,7 +52,12 @@ public class VenuesAdapter extends FirestoreRecyclerAdapter<Venue, VenuesAdapter
     public void onBindViewHolder(final VenuesViewHolder venuesViewHolder, int position, final Venue venue) {
         venuesViewHolder.goingBanner.setVisibility(View.INVISIBLE);
         venuesViewHolder.venueName.setText(venue.getVenueName());
-        venuesViewHolder.venuePicture.setImageResource(venue.getImageId());
+
+
+        Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(),venue.getImageId());
+        Bitmap circularBitmap = ImageConverter.getRoundedCornerBitmap(bitmap, 100);
+
+        venuesViewHolder.venuePicture.setImageBitmap(circularBitmap);
         venuesViewHolder.venueRating.setRating(Float.parseFloat(venue.getRating().replace(",", ".") + "f"));
         venuesViewHolder.numberOfAttendees.setText(""+venue.getNumberOfAttendees());
 
@@ -95,7 +105,7 @@ public class VenuesAdapter extends FirestoreRecyclerAdapter<Venue, VenuesAdapter
     class VenuesViewHolder extends RecyclerView.ViewHolder {
 
         private TextView venueName;
-        private CircularImageView venuePicture;
+        private ImageView venuePicture;
         private RatingBar venueRating;
         private TextView numberOfAttendees;
         private CardView cardView;
@@ -104,7 +114,7 @@ public class VenuesAdapter extends FirestoreRecyclerAdapter<Venue, VenuesAdapter
         private VenuesViewHolder(View itemView) {
             super(itemView);
             this.venueName = (TextView) itemView.findViewById(R.id.venue_name);
-            this.venuePicture = (CircularImageView) itemView.findViewById(R.id.venue_picture_round);
+            this.venuePicture = (ImageView) itemView.findViewById(R.id.venue_picture_round);
             this.venueRating = (RatingBar) itemView.findViewById(R.id.venue_rating_bar);
             this.numberOfAttendees = (TextView) itemView.findViewById(R.id.number_of_attendees);
             this.goingBanner = (ImageView) itemView.findViewById(R.id.going_banner);

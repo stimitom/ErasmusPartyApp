@@ -130,7 +130,7 @@ public class VenuesListActivity extends AppCompatActivity {
         FirestoreRecyclerOptions<Venue> options = new FirestoreRecyclerOptions.Builder<Venue>()
                 .setQuery(query, Venue.class)
                 .build();
-        popularAdapter = new VenuesAdapter(options, shimmerViewContainer);
+        popularAdapter = new VenuesAdapter(options, shimmerViewContainer,context);
 
         if (firstSetup) {
             recyclerView = (RecyclerView) findViewById(R.id.recycler_view_venues_list);
@@ -158,7 +158,7 @@ public class VenuesListActivity extends AppCompatActivity {
         FirestoreRecyclerOptions<Venue> options = new FirestoreRecyclerOptions.Builder<Venue>()
                 .setQuery(query, Venue.class)
                 .build();
-        alphabeticAdapter = new VenuesAdapter(options, shimmerViewContainer);
+        alphabeticAdapter = new VenuesAdapter(options, shimmerViewContainer,context);
         popularAdapter.stopListening();
         recyclerView.setAdapter(alphabeticAdapter);
         attachItemClickListenerToAdapter(alphabeticAdapter);
@@ -264,7 +264,7 @@ public class VenuesListActivity extends AppCompatActivity {
             FirestoreRecyclerOptions<Venue> options = new FirestoreRecyclerOptions.Builder<Venue>()
                     .setQuery(query, Venue.class)
                     .build();
-            VenuesAdapter searchAdapter = new VenuesAdapter(options, shimmerViewContainer);
+            VenuesAdapter searchAdapter = new VenuesAdapter(options, shimmerViewContainer,context);
             if (newText.trim().isEmpty()) {
                 searchAdapter.stopListening();
                 if (popularSortActive) {
