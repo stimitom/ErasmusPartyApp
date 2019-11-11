@@ -54,7 +54,8 @@
     <string name="bar_night_club">BAR/NIGHT CLUB</string>
     <string name="buy_me_a_coffee">Buy Me a Coffee</string>
     <string name="send_feedback">Send Feedback</string>
-    <string name="icons8_link"> All icons are provided by icons8.com</string>
+    <string name="icons8_link"> All icons are provided by www.icons8.com</string>
+    <string name="flat_icons_link">All flag-icons are made by Freepik from www.flaticon.com</string>
     <string name="mail_feedback_email">t.stimakovits@outlook.com</string>
     <string name="mail_feedback_subject">Feedback on Erasmus Party App</string>
     <string name="mail_feedback_message">My Feedback: </string>
