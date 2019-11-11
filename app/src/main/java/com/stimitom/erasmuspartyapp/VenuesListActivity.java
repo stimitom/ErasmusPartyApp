@@ -11,7 +11,6 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -39,7 +38,6 @@ import com.google.firebase.firestore.Query;
 
 
 public class VenuesListActivity extends AppCompatActivity {
-    private final String TAG = "VenuesListActivity";
     private Context context = this;
     public static Activity downShutter;
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
@@ -70,7 +68,6 @@ public class VenuesListActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_venues_list);
-        Log.e(TAG, "onCreate: iscalled");
         downShutter = this;
         Toolbar myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
         setSupportActionBar(myToolbar);
@@ -99,14 +96,12 @@ public class VenuesListActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        Log.e(TAG, "onResume: called- should shimmer");
         shimmerViewContainer.startShimmerAnimation();
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        Log.e(TAG, "onStart: called");
         if (popularSortActive) popularAdapter.startListening();
         else alphabeticAdapter.startListening();
     }
@@ -196,7 +191,6 @@ public class VenuesListActivity extends AppCompatActivity {
                 Intent intent = new Intent(context, AttendPartyActivity.class);
                 intent.putExtra("venueName", clickedVenue.getVenueName());
                 String day;
-                String dayText;
                 if (todayBool) {
                     day = today;
 
@@ -423,7 +417,7 @@ public class VenuesListActivity extends AppCompatActivity {
     }
 
     public String beautifyDateString(String date) {
-        String day = date.substring(0,2);
+        String day = date.substring(0, 2);
         String month = date.substring(3, 5);
         String year = date.substring(6);
         switch (month) {
@@ -466,7 +460,6 @@ public class VenuesListActivity extends AppCompatActivity {
         }
         return month + " " + day + " " + year;
     }
-
 
     public static CollectionReference getDayVenuesRef() {
         return dayVenuesRef;

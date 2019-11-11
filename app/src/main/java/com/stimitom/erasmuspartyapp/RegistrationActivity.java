@@ -6,7 +6,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
@@ -21,8 +20,6 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 
 public class RegistrationActivity extends AppCompatActivity {
-
-    private static final String TAG = "RegistrationActivity";
     private Context context = this;
 
     private EditText editTextName;
@@ -120,10 +117,11 @@ public class RegistrationActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             runCitySetupActivity(name);
                         } else {
-                            Log.e(TAG, "onComplete: user upload to db was not succesful" + task.getException().getMessage());
                             // If email address is already registered
                             if (task.getException() instanceof FirebaseAuthUserCollisionException) {
                                 Toast.makeText(getApplicationContext(), "Your email address is already registered, please Login.", Toast.LENGTH_SHORT).show();
+                            }else {
+                                Toast.makeText(getApplicationContext(), "You could not be signed in.Sorry ! Please check your internet connection or try facebook login.", Toast.LENGTH_SHORT).show();
                             }
                         }
                     }

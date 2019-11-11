@@ -7,9 +7,7 @@ import androidx.fragment.app.FragmentActivity;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
-import android.location.LocationManager;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -25,11 +23,10 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
-    private static final String TAG = "MapsActivity";
     private static final int MY_PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 0;
     private GoogleMap mMap;
     private String city;
-    private   FirebaseFirestore db;
+    private FirebaseFirestore db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,7 +41,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
 
-    public void checkLocationPermission(){
+    public void checkLocationPermission() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED) {
             mMap.setMyLocationEnabled(true);
@@ -106,11 +103,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         if (comesFromVenueLATLNG != null) {
             setAllVenueMarkers(true);
             moveCameraToVenue(comesFromVenueLATLNG);
-        }else setAllVenueMarkers(false);
+        } else setAllVenueMarkers(false);
 
     }
 
-    public void setAllVenueMarkers(final Boolean cameraMovedElsewhere){
+    public void setAllVenueMarkers(final Boolean cameraMovedElsewhere) {
         db.collection("cities").document(city).collection("venues").get()
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override
@@ -121,7 +118,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         for (QueryDocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
                             Venue venue = documentSnapshot.toObject(Venue.class);
                             String[] array = venue.getLocation().split(",");
-                            LatLng point = new LatLng(Double.parseDouble(array[0]),Double.parseDouble(array[1]));
+                            LatLng point = new LatLng(Double.parseDouble(array[0]), Double.parseDouble(array[1]));
                             mMap.addMarker(new MarkerOptions().position(point).title(venue.getVenueName()));
                             if (!cameraMovedElsewhere) {
                                 if (!movedCameraAlready) {
@@ -134,17 +131,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(getApplicationContext(),"Sorry the places' locations could not be loaded.", Toast.LENGTH_SHORT).show();
-                        Log.e(TAG, "onFailure: Places could not be fetched from db. " + e.toString());
+                        Toast.makeText(getApplicationContext(), "Sorry the venues' locations could not be loaded.", Toast.LENGTH_SHORT).show();
                     }
                 });
 
     }
 
-    public void moveCameraToVenue(String latlng){
+    public void moveCameraToVenue(String latlng) {
         String[] array = latlng.split(",");
-        LatLng point = new LatLng(Double.parseDouble(array[0]),Double.parseDouble(array[1]));
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(point,20));
+        LatLng point = new LatLng(Double.parseDouble(array[0]), Double.parseDouble(array[1]));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(point, 20));
     }
 
 

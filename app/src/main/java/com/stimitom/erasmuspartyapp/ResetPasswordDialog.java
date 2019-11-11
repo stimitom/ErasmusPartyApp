@@ -5,7 +5,6 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.util.Log;
 import android.util.Patterns;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,7 +20,6 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatDialogFragment;
 
 public class ResetPasswordDialog extends AppCompatDialogFragment {
-    private final String TAG = "ResetPasswordDialog";
     private EditText editTextEmail;
     private Context baseContext;
 
@@ -62,7 +60,6 @@ public class ResetPasswordDialog extends AppCompatDialogFragment {
                                                         @Override
                                                         public void onComplete(@NonNull Task<Void> task) {
                                                             if (task.isSuccessful()) {
-                                                                Log.d(TAG, "Reset Email sent.");
                                                                 Toast.makeText(baseContext, "Reset Email Sent", Toast.LENGTH_SHORT).show();
                                                             }
                                                         }

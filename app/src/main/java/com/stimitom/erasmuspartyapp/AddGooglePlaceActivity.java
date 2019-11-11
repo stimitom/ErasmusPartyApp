@@ -65,7 +65,6 @@ public class AddGooglePlaceActivity extends AppCompatActivity {
 
             //Name
             String name = place.getName();
-            Log.d(TAG, "onPlaceSelected: Name " + name);
 
             //Types
             List<String> typesList = new ArrayList<String>();
@@ -74,7 +73,6 @@ public class AddGooglePlaceActivity extends AppCompatActivity {
                 List<Place.Type> types = place.getTypes();
                 for (Place.Type t : types) {
                     typesList.add(t.toString());
-                    Log.d(TAG, "onPlaceSelected: Type: " + t.toString());
                 }
                 if (typesList.contains("BAR") || typesList.contains("NIGHT_CLUB")) {
                     if (typesList.contains("BAR") && !typesList.contains("NIGHT_CLUB"))
@@ -95,7 +93,6 @@ public class AddGooglePlaceActivity extends AppCompatActivity {
                 OpeningHours openingHours = place.getOpeningHours();
                 for (String element : openingHours.getWeekdayText()) {
                     openingHoursList.add(element);
-                    Log.d(TAG, "onPlaceSelected: Opening Hours Week " + element);
                 }
             }
 
@@ -105,12 +102,10 @@ public class AddGooglePlaceActivity extends AppCompatActivity {
             DecimalFormat df = new DecimalFormat("#.##");
             df.setRoundingMode(RoundingMode.CEILING);
             String rating = df.format(ratingDouble);
-            Log.d(TAG, "onPlaceSelected: Rating " + rating);
 
             //Address
             String address = "";
             if (place.getAddress() != null) address = place.getAddress();
-            Log.d(TAG, "onPlaceSelected: Address " + address);
 
             //Location LATLNG
             String location = "";
@@ -119,9 +114,6 @@ public class AddGooglePlaceActivity extends AppCompatActivity {
                 location = place.getLatLng().toString();
                 cleanedLocation = location.substring(10, location.length() - 1);
             }
-            Log.d(TAG, "onPlaceSelected: LATLNG: " + location);
-            Log.d(TAG, "onPlaceSelected: Cleaned LATLNG " + cleanedLocation);
-
 
             //PROCEED ADDING TO VENUES LIST
             Venue venue = new Venue(name, rating, address, cleanedLocation, openingHoursList, type);
@@ -130,8 +122,7 @@ public class AddGooglePlaceActivity extends AppCompatActivity {
 
         @Override
         public void onError(Status status) {
-            // TODO: Handle the error.
-            Log.i(TAG, "An error occurred: " + status);
+
         }
     };
 
@@ -167,7 +158,6 @@ public class AddGooglePlaceActivity extends AppCompatActivity {
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Log.e(TAG, "venue upload to database FAILED " + e.toString());
                         Toast.makeText(getApplicationContext(), "Sorry something went wrong Try again later.", Toast.LENGTH_SHORT).show();
                     }
                 });

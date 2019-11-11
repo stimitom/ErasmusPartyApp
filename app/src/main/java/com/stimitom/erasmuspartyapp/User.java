@@ -1,7 +1,6 @@
 package com.stimitom.erasmuspartyapp;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -30,16 +29,6 @@ public class User {
         this.city = city;
     }
 
-    public User(String username, String email) {
-        this.username = username;
-        this.email = email;
-    }
-
-    public User(String userid,String username, String email) {
-        this.userid = userid;
-        this.username = username;
-        this.email = email;
-    }
 
     public String getUserid() {
         return userid;

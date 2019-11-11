@@ -6,11 +6,9 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
-import java.net.URI;
 
 public class AboutActivity extends AppCompatActivity {
 
@@ -18,6 +16,7 @@ public class AboutActivity extends AppCompatActivity {
     private TextView flaticonLink;
     private ImageButton buyMeACoffeeButton;
     private ImageButton feedbackButton;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -27,7 +26,6 @@ public class AboutActivity extends AppCompatActivity {
         flaticonLink = (TextView) findViewById(R.id.flaticon_link_tv);
         feedbackButton = (ImageButton) findViewById(R.id.feedback_button);
         buyMeACoffeeButton = (ImageButton) findViewById(R.id.buy_me_a_coffee_button);
-
 
 
         icons8Link.setOnClickListener(new View.OnClickListener() {
@@ -66,10 +64,10 @@ public class AboutActivity extends AppCompatActivity {
     }
 
     private void sendFeedback() {
-        final Intent _Intent = new Intent(android.content.Intent.ACTION_SENDTO, Uri.fromParts("mailto",getString(R.string.mail_feedback_email),null));
+        final Intent _Intent = new Intent(android.content.Intent.ACTION_SENDTO, Uri.fromParts("mailto", getString(R.string.mail_feedback_email), null));
         _Intent.putExtra(android.content.Intent.EXTRA_SUBJECT, getString(R.string.mail_feedback_subject));
         _Intent.putExtra(android.content.Intent.EXTRA_TEXT, getString(R.string.mail_feedback_message));
         startActivity(Intent.createChooser(_Intent, getString(R.string.title_send_feedback)));
     }
-    }
+}
 

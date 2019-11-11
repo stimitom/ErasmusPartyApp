@@ -8,7 +8,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -42,7 +41,6 @@ import java.util.List;
 import java.util.Map;
 
 public class AttendPartyActivity extends AppCompatActivity {
-    private final String TAG = "AttendPartyActivity";
     Context context = this;
 
     private ImageView venuePicture_ImageView;
@@ -65,7 +63,7 @@ public class AttendPartyActivity extends AppCompatActivity {
     DocumentReference dayVenueRef;
 
     private RecyclerView recyclerView;
-      private CountriesAdapter adapter;
+    private CountriesAdapter adapter;
 
     private String venueName;
     private String venueRating;
@@ -75,7 +73,7 @@ public class AttendPartyActivity extends AppCompatActivity {
     private List<String> venueGuestList;
     private List<String> venueOpeningHoursList;
     private ArrayList<String> venueNationalitiesList;
-    private Map<String,String> venueUsersNationalitiesMap;
+    private Map<String, String> venueUsersNationalitiesMap;
 
 
     private String dateGivenString;
@@ -106,7 +104,7 @@ public class AttendPartyActivity extends AppCompatActivity {
         ratingBar = (RatingBar) findViewById(R.id.rating_bar);
         progressBar = (ProgressBar) findViewById(R.id.progress_bar);
         progressBar.setVisibility(View.INVISIBLE);
-        dateTextView = (TextView)findViewById(R.id.date_text_view);
+        dateTextView = (TextView) findViewById(R.id.date_text_view);
 
         Intent intent = getIntent();
         String venue_name = intent.getStringExtra("venueName");
@@ -192,13 +190,14 @@ public class AttendPartyActivity extends AppCompatActivity {
             Venue venue = snapshot.toObject(Venue.class);
 
             venueGuestList = new ArrayList<String>();
-            venueUsersNationalitiesMap = new HashMap<String,String>();
+            venueUsersNationalitiesMap = new HashMap<String, String>();
             venueUsersNationalitiesMap.putAll(venue.getUsersNationalitiesMap());
 
             if (venue.getGuestList().size() != 0) {
                 venueGuestList.addAll(venue.getGuestList());
                 for (String nationality : venueUsersNationalitiesMap.values()) {
-                    if (!venueNationalitiesList.contains(nationality)) venueNationalitiesList.add(nationality);
+                    if (!venueNationalitiesList.contains(nationality))
+                        venueNationalitiesList.add(nationality);
                 }
                 adapter.notifyDataSetChanged();
             }
@@ -250,7 +249,6 @@ public class AttendPartyActivity extends AppCompatActivity {
                     helpArray[6] = day;
                     break;
                 default:
-                    Log.e(TAG, "onSuccess: Something went wrong with the opening Hours");
                     break;
             }
         }
@@ -267,7 +265,6 @@ public class AttendPartyActivity extends AppCompatActivity {
         public void onClick(View v) {
             progressBar.setVisibility(View.VISIBLE);
             if (containsList || buttonIsClicked) {
-                Log.e(TAG, "onClick: Contains List");
                 if (usersVenueCountNumber < 3 || buttonIsClicked) {
                     if (!buttonIsClicked) {
                         //Update db day_venue Side
@@ -284,8 +281,7 @@ public class AttendPartyActivity extends AppCompatActivity {
                         addBatch.commit().addOnFailureListener(new OnFailureListener() {
                             @Override
                             public void onFailure(@NonNull Exception e) {
-                                Log.e(TAG, "onFailure: " + e.toString());
-                                Toast.makeText(context,"Sorry this operation did not work.Please try again later.", Toast.LENGTH_SHORT);
+                                Toast.makeText(context, "Sorry this operation did not work.Please check your internet connection and try again later.", Toast.LENGTH_SHORT).show();
                             }
                         });
 
@@ -306,8 +302,7 @@ public class AttendPartyActivity extends AppCompatActivity {
                         deleteBatch.commit().addOnFailureListener(new OnFailureListener() {
                             @Override
                             public void onFailure(@NonNull Exception e) {
-                                Log.e(TAG, "onFailure: " + e.toString());
-                                Toast.makeText(context,"Sorry this operation did not work.Please try again later.", Toast.LENGTH_SHORT);
+                                Toast.makeText(context, "Sorry this operation did not work.Please try again later.", Toast.LENGTH_SHORT).show();
                             }
                         });
 
@@ -333,8 +328,7 @@ public class AttendPartyActivity extends AppCompatActivity {
                 addBatch.commit().addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Log.e(TAG, "onFailure: " + e.toString());
-                        Toast.makeText(context,"Sorry something went wrong.Please try again later.", Toast.LENGTH_SHORT);
+                        Toast.makeText(context, "Sorry something went wrong.Please try again later.", Toast.LENGTH_SHORT).show();
                     }
                 });
 
@@ -350,10 +344,10 @@ public class AttendPartyActivity extends AppCompatActivity {
      **/
 
     private void setUpRecyclerView(String venueName) {
-      adapter = new CountriesAdapter(venueNationalitiesList);
-      recyclerView = (RecyclerView) findViewById(R.id.recycler_view_attend_party);
-      recyclerView.setLayoutManager(new LinearLayoutManager(this));
-      recyclerView.setAdapter(adapter);
+        adapter = new CountriesAdapter(venueNationalitiesList);
+        recyclerView = (RecyclerView) findViewById(R.id.recycler_view_attend_party);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setAdapter(adapter);
     }
 
     /**
@@ -379,9 +373,8 @@ public class AttendPartyActivity extends AppCompatActivity {
                 Intent sendIntent = new Intent();
                 sendIntent.setAction(Intent.ACTION_SEND);
                 sendIntent.putExtra(Intent.EXTRA_TEXT, "Hey! Come join me at " + venueName + " tonight!");
-                sendIntent.putExtra(Intent.EXTRA_SUBJECT, "com.stimitom.erasmuspartyapp");
                 sendIntent.setType("text/plain");
-                startActivity(Intent.createChooser(sendIntent,null));
+                startActivity(Intent.createChooser(sendIntent, null));
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -421,11 +414,9 @@ public class AttendPartyActivity extends AppCompatActivity {
                                     usersVenueCountNumber = user.getCounterpos2();
                                     break;
                                 default:
-                                    Log.e(TAG, "onSuccess: no correct counter found... Should not happen!");
                                     break;
                             }
                         } else {
-                            Log.e(TAG, "onSuccess: switchStatement in else reached");
                             usersCounterMappingChanged = true;
                             // new List wil be initialized,a counter needs to be set
                             switch (listSize) {
@@ -447,18 +438,15 @@ public class AttendPartyActivity extends AppCompatActivity {
                                     usersHashMap.put(dateGivenString, usersVenueCountName);
                                     break;
                             }
-                            Log.e(TAG, "onSuccess: counterName: " + usersVenueCountName);
-
                             containsList = false;
                             usersVenueCountNumber = 0;
-                            Log.e(TAG, "onSuccess: counternumber" + usersVenueCountNumber);
                         }
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Log.e(TAG, "onFailure: Could not fetch UserData" + e.toString());
+                        Toast.makeText(context, "Something went wrong, please try again later", Toast.LENGTH_SHORT).show();
                     }
                 });
     }
@@ -485,7 +473,7 @@ public class AttendPartyActivity extends AppCompatActivity {
 
     public String getOldestDateString(Map<String, String> counterMapping) {
         //Finds and cleans the oldest counter and deletes it from map
-        //returns String of the oldest COunter that can be used again
+        //returns String of the oldest Counter that can be used again
         usersHashMap.putAll(counterMapping);
 
         Date oldestDate = null;
@@ -496,13 +484,13 @@ public class AttendPartyActivity extends AppCompatActivity {
                 try {
                     oldestDate = formatter.parse(dateStringKey);
                 } catch (ParseException e) {
-                    Log.e(TAG, "onCreate: date could not be parsed" + e.toString());
+                    Toast.makeText(context, "Something went wrong, please try again later", Toast.LENGTH_SHORT).show();
                 }
             } else {
                 try {
                     checkDate = formatter.parse(dateStringKey);
                 } catch (ParseException e) {
-                    Log.e(TAG, "onCreate: date could not be parsed" + e.toString());
+                    Toast.makeText(context, "Something went wrong, please try again later", Toast.LENGTH_SHORT).show();
                 }
                 if (checkDate.before(oldestDate)) {
                     oldestDate = checkDate;
@@ -534,7 +522,7 @@ public class AttendPartyActivity extends AppCompatActivity {
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Log.e(TAG, "onFailure: Could not fetch VenueData" + e.toString());
+                        Toast.makeText(context, "Something went wrong, please try again later", Toast.LENGTH_SHORT).show();
                     }
                 });
     }
@@ -551,10 +539,10 @@ public class AttendPartyActivity extends AppCompatActivity {
         //Update Local Variable
         usersVenueCountNumber++;
         //Update Db variables
-        batch.update(userRef,dateGivenString, FieldValue.arrayUnion(venueName));
-        batch.update(userRef,usersVenueCountName, usersVenueCountNumber);
-        batch.update(userRef,"listnames", FieldValue.arrayUnion(dateGivenString));
-        if (usersCounterMappingChanged) batch.update(userRef,"countermapping", usersHashMap);
+        batch.update(userRef, dateGivenString, FieldValue.arrayUnion(venueName));
+        batch.update(userRef, usersVenueCountName, usersVenueCountNumber);
+        batch.update(userRef, "listnames", FieldValue.arrayUnion(dateGivenString));
+        if (usersCounterMappingChanged) batch.update(userRef, "countermapping", usersHashMap);
 
     }
 
@@ -562,8 +550,8 @@ public class AttendPartyActivity extends AppCompatActivity {
         // Update Local variables
         usersVenueCountNumber--;
         //Update db Variables
-        batch.update(userRef,dateGivenString, FieldValue.arrayRemove(venueName));
-        batch.update(userRef,usersVenueCountName, usersVenueCountNumber);
+        batch.update(userRef, dateGivenString, FieldValue.arrayRemove(venueName));
+        batch.update(userRef, usersVenueCountName, usersVenueCountNumber);
     }
 
     /**
@@ -572,15 +560,15 @@ public class AttendPartyActivity extends AppCompatActivity {
 
     public void addUserToVenueGuestList(WriteBatch batch) {
         venueGuestList.add(currentUserId);
-        venueUsersNationalitiesMap.put(currentUserId,currentUserNationality);
+        venueUsersNationalitiesMap.put(currentUserId, currentUserNationality);
         if (!venueNationalitiesList.contains(currentUserNationality)) {
             venueNationalitiesList.add(currentUserNationality);
             adapter.notifyDataSetChanged();
         }
 
-        batch.update(dayVenueRef,"numberOfAttendees", FieldValue.increment(1L));
-        batch.update(dayVenueRef,"usersNationalitiesMap",venueUsersNationalitiesMap);
-        batch.update(dayVenueRef,"guestList", FieldValue.arrayUnion(currentUserId));
+        batch.update(dayVenueRef, "numberOfAttendees", FieldValue.increment(1L));
+        batch.update(dayVenueRef, "usersNationalitiesMap", venueUsersNationalitiesMap);
+        batch.update(dayVenueRef, "guestList", FieldValue.arrayUnion(currentUserId));
 
     }
 
@@ -591,9 +579,9 @@ public class AttendPartyActivity extends AppCompatActivity {
         venueNationalitiesList.addAll(venueUsersNationalitiesMap.values());
         adapter.notifyDataSetChanged();
 
-        batch.update(dayVenueRef,"usersNationalitiesMap",venueUsersNationalitiesMap);
-        batch.update(dayVenueRef,"guestList", FieldValue.arrayRemove(currentUserId));
-        batch.update(dayVenueRef,"numberOfAttendees", FieldValue.increment(-1L));
+        batch.update(dayVenueRef, "usersNationalitiesMap", venueUsersNationalitiesMap);
+        batch.update(dayVenueRef, "guestList", FieldValue.arrayRemove(currentUserId));
+        batch.update(dayVenueRef, "numberOfAttendees", FieldValue.increment(-1L));
     }
 
 }
