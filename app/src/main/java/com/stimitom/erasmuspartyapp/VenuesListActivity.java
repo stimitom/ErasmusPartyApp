@@ -387,7 +387,6 @@ public class VenuesListActivity extends AppCompatActivity {
         today = DatabaseMethods.getDateToday();
         tomorrow = DatabaseMethods.getDateTomorrow();
         theDayAfterTomorrow = DatabaseMethods.getDateTheDayAfterTomorrow();
-
         dateButton.setText(beautifyDateString(today));
         todayBool = true;
         tomorrowBool = false;

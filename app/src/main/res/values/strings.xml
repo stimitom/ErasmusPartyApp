@@ -1,21 +1,13 @@
 <resources>
-    <string name="app_name">Erasmus Party</string>
-    <string name="welcome">Welcome to the Erasmus Party App</string>
-    <string name="button_lab1">LAB 1</string>
+    <string name="app_name">Erasmus Party App</string>
     <string name="erasmus_party_app">Erasmus Party App</string>
-    <string name="button_core_app">Core App</string>
     <string name="venue_picture">venuePicture</string>
     <string name="action_add_venue">Add Venue</string>
-    <string name="action_request_venue">Request New Venue</string>
-    <string name="venue_name">Venue</string>
-    <string name="venue_rating">Rating: X/5</string>
     <string name="facebook_application_id">2401198669957036</string>
     <string name="fb_login_protocol_scheme">fb2401198669957036</string>
     <string name="attend">I\'m Going</string>
-    <string name="dontgo">I\'m Not Going</string>
-    <string name="sort">Sort</string>
+    <string name="dont_go">I\'m Not Going</string>
     <string name="search">Search</string>
-    <string name="maps">Maps</string>
     <string name="username">Username</string>
     <string name="password">Password</string>
     <string name="repeat_password">Repeat Password</string>
@@ -34,20 +26,16 @@
     <string name="popular">Popular</string>
     <string name="alphabetic">Alphabetic</string>
     <string name="logout">Log Out</string>
-    <string name="tell_city">Tell us which city you are staying in: </string>
-    <string name="cannot_find_city">Can\'t find your city? Become your cities host!</string>
-    <string name="tell_nationality">Tell us your nationality please: </string>
+    <string name="tell_city">Tell us which city you are staying in:</string>
+    <string name="tell_nationality">Tell us your nationality please:</string>
     <string name="lets_go_party">Let\'s go!</string>
-    <string name="today_text">Today: </string>
-    <string name="tomorrow_text">Tomorrow: </string>
-    <string name="thedayaftertomorrow_text">The Day After Tomorrow: </string>
     <string name="about">About</string>
     <string name="needs_location">We need your location to show bars and clubs near you.</string>
     <string name="add_google_place">Find a bar or nightclub that Erasmus people love and click to add it to your city\'s list.</string>
     <string name="add_place_to_list">ADD PLACE</string>
     <string name="map_iv_description">Click here for seeing the venue on the map.</string>
-    <string name="google_rating">Google Rating:\u0020</string>
     <string name="title_activity_maps">Map</string>
+    <string name="action_request_venue">Request New Venue</string>
     <string name="share_button">Share Button</string>
     <string name="bar">BAR</string>
     <string name="night_club">NIGHT CLUB</string>
@@ -63,9 +51,9 @@
     <string name="edit">Edit</string>
     <string name="reset_password_short">Reset Password</string>
     <string name="placeholder">Placeholder</string>
-    <string name="profile_username">Username: </string>
-    <string name="profile_nationality">Nationality: </string>
-    <string name="profile_city">City: </string>
+    <string name="profile_username">Username:</string>
+    <string name="profile_nationality">Nationality:</string>
+    <string name="profile_city">City:</string>
     <string name="profile">Profile</string>
     <string name="next">NEXT</string>
     <string name="skip">SKIP</string>
@@ -332,5 +320,4 @@
         <item>Zambia</item>
         <item>Zimbabwe</item>
     </string-array>
-
 </resources>
