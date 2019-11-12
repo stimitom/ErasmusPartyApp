@@ -58,6 +58,8 @@ public class VenuesAdapter extends FirestoreRecyclerAdapter<Venue, VenuesAdapter
         Bitmap circularBitmap = ImageConverter.getRoundedCornerBitmap(bitmap, 100);
 
         venuesViewHolder.venuePicture.setImageBitmap(circularBitmap);
+
+
         venuesViewHolder.venueRating.setRating(Float.parseFloat(venue.getRating().replace(",", ".") + "f"));
         venuesViewHolder.numberOfAttendees.setText(""+venue.getNumberOfAttendees());
 

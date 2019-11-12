@@ -1,95 +1,138 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_registration"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/beer_photo"
     android:paddingHorizontal="16dp">
 
-    <LinearLayout
-        android:paddingTop="150dp"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:paddingTop="50dp">
 
         <TextView
+            android:id="@+id/textView2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginBottom="30dp"
             android:fontFamily="@font/baumans"
             android:text="@string/erasmus_party_app"
+            android:textAlignment="center"
             android:textColor="@color/colorWhite"
-            android:textSize="37sp" />
+            android:textSize="37sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <EditText
             android:id="@+id/email_edit_text_registration"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="24dp"
+            android:layout_marginEnd="16dp"
+            android:background="@drawable/edit_text_style_login"
+            android:hint="@string/email"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
             android:textColor="#fff"
             android:textColorHint="#fff"
-            android:background="@drawable/edit_text_style_login"
-            android:layout_width="300dp"
-            android:layout_height="60dp"
-            android:layout_gravity="center"
-            android:hint="@string/email"
-            />
+            android:textSize="@dimen/textSizeLarge"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView2" />
 
         <EditText
-            android:layout_marginTop="10dp"
             android:id="@+id/username_edit_text_registration"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/edit_text_style_login"
+            android:hint="@string/username"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
             android:textColor="#fff"
             android:textColorHint="#fff"
-            android:background="@drawable/edit_text_style_login"
-            android:layout_width="300dp"
-            android:layout_height="60dp"
-            android:layout_gravity="center"
-            android:hint="@string/username"/>
+            android:textSize="@dimen/textSizeLarge"
+            app:layout_constraintEnd_toEndOf="@+id/email_edit_text_registration"
+            app:layout_constraintStart_toStartOf="@+id/email_edit_text_registration"
+            app:layout_constraintTop_toBottomOf="@+id/email_edit_text_registration" />
 
         <EditText
             android:id="@+id/password_edit_text_registration"
-            android:textColor="#fff"
-            android:textColorHint="#fff"
-            android:background="@drawable/edit_text_style_login"
-            android:layout_marginTop="10dp"
-            android:layout_width="300dp"
-            android:layout_height="60dp"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/edit_text_style_login"
             android:hint="@string/password"
-            android:inputType="textPassword"/>
+            android:inputType="textPassword"
+            android:textColor="#fff"
+            android:textSize="@dimen/textSizeLarge"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            android:textColorHint="#fff"
+            app:layout_constraintEnd_toEndOf="@+id/username_edit_text_registration"
+            app:layout_constraintStart_toStartOf="@+id/username_edit_text_registration"
+            app:layout_constraintTop_toBottomOf="@+id/username_edit_text_registration" />
 
         <EditText
             android:id="@+id/repeat_password_edit_text_registration"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/edit_text_style_login"
+            android:hint="@string/repeat_password"
+            android:inputType="textPassword"
             android:textColor="#fff"
             android:textColorHint="#fff"
-            android:background="@drawable/edit_text_style_login"
-            android:layout_marginTop="10dp"
-            android:layout_width="300dp"
-            android:layout_height="60dp"
-            android:layout_gravity="center"
-            android:hint="@string/repeat_password"
-            android:inputType="textPassword"/>
+            android:textSize="@dimen/textSizeLarge"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            app:layout_constraintEnd_toEndOf="@+id/password_edit_text_registration"
+            app:layout_constraintStart_toStartOf="@+id/password_edit_text_registration"
+            app:layout_constraintTop_toBottomOf="@+id/password_edit_text_registration" />
 
         <Button
             android:id="@+id/sign_up_button"
-            android:layout_height="60dp"
             android:layout_width="match_parent"
-            android:layout_marginTop="30dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
             android:background="@drawable/button_style_login_selector"
             android:gravity="center"
-            android:text="@string/sign_up" />
+            android:text="@string/sign_up"
+            android:textSize="@dimen/textSizeLarge"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            app:layout_constraintTop_toBottomOf="@+id/repeat_password_edit_text_registration"
+            tools:layout_editor_absoluteX="-49dp" />
 
         <Button
             android:id="@+id/already_registered_button"
-            android:background="?android:attr/selectableItemBackground"
-            android:layout_marginTop="20dp"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginStart="32dp"
+            android:layout_marginEnd="32dp"
+            android:background="?android:attr/selectableItemBackground"
             android:text="@string/already_registered"
             android:textAllCaps="false"
             android:textColor="#fff"
-            android:layout_gravity="center"/>
+            android:textSize="@dimen/textSizeSmall"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/sign_up_button" />
 
 
-    </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <ProgressBar
         android:id="@+id/progress_bar_registration"
