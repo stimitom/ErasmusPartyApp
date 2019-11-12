@@ -65,6 +65,7 @@
     <string name="slide_3_title">Global Player</string>
     <string name="slide_3_desc">Attend a Bar or Club with just one Click and have fun with people from all over the world!</string>
     <string name="share">Share</string>
+    <string name="going_banner">Going Banner</string>
     <string-array name="countries">
         <item>Select Nationality</item>
         <item>Afghanistan</item>
