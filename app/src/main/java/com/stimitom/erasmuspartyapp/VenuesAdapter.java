@@ -19,7 +19,6 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.pkmmte.view.CircularImageView;
 
 import java.util.List;
 
@@ -110,7 +109,6 @@ public class VenuesAdapter extends FirestoreRecyclerAdapter<Venue, VenuesAdapter
         private ImageView venuePicture;
         private RatingBar venueRating;
         private TextView numberOfAttendees;
-        private CardView cardView;
         private ImageView goingBanner;
 
         private VenuesViewHolder(View itemView) {
@@ -120,7 +118,6 @@ public class VenuesAdapter extends FirestoreRecyclerAdapter<Venue, VenuesAdapter
             this.venueRating = (RatingBar) itemView.findViewById(R.id.venue_rating_bar);
             this.numberOfAttendees = (TextView) itemView.findViewById(R.id.number_of_attendees);
             this.goingBanner = (ImageView) itemView.findViewById(R.id.going_banner);
-            cardView = (CardView) itemView.findViewById(R.id.card_view_venue);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
