@@ -5,6 +5,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import androidx.annotation.Keep;
+
+@Keep
 public class User {
     private String userid;
     private String username;
