@@ -8,7 +8,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".WelcomeActivity"></activity>
+        <activity android:name=".WelcomeActivity"/>
         <activity android:name=".ProfileActivity" />
         <activity
             android:name=".MapsActivity"
