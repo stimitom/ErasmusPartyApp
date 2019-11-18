@@ -1,6 +1,14 @@
 apply plugin: 'com.android.application'
 
 android {
+    signingConfigs {
+        signingConfig {
+            storeFile file('C:\\Users\\tstim\\Keystore\\Keystore2\\keystore.jks')
+            storePassword var2
+            keyAlias = 'upload'
+            keyPassword var1
+        }
+    }
     compileSdkVersion 28
     defaultConfig {
         applicationId "com.stimitom.erasmuspartyapp"
@@ -10,12 +18,13 @@ android {
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
+        resConfigs "en"
     }
-    buildTypes {        release {
-            minifyEnabled true
-            shrinkResources true
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-        }
+    buildTypes {
+    release {
+        signingConfig signingConfigs.signingConfig
+        minifyEnabled = false
+    }
     }
 }
 
