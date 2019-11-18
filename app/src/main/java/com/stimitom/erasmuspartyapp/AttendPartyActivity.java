@@ -78,6 +78,7 @@ public class AttendPartyActivity extends AppCompatActivity {
 
     private String dateGivenString;
     private String city;
+    String dayText;
 
     private String currentUserId;
     private String currentUserNationality;
@@ -109,7 +110,7 @@ public class AttendPartyActivity extends AppCompatActivity {
         Intent intent = getIntent();
         String venue_name = intent.getStringExtra("venueName");
         dateGivenString = intent.getStringExtra("dateGiven");
-        String dayText = intent.getStringExtra("dayText");
+        dayText = intent.getStringExtra("dayText");
         city = intent.getStringExtra("city");
 
         dateTextView.setText(dayText);
@@ -372,9 +373,11 @@ public class AttendPartyActivity extends AppCompatActivity {
             case R.id.action_share:
                 Intent sendIntent = new Intent();
                 sendIntent.setAction(Intent.ACTION_SEND);
-                sendIntent.putExtra(Intent.EXTRA_TEXT, "Hey! Come join me at " + venueName + " tonight!");
+                sendIntent.putExtra(Intent.EXTRA_TEXT, "Hey! Come join me at " + venueName + " at " + dayText + "!" +
+                        "\n " +
+                        " https://play.google.com/store/apps/details?id=com.stimitom.erasmuspartyapp");
                 sendIntent.setType("text/plain");
-                startActivity(Intent.createChooser(sendIntent, null));
+                startActivity(Intent.createChooser(sendIntent, "Invite people to join you!"));
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

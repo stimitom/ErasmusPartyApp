@@ -43,7 +43,6 @@ public class VenuesListActivity extends AppCompatActivity {
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private static CollectionReference dayVenuesRef;
     private RecyclerView recyclerView;
-    private FirebaseUser user;
     private Button popularButton;
     private Button alphabeticButton;
     private Boolean popularSortActive;
@@ -193,7 +192,6 @@ public class VenuesListActivity extends AppCompatActivity {
                 String day;
                 if (todayBool) {
                     day = today;
-
                 } else if (tomorrowBool) {
                     day = tomorrow;
                 } else {

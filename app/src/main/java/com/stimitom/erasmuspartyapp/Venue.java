@@ -4,6 +4,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import androidx.annotation.Keep;
+
+@Keep
 public class Venue {
     private String venueName;
     private String rating;
