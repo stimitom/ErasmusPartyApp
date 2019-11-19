@@ -64,6 +64,7 @@
     <string name="slide_3_desc">Attend a Bar or Club with just one Click and have fun with people from all over the world!</string>
     <string name="share">Share</string>
     <string name="going_banner">Going Banner</string>
+    <string name="google_rating">All ratings are provided by Google Places.</string>
 
     <string name="facebook_application_id">2401198669957036</string>
     <string name="fb_login_protocol_scheme">fb2401198669957036</string>
