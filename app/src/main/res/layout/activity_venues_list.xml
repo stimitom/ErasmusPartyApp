@@ -17,20 +17,48 @@
         android:theme="@style/ActionBarTheme"
         />
 
-    <Button
-        android:id="@+id/button_date"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColor="@color/colorWhite"
-        android:background="@color/colorPrimaryLight"
-        android:textAlignment="center"
-        android:paddingEnd="25dp"
-        android:paddingStart="25dp"
-        android:textSize="@dimen/textSizeLarge"
-        android:drawableStart="@drawable/ic_arrow_left_primary_light_24dp"
-        android:drawableEnd="@drawable/ic_arrow_right_24dp"
-        android:textAllCaps="false"
-        />
+        android:orientation="horizontal"
+        android:background="@color/colorPrimaryLight">
+
+        <Button
+            android:id="@+id/button_date_minus"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:drawableStart="@drawable/ic_arrow_left_primary_light_24dp"
+            style="?android:attr/buttonBarButtonStyle"
+            android:textColor="@color/colorWhite"
+            android:paddingStart="25dp"
+            />
+        <TextView
+            android:id="@+id/date_text_view"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textColor="@color/colorWhite"
+            android:text="@string/placeholder"
+            android:textAlignment="center"
+            android:textSize="@dimen/textSizeLarge"
+            android:textAllCaps="false"
+            android:inputType="text"
+            />
+
+        <Button
+            android:id="@+id/button_date_plus"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:drawableEnd="@drawable/ic_arrow_right_24dp"
+            style="?android:attr/buttonBarButtonStyle"
+            android:textColor="@color/colorWhite"
+            android:paddingEnd="25dp"/>
+
+
+    </LinearLayout>
+
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -88,3 +116,18 @@
 
 </LinearLayout>
 
+<!--
+    <Button
+            android:id="@+id/button_date"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorWhite"
+            android:background="@color/colorPrimaryLight"
+            android:textAlignment="center"
+            android:paddingEnd="25dp"
+            android:paddingStart="25dp"
+            android:textSize="@dimen/textSizeLarge"
+            android:drawableStart="@drawable/ic_arrow_left_primary_light_24dp"
+            android:drawableEnd="@drawable/ic_arrow_right_24dp"
+            android:textAllCaps="false"
+            />-->
