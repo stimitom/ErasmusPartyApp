@@ -17,6 +17,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.SearchView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.facebook.shimmer.ShimmerFrameLayout;
@@ -36,6 +37,8 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 
+import org.w3c.dom.Text;
+
 
 public class VenuesListActivity extends AppCompatActivity {
     private Context context = this;
@@ -47,7 +50,9 @@ public class VenuesListActivity extends AppCompatActivity {
     private Button alphabeticButton;
     private Boolean popularSortActive;
 
-    private Button dateButton;
+    private Button dateButtonPlus;
+    private Button dateButtonMinus;
+    private TextView dateTextView;
     private String today;
     private String tomorrow;
     private String theDayAfterTomorrow;
@@ -55,6 +60,7 @@ public class VenuesListActivity extends AppCompatActivity {
 
     private Boolean todayBool;
     private Boolean tomorrowBool;
+    private Boolean theDayAfterTomorrowBool;
 
     private VenuesAdapter popularAdapter;
     private VenuesAdapter alphabeticAdapter;
@@ -79,7 +85,9 @@ public class VenuesListActivity extends AppCompatActivity {
 
         popularButton = (Button) findViewById(R.id.button_popular);
         alphabeticButton = (Button) findViewById(R.id.button_alphabetic);
-        dateButton = (Button) findViewById(R.id.button_date);
+        dateButtonPlus = (Button) findViewById(R.id.button_date_plus);
+        dateButtonMinus = (Button) findViewById(R.id.button_date_minus);
+        dateTextView = (TextView) findViewById(R.id.date_text_view);
         shimmerViewContainer = (ShimmerFrameLayout) findViewById(R.id.shimmer_view_container);
         popularButton.setBackgroundResource(R.drawable.button_venues_list_selected);
         alphabeticButton.setBackgroundResource(R.drawable.button_venues_list_not_selected);
@@ -380,33 +388,68 @@ public class VenuesListActivity extends AppCompatActivity {
         today = DatabaseMethods.getDateToday();
         tomorrow = DatabaseMethods.getDateTomorrow();
         theDayAfterTomorrow = DatabaseMethods.getDateTheDayAfterTomorrow();
-        dateButton.setText(beautifyDateString(today));
+        dateTextView.setText(beautifyDateString(today));
         todayBool = true;
         tomorrowBool = false;
-        dateButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (todayBool) {
-                    dateButton.setText(beautifyDateString(tomorrow));
-                    todayBool = false;
-                    tomorrowBool = true;
-
-                } else if (tomorrowBool) {
-                    dateButton.setText(beautifyDateString(theDayAfterTomorrow));
-                    dateButton.setCompoundDrawablesRelativeWithIntrinsicBounds(getApplicationContext().getResources().getDrawable(R.drawable.ic_arrow_left_24dp), null, getResources().getDrawable(R.drawable.ic_arrow_right_primary_light_24dp), null);
-                    tomorrowBool = false;
-                } else {
-                    dateButton.setText(beautifyDateString(today));
-                    dateButton.setCompoundDrawablesRelativeWithIntrinsicBounds(getApplicationContext().getResources().getDrawable(R.drawable.ic_arrow_left_primary_light_24dp), null, getResources().getDrawable(R.drawable.ic_arrow_right_24dp), null);
-                    todayBool = true;
-                }
-                shimmerViewContainer.setVisibility(View.VISIBLE);
-                shimmerViewContainer.startShimmerAnimation();
-                if (popularSortActive) setUpPopularRecyclerView(false, true);
-                else setUpAlphabeticRecyclerView(true);
-            }
-        });
+        theDayAfterTomorrowBool = false;
+        dateButtonMinus.setEnabled(false);
+        dateButtonPlus.setOnClickListener(dateButtonPlusListener);
+//                        dateButtonPlus.setCompoundDrawablesRelativeWithIntrinsicBounds(getApplicationContext().getResources().getDrawable(R.drawable.ic_arrow_left_24dp), null, getResources().getDrawable(R.drawable.ic_arrow_right_primary_light_24dp), null);
+        dateButtonMinus.setOnClickListener(dateButtonMinusListener);
     }
+
+    View.OnClickListener dateButtonPlusListener  = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            if (todayBool) {
+                dateTextView.setText(beautifyDateString(tomorrow));
+                dateButtonMinus.setCompoundDrawablesRelativeWithIntrinsicBounds(getResources().getDrawable(R.drawable.ic_arrow_left_24dp),null,null,null);
+                dateButtonMinus.setEnabled(true);
+                todayBool = false;
+                tomorrowBool = true;
+            } else if (tomorrowBool) {
+                dateTextView.setText(beautifyDateString(theDayAfterTomorrow));
+                dateButtonPlus.setCompoundDrawablesRelativeWithIntrinsicBounds(null, null, getResources().getDrawable(R.drawable.ic_arrow_right_primary_light_24dp), null);
+                dateButtonPlus.setEnabled(false);
+                tomorrowBool = false;
+                theDayAfterTomorrowBool = true;
+            } else if(theDayAfterTomorrowBool) {
+                dateTextView.setText(beautifyDateString(today));
+                dateButtonPlus.setCompoundDrawablesRelativeWithIntrinsicBounds(null, null, getResources().getDrawable(R.drawable.ic_arrow_right_24dp), null);
+                dateButtonPlus.setEnabled(true);
+                todayBool = true;
+                theDayAfterTomorrowBool = false;
+            }
+            shimmerViewContainer.setVisibility(View.VISIBLE);
+            shimmerViewContainer.startShimmerAnimation();
+            if (popularSortActive) setUpPopularRecyclerView(false, true);
+            else setUpAlphabeticRecyclerView(true);
+        }
+        };
+
+    View.OnClickListener dateButtonMinusListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            if (tomorrowBool) {
+                dateTextView.setText(beautifyDateString(today));
+                dateButtonMinus.setEnabled(false);
+                dateButtonMinus.setCompoundDrawablesRelativeWithIntrinsicBounds(getResources().getDrawable(R.drawable.ic_arrow_left_primary_light_24dp), null, null, null);
+                tomorrowBool = false;
+                todayBool = true;
+            } else if(theDayAfterTomorrowBool) {
+                dateTextView.setText(beautifyDateString(tomorrow));
+                dateButtonPlus.setCompoundDrawablesRelativeWithIntrinsicBounds(null, null, getResources().getDrawable(R.drawable.ic_arrow_right_24dp), null);
+                dateButtonPlus.setEnabled(true);
+                tomorrowBool = true;
+                theDayAfterTomorrowBool = false;
+            }
+            shimmerViewContainer.setVisibility(View.VISIBLE);
+            shimmerViewContainer.startShimmerAnimation();
+            if (popularSortActive) setUpPopularRecyclerView(false, true);
+            else setUpAlphabeticRecyclerView(true);
+        }
+        };
+
 
     public String beautifyDateString(String date) {
         String day = date.substring(0, 2);
