@@ -579,7 +579,9 @@ public class AttendPartyActivity extends AppCompatActivity {
         venueGuestList.remove(currentUserId);
         venueUsersNationalitiesMap.remove(currentUserId);
         venueNationalitiesList.clear();
-        venueNationalitiesList.addAll(venueUsersNationalitiesMap.values());
+        for (String nationality: venueUsersNationalitiesMap.values()) {
+            if (!venueNationalitiesList.contains(nationality))venueNationalitiesList.add(nationality);
+        }
         adapter.notifyDataSetChanged();
 
         batch.update(dayVenueRef, "usersNationalitiesMap", venueUsersNationalitiesMap);

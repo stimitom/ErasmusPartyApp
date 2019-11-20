@@ -75,12 +75,7 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onSuccess(LoginResult loginResult) {
                 progressBar.setVisibility(View.VISIBLE);
-                Profile profile = Profile.getCurrentProfile();
-                String name = "";
-                if (profile != null) {
-                    name = profile.getName();
-                }
-                handleFacebookAccessToken(loginResult.getAccessToken(), name);
+                handleFacebookAccessToken(loginResult.getAccessToken());
             }
 
             @Override
@@ -100,14 +95,19 @@ public class LoginActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-    private void handleFacebookAccessToken(AccessToken token, final String username) {
+    private void handleFacebookAccessToken(AccessToken token) {
         AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());
         mAuth.signInWithCredential(credential)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            runNextActivity(username);
+                            Profile profile = Profile.getCurrentProfile();
+                            String name = "";
+                            if (profile != null) {
+                                name = profile.getName();
+                            }
+                            runNextActivity(name);
                         } else {
                             // If sign in fails, display a message to the user
                             Toast.makeText(LoginActivity.this, "Authentication failed. Please check your internet connection and try again.", Toast.LENGTH_SHORT).show();
