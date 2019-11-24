@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "759157794385",
+    "firebase_url": "https://erasmuspartyapp.firebaseio.com",
+    "project_id": "erasmuspartyapp",
+    "storage_bucket": "erasmuspartyapp.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:759157794385:android:11c9ab37b4238bdb2bba70",
+        "android_client_info": {
+          "package_name": "com.stimitom.erasmuspartyapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "759157794385-71hkagf73gadm9cfb2qou2q9mmtkh96a.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.stimitom.erasmuspartyapp",
+            "certificate_hash": "57928990965a61076e6d17e67aea09f414c180ac"
+          }
+        },
+        {
+          "client_id": "759157794385-8n09hh5he3ine76orgk7tdjlv13ht3jo.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDzn32oe3_LxmWc4o_m7-qvsZF--8mzrjw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "759157794385-8n09hh5he3ine76orgk7tdjlv13ht3jo.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
