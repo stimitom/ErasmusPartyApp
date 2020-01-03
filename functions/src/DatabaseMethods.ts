@@ -11,6 +11,7 @@ export const getDateToday = () => {
     let day = currentDate.getDate().toString();
     if (day.length == 1) day = "0" + day;
     let month = (currentDate.getMonth() + 1).toString();
+    if (month.length == 1) month = "0" + month;
     let year = currentDate.getFullYear().toString();
     return day + "-" + month + "-" + year;
 }
@@ -21,6 +22,7 @@ export const getDateTomorrow = () => {
     let day = currentDate.getDate().toString();
     if (day.length == 1) day = "0" + day;
     let month = (currentDate.getMonth() + 1).toString();
+    if (month.length == 1) month = "0" + month;
     let year = currentDate.getFullYear().toString();
     return day + "-" + month + "-" + year;
 }
@@ -31,10 +33,10 @@ export const getDateTheDayAfterTomorrow = () => {
     let day = currentDate.getDate().toString();
     if (day.length == 1) day = "0" + day;
     let month = (currentDate.getMonth() + 1).toString();
+    if (month.length == 1) month = "0" + month;
     let year = currentDate.getFullYear().toString();
     return day + "-" + month + "-" + year;
 }
-
 
 export const getDateInThreeDays = () => {
     let currentDate = new Date();
@@ -42,6 +44,7 @@ export const getDateInThreeDays = () => {
     let day = currentDate.getDate().toString();
     if (day.length == 1) day = "0" + day;
     let month = (currentDate.getMonth() + 1).toString();
+    if (month.length == 1) month = "0" + month;
     let year = currentDate.getFullYear().toString();
     return day + "-" + month + "-" + year;
 }
@@ -151,6 +154,7 @@ export const setUpFourDaysInDB = async () => {
         return null;
     }
 }
+
 
 export const setUpCityInDB = async () => {
     await  db.collection("cities").doc("Kaunas,LT").set({

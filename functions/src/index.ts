@@ -26,6 +26,7 @@ export const setUpFourNewDates = functions.pubsub
         return setUpFourDaysInDB();
     })
 
+
 export const setUpACity = functions.pubsub
     .schedule('25 00 4 11 *')
     .timeZone('Europe/Vilnius')
