@@ -21,12 +21,12 @@ android {
         resConfigs "en"
     }
     buildTypes {
-    release {
-        signingConfig signingConfigs.signingConfig
-        minifyEnabled = true
-        proguardFiles getDefaultProguardFile('proguard-android.txt'),
-                'proguard-rules.pro'
-    }
+        release {
+            signingConfig signingConfigs.signingConfig
+            minifyEnabled = true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'),
+                    'proguard-rules.pro'
+        }
         debug {
             minifyEnabled = true
             proguardFiles getDefaultProguardFile('proguard-android.txt'),

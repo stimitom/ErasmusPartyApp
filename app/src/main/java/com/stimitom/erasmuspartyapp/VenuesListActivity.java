@@ -328,6 +328,11 @@ public class VenuesListActivity extends AppCompatActivity {
                 Intent intent2 = new Intent(this, ProfileActivity.class);
                 startActivity(intent2);
                 return true;
+            case R.id.action_add_place:
+                Intent intent3 = new Intent(this, AddGooglePlaceActivity.class);
+                intent3.putExtra("city", city);
+                startActivity(intent3);
+                return true;
             default:
                 // If we got here, the user's action was not recognized.
                 // Invoke the superclass to handle it.

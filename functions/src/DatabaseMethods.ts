@@ -16,6 +16,17 @@ export const getDateToday = () => {
     return day + "-" + month + "-" + year;
 }
 
+export const getDateYesterday = () => { 
+    let currentDate = new Date();
+    currentDate.setDate(currentDate.getDate() - 1);
+    let day = currentDate.getDate().toString();
+    if (day.length == 1) day = "0" + day;
+    let month = (currentDate.getMonth() + 1).toString();
+    if (month.length == 1) month = "0" + month;
+    let year = currentDate.getFullYear().toString();
+    return day + "-" + month + "-" + year; 
+}
+
 export const getDateTomorrow = () => {
     let currentDate = new Date();
     currentDate.setDate(currentDate.getDate() + 1);
@@ -162,6 +173,44 @@ export const setUpCityInDB = async () => {
     });
     return null; 
 }
+
+
+export const cleanUsers = async () => { 
+    console.log("Started cleanUsers()");
+    const dateToCheck: string = getDateYesterday(); 
+    console.log("Date being checked: " + dateToCheck);
+    
+    const usersSnapshot = await db.collection('users').get();
+    let containsDate: boolean = false; 
+    let usersWithDate: string[] = []; 
+
+    usersSnapshot.forEach(doc => { 
+        const user = doc.data(); 
+        containsDate = false; 
+
+        for (const field in user) {
+            if (field == dateToCheck) {
+                containsDate = true;
+                break;
+            }
+        }
+
+        if(containsDate){ 
+            usersWithDate.push(`${user.userid}`); 
+        }
+    }); 
+
+    let userRef: FirebaseFirestore.DocumentReference; 
+
+    for(const item in usersWithDate){ 
+        userRef = db.collection('users').doc(usersWithDate[item]);
+        await userRef.update({[`${dateToCheck}`]: admin.firestore.FieldValue.delete()})
+        console.log(dateToCheck + " deleted from " + usersWithDate[item]);
+        
+    }
+    return true; 
+}
+
 
 
 
