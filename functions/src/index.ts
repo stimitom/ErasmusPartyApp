@@ -1,5 +1,5 @@
 import * as functions from 'firebase-functions';
-import { setUpNewDayInDB, setUpFourDaysInDB, setUpCityInDB } from './DatabaseMethods';
+import { setUpNewDayInDB, setUpFourDaysInDB, setUpCityInDB, cleanUsers } from './DatabaseMethods';
 /* import * as admin from 'firebase-admin';
 
 
@@ -34,6 +34,12 @@ export const setUpACity = functions.pubsub
         return setUpCityInDB(); 
     })
 
+export const cleanUser = functions.pubsub
+    .schedule('00 04 * * *')
+    .timeZone('Europe/Vienna')
+    .onRun(context => {
+        return cleanUsers();
+    })
 
 
 
