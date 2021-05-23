@@ -5,9 +5,10 @@ The app was designed for people in my Erasmus destination called Kaunas, a city 
 People could see the local Pubs, Bars and Night Clubs and Check In , if they were there. Other users could then see how many people from which country were at each place.
 
 At its short peak it looked something like this: 
-![Starting Screen](image url "image Title")
-![All Bars](image url "image Title")
-![One Bar](image url "image Title")
+
+<img src="https://github.com/stimitom/ErasmusPartyApp/blob/master/Screenshot_20191112-144035_Erasmus%20Party%20App.jpg" alt="Starting Screen" width="200"/>
+<img src="https://github.com/stimitom/ErasmusPartyApp/blob/master/Screenshot_20191112-144005_Erasmus%20Party%20App.jpg" alt="All Bars" width="200"/>
+<img src="https://github.com/stimitom/ErasmusPartyApp/blob/master/Screenshot_20191112-143816_Erasmus%20Party%20App.jpg" alt="One Bar" width="200"/>
 
 Due to some problems with maintenance and most important, me moving on to other things, the app is not functional anymore. 
 You can still download it, but you won't find it very useful.
