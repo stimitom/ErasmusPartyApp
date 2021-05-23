@@ -1,9 +1,8 @@
 {
   "type": "service_account",
   "project_id": "erasmuspartyapp",
-  "private_key_id": "1b7557ad3ec7929b305b69d99ef3b251b607d366",
-  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQCbGYPeiqNhWhms\n6HidwDJ5LX2F0F+cTAb3E6844q870kqL7KH06M2ZvKgC/b7Oup6bdrC1UmAoqnSo\nl+ZBxpxYs5hqEdQ/aZXLjX5xM4Wr7tXe2D9TYnE1qBiBcGnZY5WUnUI8Kn6lRIpS\nFSISpPCbgE1Tx1CDWBko7t8q5n/Ri1rOcU4Slsw2jKKoQ9Xq5KGIBA9OcBpuk/at\nc1yJVhX14A74QJb0ezkkPuHne+oFJNAoYX4D7ndQFTXb3hptsRlreTNWtV7a7I4i\nuXbx6PJGBP7b85ATvmOLaQ+6NKvDYA8QowTdCSI4TcEDk1pg7bbhzCgZUL+R41k7\nKPwirGjrAgMBAAECggEAJBsh/DYJB7o6XOq3XX3nIheJb5PNFi0KuA0Ajv0Sbxoq\n2X0KTOG/LylgcWXRu/1su+M7CtL06LKZur+1zh0mu21/rz2cS/DP+tVjGIY2eYp9\nhkWQJGC32xZZMhTRx1Yr9a9QQoJf/ihBDQ+3YWC9VG3fUoAFSbZCESnekPWcztJF\nu/XKeLHhOtd/hfmYwo23t04tKvAsIO7Sk0K8g6n36rLdszY/qSpAjMhwgehA/z/t\nNZLnLkHHX5KDpyEyymRJz/oFjDTmhNjDDRDmwU2enp1/+bp+x0/h4bLeG8xHzPlM\nMi8h0j6MPeW8PFqmCvTnJqtZYZ1FQ2MmCNgXkvSMbQKBgQDRR2fPNnAA4nWTvNJV\n3mpnaEm9PEu30YnnFQWVZeZA9f0mXPtrWZl5hd3mejPaYR6wyq2DwfCz/tkWMlC1\nc7uJ93fMsOVRXCEpxAyGg+smJJdihewy7tVHifg5nItDC8ox1ATQRKTWHQHfuwnK\nsPaL7hjpZEUiVWX9XRRKqwSqPwKBgQC9ua+xCj1UqJJ73vcyeTgI7OU6EMb6zckF\nxP2Vf0w7gzVMfrZCbUjMMcn5+DjATls0cP1M/NFHF1Anp8r+gmtIln++Wf6N0GxW\nKy3pRQi/WU+h1gIevDXy7W9lhWVbcKoJ+vHrYQVXTLRoOXZzbbQHvzJGawkqmlcY\nD4uc0bOeVQKBgDlEvwWXMgMr9VzeWPiiip+NjFA6hcXhk0knGYYOgnnYVtP+sdZo\niHUWyuhdHH9wAEQE0oKxubqnzKQkVK2y4+kXTTM4XShse67ANWVCCEFB1iNh3ob5\nkGepO8IYMovAWC5WhJKxliH5gh/FQSK0VmNoXmzPwZNppyU0KW9daUNlAoGAMzSi\njo3M78RvhK8w2JaO4RnO5FUS3y4bS0tXhbnNwWIwSG0Kk/Ma6sGlWan85yo+w3Cb\nbOPvN9i68Xj/+KEKg5Ta9W0knvHZy4fr5EGVks9wBqXT/Kefh+k9X5EZQgyuV/M6\nx+RvpJg3OMoJhi3doRmhYBATcUQmrX/Elpaie+ECgYAHjU/HyNye8yUHj87fjNDu\nbe6MsNPUz6+c1UzM5A5mYmu50KbIzo4iXe+pxVFlpu4WwqIpvEGFgOt3WoD1/bs/\nv5wLhoTXAGnii6e9CJiB0fLQsfHE93Q48tkmyIwyTc79pb7s/qdiWKOx2l6HkV+l\nNGHaZxj4t7lvngRw1ART9w==\n-----END PRIVATE KEY-----\n",
-  "client_email": "firebase-adminsdk-bfv8h@erasmuspartyapp.iam.gserviceaccount.com",
+  "private_key_id": "",
+  "private_key": "",
   "client_id": "105231039574396762383",
   "auth_uri": "https://accounts.google.com/o/oauth2/auth",
   "token_uri": "https://oauth2.googleapis.com/token",
