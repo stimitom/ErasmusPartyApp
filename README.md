@@ -20,3 +20,8 @@ I used google firebase as my database and some google cloud functions for updati
 I am sure this project is full of ridiculous mistakes but still, feel free to check it out :). 
 
 
+
+
+p.s. I am fully aware that there might be some secrets leaked in the git history (it was also my first time using git). All of the services affiliated with these keys are deactivated.
+
+
