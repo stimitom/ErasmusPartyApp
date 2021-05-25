@@ -11,7 +11,7 @@ At its short peak it looked something like this:
 <img src="https://github.com/stimitom/ErasmusPartyApp/blob/master/Screenshot_20191112-143816_Erasmus%20Party%20App.jpg" alt="One Bar" width="200"/>
 
 Due to some problems with maintenance and most important, me moving on to other things, the app is not functional anymore. 
-You can still download it, but you won't find it very useful.
+You can still download it, but you won't find it very useful.[PlayStore](https://play.google.com/store/apps/details?id=com.stimitom.erasmuspartyapp&hl=en_US&gl=US)
 
 Erasmus Party App was my first real project ever. I coded it without any knowledge about program structure or good practices.
 The app is nearly entirely running in the front-end on the users' phones. 
